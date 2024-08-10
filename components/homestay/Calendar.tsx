@@ -2,19 +2,28 @@
 
 import React, { useState } from "react";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+
 // Định nghĩa kiểu cho sự kiện
 interface Event {
   name: string;
   time: string;
 }
 
-// Định nghĩa kiểu cho state events
+
 interface Events {
   [key: string]: Event[];
 }
 
-const Calendar: React.FC = () => {
-  // Dữ liệu mẫu cho các sự kiện trong lịch
+const 
+Calendar: React.FC = () => {
+  
   const initialEvents: Events = {
     "2024-12-01": [{ name: "Redesign Website", time: "1 Dec - 3 Dec" }],
     "2024-12-25": [{ name: "App Design", time: "25 Dec - 27 Dec" }],
@@ -69,9 +78,9 @@ const Calendar: React.FC = () => {
       return events[date].map((event, index) => (
         <div
           key={index}
-          className="event invisible absolute left-2 z-99 mb-1 flex w-[200%] flex-col rounded-r-[5px] border-l-[3px] border-primary bg-gray-2 px-3 py-1 text-left opacity-0 group-hover:visible group-hover:opacity-100 dark:bg-dark-2 md:visible md:w-[190%] md:opacity-100"
+          className="event invisible absolute left-2 z-99 mb-1 flex w-[200%] flex-col rounded-r-[5px] border-l-[3px] border-primary bg-gray-2 px-3 py-1 text-left opacity-0 group-hover:visible group-hover:opacity-100  md:visible md:w-[190%] md:opacity-100"
         >
-          <span className="event-name font-medium text-dark dark:text-white">
+          <span className="event-name font-medium text-dark">
             {event.name}
           </span>
           <span className="time text-sm">{event.time}</span>
@@ -102,9 +111,9 @@ const Calendar: React.FC = () => {
       days.push(
         <td
           key={`prev-${i}`}
-          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200 dark:border-dark-3 dark:bg-dark-2 md:h-25 md:p-6 xl:h-31"
+          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200  md:h-25 md:p-6 xl:h-31"
         >
-          <span className="font-medium text-gray-500 dark:text-gray-400">
+          <span className="font-medium text-gray-500 ">
             {prevMonthDays - i}
           </span>
           {renderEvents(dateString)}
@@ -120,9 +129,9 @@ const Calendar: React.FC = () => {
       days.push(
         <td
           key={day}
-          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 hover:bg-gray-2 dark:border-dark-3 dark:hover:bg-dark-2 md:h-25 md:p-6 xl:h-31"
+          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 hover:bg-gray-2  md:h-25 md:p-6 xl:h-31"
         >
-          <span className="font-medium text-dark dark:text-white">{day}</span>
+          <span className="font-medium text-dark ">{day}</span>
           <div className="group h-16 w-full flex-grow cursor-pointer py-1 md:h-30">
             <span className="group-hover:text-primary md:hidden">More</span>
             {renderEvents(dateString)}
@@ -140,9 +149,9 @@ const Calendar: React.FC = () => {
       days.push(
         <td
           key={`next-${i}`}
-          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200 dark:border-dark-3 dark:bg-dark-2 md:h-25 md:p-6 xl:h-31"
+          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200  md:h-25 md:p-6 xl:h-31"
         >
-          <span className="font-medium text-gray-500 dark:text-gray-400">
+          <span className="font-medium text-gray-500 ">
             {i}
           </span>
           {renderEvents(dateString)}
@@ -154,25 +163,126 @@ const Calendar: React.FC = () => {
   };
 
   return (
-    <div className="w-full max-w-full rounded-[10px] bg-white shadow-1 dark:bg-gray-dark dark:shadow-card">
+    <div className="w-full max-w-full rounded-[10px] bg-white shadow-1 ">
       <div className="flex items-center justify-between p-4">
-        <button onClick={goToPreviousMonth} className="p-2 bg-gray-200 rounded">
-          Previous Month
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={goToPreviousMonth}
+                className="p-2 border-none rounded"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
+                  />
+                </svg>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Previous Year</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
 
-        <button onClick={goToPreviousYear} className="p-2 bg-gray-200 rounded">
-          Previous Year
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={goToPreviousYear}
+                className="p-2 border-none  rounded"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15.75 19.5 8.25 12l7.5-7.5"
+                  />
+                </svg>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Previous Month</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+
         <h2 className="text-lg font-bold">
           {currentDate.toLocaleString("default", { month: "long" })}{" "}
           {currentDate.getFullYear()}
         </h2>
-        <button onClick={goToNextYear} className="p-2 bg-gray-200 rounded">
-          Previous Year
-        </button>
-        <button onClick={goToNextMonth} className="p-2 bg-gray-200 rounded">
-          Next Month
-        </button>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={goToNextYear}
+                className="p-2  border-none rounded"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                  />
+                </svg>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Next Month</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={goToNextMonth}
+                className="p-2 border-none rounded"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  className="size-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"
+                  />
+                </svg>
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Next Year</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </div>
       <table className="w-full">
         <thead>
