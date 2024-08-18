@@ -8,11 +8,32 @@
   box-sizing: border-box;
 }
 
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #a4a4a4 ;   
+  /* border-radius: 5px; */
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: gray;
+  border-radius: 14px;
+  border: 1px solid #664b4b;
+}
+
+.scroll-transparent::-webkit-scrollbar {
+    width: 0px;
+  }
+
 body {
   font-family: Inter;
 }
 
 @layer utilities {
+  
   .btn_white {
     @apply border-white bg-white px-8 py-3 text-green-50;
   }
@@ -128,14 +149,14 @@ body {
 
   /* Hero */
   .hero-map {
-    @apply absolute -right-80 top-0 h-screen w-screen bg-bg-map-hero bg-contain bg-no-repeat md:right-[-6rem]  xl:-top-24 xl:right-[-53rem];
+    @apply absolute -right-80 top-0 h-screen w-screen bg-bg-map-hero bg-contain bg-no-repeat md:right-[-6rem]  lg:-top-12 lg:right-[-48rem]  ;
   }
 
   
 
   /* Feature */
   .feature-phone {
-    @apply absolute top-[13%] z-10 hidden max-w-[1500px] rotate-[15deg] md:-left-16 lg:flex  3xl:left-20;
+    @apply absolute top-[13%] z-10 hidden max-w-[1500px]  lg:flex  3xl:left-20;
   }
 
   

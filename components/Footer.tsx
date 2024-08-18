@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <footer
      
-      className="flexCenter fill-white-500 bg-center bg-cover bg-no-repeat bg-bg-footer"
+      className="flexCenter mt-24 fill-white-500 bg-center bg-cover bg-no-repeat bg-bg-footer"
     >
       <div className="padding-container max-container flex w-full flex-col gap-14">
         <div className="flex flex-col items-start justify-center gap-[10%] md:flex-row">

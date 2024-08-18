@@ -7,7 +7,7 @@ export default function ClientLayout({children} : Readonly<{
     return (
       <>
         <Navbar />
-        <main className="relative overflow-hidden mt-[9rem]">{children}</main>
+        <main className="relative overflow-hidden mt-36">{children}</main>
         <Footer />
       </>
     );
