@@ -10,7 +10,7 @@ import Categories from "@/components/Categories";
 
 export default function Home() {
   return (
-    <>
+    <div className="mx-20">
       <Hero />
       <TopCategories />
       <Categories />
@@ -19,6 +19,6 @@ export default function Home() {
       <CarouselFeatures />
       <Criteria />
       <Faq />
-    </>
+    </div>
   );
 }

@@ -16,7 +16,7 @@ export function CarouselFeatures() {
   };
 
   return (
-    <div className="px-8 py-56">
+    <div className="pt-5 pb-20">
       <section className="container mx-auto rounded-lg bg-[url('/image/Background.png')] bg-center py-10 lg:px-16">
         <div className="relative overflow-hidden">
           <div
@@ -30,15 +30,14 @@ export function CarouselFeatures() {
               >
                 <div className="flex flex-col items-start justify-center md:w-3/5">
                   <p className="mb-5 text-xl font-normal text-white">
-                    Easy Shopping, Quick Delivery <br />
-                    No need to stress about shopping for books. Order online and
-                    have your textbooks and supplies delivered straight to your
-                    doorstep for free.
+                    Easy Booking, Easy Payment <br />
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Error qui nemo voluptas nisi aliquid ut
+                    beatae animi, nesciunt cupiditate adipisci unde non in sed aut, placeat aspernatur eum, praesentium esse?
                   </p>
                   <div className="flex items-center gap-2">
                     🚚
                     <p className="font-medium uppercase text-white">
-                      Free Delivery
+                      Quick serve
                     </p>
                   </div>
                 </div>
@@ -46,7 +45,7 @@ export function CarouselFeatures() {
                   <Image
                     width={768}
                     height={768}
-                    src="/image/logos/logo-amazon 3.svg"
+                    src="/Logo.png"
                     alt="testimonial image"
                     className="h-full w-2/4 object-contain md:w-2/3"
                   />

@@ -5,50 +5,10 @@ import React from "react";
 
 const OTHER_BOOKS = [
   {
-    img: `/image/tours/RectangleBig1.svg`,
-    category: "Frank Herbert",
-    title: "Dune",
-    desc: "A classic epic that explores political intrigue and power struggles on a desert planet.",
-    price: "$99",
-    offPrice: "$79",
-  },
-  {
-    img: `/image/tours/RectangleBig7.svg`,
-    category: "William Gibson",
-    title: "Neuromancer",
-    desc: "A pioneering cyberpunk novel filled with futuristic technology and hackers.",
-    price: "$99",
-    offPrice: "$79",
-  },
-  {
-    img: `/image/tours/RectangleBig1.svg`,
-    category: "J.R.R. Tolkien",
-    title: "The Hobbit",
-    desc: "A timeless adventure through Middle-earth, featuring Bilbo Baggins and his quest.",
-    price: "$99",
-    offPrice: "$79",
-  },
-  {
-    img: `/image/tours/RectangleBig1.svg`,
-    category: "Frank Herbert",
-    title: "Dune",
-    desc: "A classic epic that explores political intrigue and power struggles on a desert planet.",
-    price: "$99",
-    offPrice: "$79",
-  },
-  {
-    img: `/image/tours/RectangleBig7.svg`,
-    category: "William Gibson",
-    title: "Neuromancer",
-    desc: "A pioneering cyberpunk novel filled with futuristic technology and hackers.",
-    price: "$99",
-    offPrice: "$79",
-  },
-  {
-    img: `/image/tours/RectangleBig1.svg`,
-    category: "J.R.R. Tolkien",
-    title: "The Hobbit",
-    desc: "A timeless adventure through Middle-earth, featuring Bilbo Baggins and his quest.",
+    img: `/image/tours/RectangleBig5.svg`,
+    category: "Lamborghini",
+    title: "Lamborghini Veneno",
+    desc: "ka ka ka ka ka ",
     price: "$99",
     offPrice: "$79",
   },
@@ -104,7 +64,7 @@ export function OtherOffers() {
     <section className="px-8 pt-28">
       <div className="container mx-auto mb-10">
         <h2 className="mb-2 text-4xl font-bold text-gray-800">
-          Other Book Offers - 20% OFF
+          Other Offers - 20% OFF
         </h2>
         <p className="w-full max-w-lg text-lg text-gray-500">
           Escape into captivating stories, vibrant characters, and enchanting

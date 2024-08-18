@@ -45,7 +45,7 @@ const Hero = () => {
         </div>
 
         <div className="flex flex-col w-full gap-3 sm:flex-row">
-          <Button type="button" title="Download App" variant="btn_green" />
+          <Button title="Discovery Now" variant="btn_green" />
         </div>
       </div>
       <div className=" relative top-36 right-36 mt-40 w-[33rem] grid gap-6 lg:mt-0">
@@ -53,28 +53,28 @@ const Hero = () => {
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle8.svg"
+            src="/hero/1.jpg"
             className="rounded-lg shadow-md"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle9.svg"
+            src="/hero/4.jpg"
             className="-mt-28 rounded-lg shadow-md"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle10.svg"
+            src="/hero/2.jpg"
             className="-mt-20 rounded-lg shadow-md"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle11.svg"
+            src="/hero/3.jpg"
             className="-mt-20 rounded-lg shadow-md"
             alt="flowers"
           />
@@ -84,21 +84,21 @@ const Hero = () => {
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle12.svg"
+            src="/hero/4.jpg"
             className="-mt-28 rounded-lg shadow-md"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle13.svg"
+            src="/hero/2.jpg"
             className="-mt-10 rounded-lg shadow-md"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/image/tours/Rectangle14.svg"
+            src="/hero/4.jpg"
             className="-mt-20 rounded-lg shadow-md"
             alt="flowers"
           />

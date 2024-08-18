@@ -21,29 +21,35 @@ const FEATURES = [
       "Our dedicated customer support team is available to assist you 24 hours a day, 7 days a week.",
   },
   {
-    icon: TruckIcon,
-    title: "Easy Shopping, Quick Delivery",
+    icon: LifebuoyIcon,
+    title: "Support 24/7",
     description:
-      "We offer fast and reliable shipping, so you can focus on what matters most - your education",
+      "Our dedicated customer support team is available to assist you 24 hours a day, 7 days a week.",
   },
   {
-    icon: TruckIcon,
-    title: "Easy Shopping, Quick Delivery",
+    icon: LifebuoyIcon,
+    title: "Support 24/7",
     description:
-      "We offer fast and reliable shipping, so you can focus on what matters most - your education",
+      "Our dedicated customer support team is available to assist you 24 hours a day, 7 days a week.",
   },
   {
-    icon: TruckIcon,
-    title: "Easy Shopping, Quick Delivery",
+    icon: LifebuoyIcon,
+    title: "Support 24/7",
     description:
-      "We offer fast and reliable shipping, so you can focus on what matters most - your education",
+      "Our dedicated customer support team is available to assist you 24 hours a day, 7 days a week.",
   },
   {
-    icon: TruckIcon,
-    title: "Easy Shopping, Quick Delivery",
+    icon: LifebuoyIcon,
+    title: "Support 24/7",
     description:
-      "We offer fast and reliable shipping, so you can focus on what matters most - your education",
+      "Our dedicated customer support team is available to assist you 24 hours a day, 7 days a week.",
   },
+  // {
+  //   icon: TruckIcon,
+  //   title: "Easy Shopping, Quick Delivery",
+  //   description:
+  //     "We offer fast and reliable shipping, so you can focus on what matters most - your education",
+  // },
 ];
 
 type FeatureCardProps = {
@@ -53,7 +59,7 @@ type FeatureCardProps = {
 };
 
 const FeatureCard = ({ icon: Icon, title, children }: FeatureCardProps) => (
-  <div className="flex flex-col items-center p-6 bg-white shadow-lg rounded-lg">
+  <div className="flex border  flex-col items-center p-6 bg-white shadow-lg rounded-lg">
     <Icon className="h-12 w-12 text-blue-500 mb-4" />
     <h3 className="text-xl font-semibold mb-2">{title}</h3>
     <p className="text-gray-500 text-center">{children}</p>
@@ -72,7 +78,7 @@ export function Criteria() {
           worlds of words.
         </p>
       </div>
-      <div className="container mx-auto grid grid-cols-1 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
+      <div className="container mx-auto grid grid-cols-1 gap-x-5 gap-y-12 md:grid-cols-2 lg:grid-cols-3">
         {FEATURES.map(({ icon, title, description }) => (
           <FeatureCard key={title} icon={icon} title={title}>
             {description}
