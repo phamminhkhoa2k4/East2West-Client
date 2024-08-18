@@ -1,4 +1,5 @@
 import Banner from "@/components/Banner/Banner";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 import Faq from "@/components/FAQ";
 import Map from "@/components/flight/Map";
 import Search from "@/components/flight/Search";
@@ -13,11 +14,13 @@ export const metadata: Metadata = {
 const Flights = () => {
   return (
     <>
-      <Banner url={"/banner/flight_banner.jpeg"} pageName={"Flights"} />
-      <Search/>
-      <Map/>
-      <Faq/>
-
+      <Banner url={"/banner/flight_banner.jpeg"}  />
+      <div className="mx-20">
+        <Breadcrumb />
+      </div>
+      <Search />
+      <Map />
+      <Faq />
     </>
   );
 };
