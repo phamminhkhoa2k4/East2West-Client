@@ -8,17 +8,17 @@ const ListingDetails = () => {
     <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8 my-8">
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h2 className="text-lg font-bold">All about Lazar&apos;s place</h2>
+          <h2 className="text-lg font-bold">All about Wisdom place</h2>
           <div className="flex items-center space-x-2">
             <span className="text-gray-500">Hosted by</span>
             <Image
-              src="/homestay/lazar.jpg"
+              src="/image/service/blog-3.png"
               alt="Lazar"
               className="w-6 h-6 rounded-full"
               height={100}
               width={100}
             />
-            <span className="text-brand-500">Lazar Nikolov</span>
+            <span className="text-brand-500">wisdom pham</span>
           </div>
         </div>
         <hr />
@@ -72,7 +72,7 @@ const ListingDetails = () => {
           </div>
           <div className="relative">
             <Image
-              src="/homestay/lazar.jpg"
+              src="/image/service/blog-3.png"
               alt="Lazar"
               className="w-12 h-12 rounded-full"
               height={100}

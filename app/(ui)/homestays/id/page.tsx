@@ -1,5 +1,6 @@
+
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 import Gallery from "@/components/homestay/Gallerry"
-import Header from "@/components/homestay/Header";
 import ListingDetails from "@/components/homestay/ListingDetails";
 import ThingsToKnow from "@/components/homestay/ThingsToKnow";
 import TitleDetails from "@/components/homestay/Title";
@@ -9,7 +10,7 @@ import WhatsIncluded from "@/components/homestay/WhatsIncluded";
     return (
       <>
         <div className="mx-20">
-          <Header />
+          <Breadcrumb />
           <TitleDetails />
           <Gallery />
           <ListingDetails />
