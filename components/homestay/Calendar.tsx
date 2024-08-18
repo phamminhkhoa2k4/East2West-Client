@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/tooltip";
 
 
-// Định nghĩa kiểu cho sự kiện
 interface Event {
   name: string;
   time: string;
@@ -31,48 +30,40 @@ Calendar: React.FC = () => {
 
   const [events, setEvents] = useState<Events>(initialEvents);
 
-  // State cho năm và tháng hiện tại
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  // Hàm để lấy số ngày trong một tháng
   const getDaysInMonth = (year: number, month: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  // Hàm để lấy ngày đầu tiên của tháng là ngày thứ mấy trong tuần
   const getFirstDayOfMonth = (year: number, month: number) => {
     return new Date(year, month, 1).getDay();
   };
 
-  // Hàm để di chuyển đến tháng trước
   const goToPreviousMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1)
     );
   };
 
-  // Hàm để di chuyển đến tháng sau
   const goToNextMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1)
     );
   };
 
-  // Hàm để di chuyển đến năm trước
   const goToPreviousYear = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear() - 1, currentDate.getMonth())
     );
   };
 
-  // Hàm để di chuyển đến năm sau
   const goToNextYear = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear() + 1, currentDate.getMonth())
     );
   };
 
-  // Hàm render sự kiện cho một ngày cụ thể
   const renderEvents = (date: string) => {
     if (events[date]) {
       return events[date].map((event, index) => (
@@ -90,7 +81,6 @@ Calendar: React.FC = () => {
     return null;
   };
 
-  // Hàm render ngày trong lịch
   const renderDays = () => {
     const days = [];
     const year = currentDate.getFullYear();
@@ -98,10 +88,8 @@ Calendar: React.FC = () => {
     const totalDays = getDaysInMonth(year, month);
     const firstDay = getFirstDayOfMonth(year, month);
 
-    // Số ngày trong tháng trước
     const prevMonthDays = getDaysInMonth(year, month - 1);
 
-    // Tạo các ô trống trước ngày đầu tiên của tháng hiện tại bằng các ngày của tháng trước
     for (let i = firstDay - 1; i >= 0; i--) {
       const dateString = `${year}-${month.toString().padStart(2, "0")}-${(
         prevMonthDays - i
@@ -121,7 +109,6 @@ Calendar: React.FC = () => {
       );
     }
 
-    // Tạo các ô cho mỗi ngày trong tháng hiện tại
     for (let day = 1; day <= totalDays; day++) {
       const dateString = `${year}-${(month + 1)
         .toString()
@@ -140,7 +127,6 @@ Calendar: React.FC = () => {
       );
     }
 
-    // Số ngày cần để lấp đầy tuần cuối cùng
     const lastDay = new Date(year, month + 1, 0).getDay();
     for (let i = 1; i < 7 - lastDay; i++) {
       const dateString = `${year}-${(month + 2).toString().padStart(2, "0")}-${i
@@ -311,7 +297,6 @@ Calendar: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {/* Render từng dòng của lịch */}
           {(() => {
             const days = renderDays();
             const rows = [];
