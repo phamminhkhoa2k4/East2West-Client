@@ -1,4 +1,5 @@
 import Banner from "@/components/Banner/Banner";
+import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 import { Metadata } from "next";
 import Image from "next/image";
 
@@ -10,7 +11,10 @@ export const metadata: Metadata = {
 export default function About(){
     return (
       <>
-        <Banner url={"/banner/about_banner.jpeg"} pageName={"About Us"} />
+        <Banner url={"/banner/about_banner.jpeg"}  />
+        <div className="mx-20">
+          <Breadcrumb />
+        </div>
         <div className="mx-40">
           <div>
             <h1 className="my-5 text-center font-medium text-3xl text-[#757474aa]">
