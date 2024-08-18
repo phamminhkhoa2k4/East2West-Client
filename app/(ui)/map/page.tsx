@@ -1,4 +1,4 @@
-
+"use client"
 import { decodeWKB } from "@/utils/decodeWKB";
 import dynamic from "next/dynamic";
 import { Point } from "geojson";
@@ -18,7 +18,7 @@ export default function Map(){
      });
     return (
       <>
-        <DynamicMap coordinates={coordinates} />
+        {/* <DynamicMap coordinates={coordinates} /> */}
       </>
     );
 }
