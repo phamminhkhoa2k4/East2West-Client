@@ -17,7 +17,7 @@ const TransferInfo =  () => {
             <div className="w-125">
               <p
                 className={`overflow-hidden text-ellipsis ${
-                  isExpanded ? "whitespace-normal" : "line-clamp-4"
+                  isExpanded ? "whitespace-normal" : "line-clamp-2"
                 }`}
               >
                 Timings - 1230 hrs - 1930 hrs. Aptly crafted for couples on
