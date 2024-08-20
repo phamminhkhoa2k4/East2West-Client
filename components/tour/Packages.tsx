@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import CarouselPackages from "./CarouselPackages";
+<<<<<<< HEAD
 import api from "../../utils/axios";
 
 const Packages = () => {
@@ -20,6 +21,20 @@ const Packages = () => {
 
     fetchPackages();
   }, []);
+=======
+
+const Packages = () => {
+  const [curve, setCurve] = useState<number>(0);
+  const [slides, setSlides] = useState<string[]>([
+    "/boat.png",
+    "/boat.png",
+    "/boat.png",
+    "/boat.png",
+    "/boat.png",
+    "/boat.png",
+    "/boat.png",
+  ]);
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
 
   const prev = () => {
     if (curve > 0) {
@@ -30,13 +45,26 @@ const Packages = () => {
   const next = () =>
     setCurve((curve) => (curve === slides.length - 1 ? 0 : curve + 1));
 
+<<<<<<< HEAD
+=======
+  //  useEffect(() => {
+  //    if (!autoSlide) return;
+  //    const slideInterval = setInterval(next, autoSlideInterval);
+  //    return () => clearInterval(slideInterval);
+  //  }, []);
+
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
   return (
     <>
       <div className="flex flex-col rounded-lg shadow-md p-8 mb-4">
         <h1 className="text-3xl font-bold my-1 mb-4">
           Jackpot Deals on Top Selling Packages
         </h1>
+<<<<<<< HEAD
         <div className="flex justify-between">
+=======
+        <div className="flex  justify-between">
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
           <p>Save extra with our exclusive deals!</p>
           <div
             className={`${
@@ -80,7 +108,11 @@ const Packages = () => {
             </button>
           </div>
         </div>
+<<<<<<< HEAD
         <div className="mt-5 w-[69.5rem] overflow-hidden">
+=======
+        <div className="mt-5 w-[69.5rem]  overflow-hidden">
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
           <CarouselPackages slides={slides} curve={curve} />
         </div>
       </div>

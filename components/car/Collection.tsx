@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client";
 
 import Image from "next/image";
@@ -5,6 +6,19 @@ import { useState, useEffect } from "react";
 import api from "../../utils/axios";
 import CardPopular from "./CardPopular";
 
+=======
+"use client"
+
+import Image from "next/image";
+import { useState } from "react";
+import CardPopular from "./CardPopular";
+
+
+
+
+
+
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
 interface CarCardProps {
   img: string;
   title: string;
@@ -14,6 +28,7 @@ interface CarCardProps {
   offPrice?: string;
 }
 
+<<<<<<< HEAD
 interface Car {
   carId: number;
   carName: string;
@@ -47,6 +62,10 @@ interface CarType {
 }
 
 function Card({ img, category, title, desc, price, offPrice }: CarCardProps) {
+=======
+function Card({ img, category, title, desc, price, offPrice }: CarCardProps) {
+    
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
   return (
     <div className="bg-transparent shadow-none">
       <div className="bg-gray-700 rounded-lg overflow-hidden mb-6">
@@ -74,6 +93,7 @@ function Card({ img, category, title, desc, price, offPrice }: CarCardProps) {
     </div>
   );
 }
+<<<<<<< HEAD
 
 const Collection = () => {
   const [cars, setCars] = useState<Car[]>([]);
@@ -114,6 +134,39 @@ const Collection = () => {
         <p className="mb-3 font-bold uppercase text-blue-500">Collection</p>
         <h1 className="mb-2 text-4xl font-bold text-blue-gray-800">
           Explore Our Collection Cars
+=======
+const Collection = () => {
+    const [books, setBooks] = useState(
+      Array(6)
+        .fill(1)
+        .map((_, index) => ({
+          img: `/image/tours/RectangleBig5.svg`,
+          category: "Lamborghini",
+          title: "Lamborghini Veneno",
+          desc: "ka ka ka ka ka ",
+          price: "$99",
+          offPrice: "$79",
+        }))
+    );
+
+    const [carTabs, setCarTabs] = useState<string[]>([
+      "All Type",
+      "SUV",
+      "Sedan",
+      "Sport",
+      "Electric",
+    ]);
+    const [activeTab, setActiveTab] = useState<string>("All Type");
+    return ( 
+        <> 
+            <section className="px-8 pt-20 pb-10">
+      <div className="container mx-auto mb-20 text-center">
+        <p className="mb-3 font-bold uppercase text-blue-500">
+          Collection
+        </p>
+        <h1 className="mb-2 text-4xl font-bold text-blue-gray-800">
+          Explore Our Collection Cars 
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
         </h1>
         <p className="mx-auto w-full px-4 text-lg text-gray-500 lg:w-9/12">
           Explore many cars you have never been to and experience new things,
@@ -140,6 +193,7 @@ const Collection = () => {
         </div>
       </div>
       <div className="container mx-auto grid grid-cols-1 items-start gap-x-6 gap-y-20 md:grid-cols-2 xl:grid-cols-3">
+<<<<<<< HEAD
         {filteredCars.map((car) => (
           <CardPopular
             img={`/path/to/car/image/${car.carId}.jpg`} 
@@ -153,6 +207,11 @@ const Collection = () => {
             fuel={car.fuel}
             carId={car.carId}
           />
+=======
+        {books.map((props, key) => (
+        //   <Card key={key} {...props} />
+        <CardPopular key={key} {...props}/>
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
         ))}
       </div>
       <div className="grid place-items-center">
@@ -161,7 +220,17 @@ const Collection = () => {
         </button>
       </div>
     </section>
+<<<<<<< HEAD
   );
 };
 
 export default Collection;
+=======
+        </>
+    )
+}
+
+
+export default Collection;
+
+>>>>>>> aa0544e38407cf1589e599ba818920f672357525
