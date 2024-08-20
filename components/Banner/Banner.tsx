@@ -12,12 +12,12 @@ export default function Banner({ url }: BannerProps) {
         className={`w-full flex justify-center items-center h-70 ${
           url === "/banner/homestay_banner.jpeg" ||
           url === "/banner/car_banner.jpeg"
-            ? "mt-19"
-            : ""
+            ? "mt-55"
+            : "mt-36"
         } ${
           url === "/banner/tour_banner.jpeg"
-            ? "mt-27"
-            : ""
+            ? "mt-62.5  "
+            : "mt-36"
         }    relative`}
       >
         <Image

@@ -26,27 +26,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-const frameworks = [
+const data = [
   {
-    value: "next.js",
-    label: "Next.js",
+    value: "kaka",
+    label: "kaka",
   },
-  {
-    value: "sveltekit",
-    label: "SvelteKit",
-  },
-  {
-    value: "nuxt.js",
-    label: "Nuxt.js",
-  },
-  {
-    value: "remix",
-    label: "Remix",
-  },
-  {
-    value: "astro",
-    label: "Astro",
-  },
+  
+  
 ];
 
 
@@ -179,7 +165,7 @@ const Create = () => {
                   <div className="flex flex-col p-6 border rounded-xl mt-5">
                     <div className="mb-5">Day 1</div>
                     <div className="flex gap-3">
-                      <Popover >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <button className="flex gap-3 border rounded-lg px-6 py-3">
                             <span>
@@ -203,14 +189,14 @@ const Create = () => {
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Command>
-                            <CommandInput placeholder="Search framework..." />
+                            <CommandInput placeholder="Search ..." />
                             <CommandList>
-                              <CommandEmpty>No framework found.</CommandEmpty>
+                              <CommandEmpty>No  found.</CommandEmpty>
                               <CommandGroup>
-                                {frameworks.map((framework) => (
+                                {data.map((item) => (
                                   <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={item.value}
+                                    value={item.value}
                                     onSelect={(currentValue) => {
                                       setValue(
                                         currentValue === value
@@ -223,12 +209,12 @@ const Create = () => {
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        value === framework.value
+                                        value === item.value
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
                                     />
-                                    {framework.label}
+                                    {item.label}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
@@ -237,7 +223,7 @@ const Create = () => {
                         </PopoverContent>
                       </Popover>
 
-                      <Popover >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <button className="flex gap-3 border rounded-lg px-6 py-3">
                             <span>
@@ -261,14 +247,14 @@ const Create = () => {
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Command>
-                            <CommandInput placeholder="Search framework..." />
+                            <CommandInput placeholder="Search item..." />
                             <CommandList>
-                              <CommandEmpty>No framework found.</CommandEmpty>
+                              <CommandEmpty>No item found.</CommandEmpty>
                               <CommandGroup>
-                                {frameworks.map((framework) => (
+                                {data.map((item) => (
                                   <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={item.value}
+                                    value={item.value}
                                     onSelect={(currentValue) => {
                                       setValue(
                                         currentValue === value
@@ -281,12 +267,12 @@ const Create = () => {
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        value === framework.value
+                                        value === item.value
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
                                     />
-                                    {framework.label}
+                                    {item.label}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
@@ -294,7 +280,7 @@ const Create = () => {
                           </Command>
                         </PopoverContent>
                       </Popover>
-                      <Popover >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <button className="flex gap-3 border rounded-lg px-6 py-3">
                             <span>
@@ -318,14 +304,14 @@ const Create = () => {
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0">
                           <Command>
-                            <CommandInput placeholder="Search framework..." />
+                            <CommandInput placeholder="Search item..." />
                             <CommandList>
-                              <CommandEmpty>No framework found.</CommandEmpty>
+                              <CommandEmpty>No item found.</CommandEmpty>
                               <CommandGroup>
-                                {frameworks.map((framework) => (
+                                {data.map((item) => (
                                   <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={item.value}
+                                    value={item.value}
                                     onSelect={(currentValue) => {
                                       setValue(
                                         currentValue === value
@@ -338,12 +324,12 @@ const Create = () => {
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        value === framework.value
+                                        value === item.value
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
                                     />
-                                    {framework.label}
+                                    {item.label}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
@@ -351,7 +337,7 @@ const Create = () => {
                           </Command>
                         </PopoverContent>
                       </Popover>
-                      <Popover >
+                      <Popover>
                         <PopoverTrigger asChild>
                           <button className="flex gap-3 border rounded-lg px-6 py-3">
                             <span>
@@ -375,14 +361,14 @@ const Create = () => {
                         </PopoverTrigger>
                         <PopoverContent className="w-[200px] p-0">
                           <Command>
-                            <CommandInput placeholder="Search framework..." />
+                            <CommandInput placeholder="Search item..." />
                             <CommandList>
-                              <CommandEmpty>No framework found.</CommandEmpty>
+                              <CommandEmpty>No item found.</CommandEmpty>
                               <CommandGroup>
-                                {frameworks.map((framework) => (
+                                {data.map((item) => (
                                   <CommandItem
-                                    key={framework.value}
-                                    value={framework.value}
+                                    key={item.value}
+                                    value={item.value}
                                     onSelect={(currentValue) => {
                                       setValue(
                                         currentValue === value
@@ -395,12 +381,12 @@ const Create = () => {
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        value === framework.value
+                                        value === item.value
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
                                     />
-                                    {framework.label}
+                                    {item.label}
                                   </CommandItem>
                                 ))}
                               </CommandGroup>
@@ -408,7 +394,6 @@ const Create = () => {
                           </Command>
                         </PopoverContent>
                       </Popover>
-
                     </div>
                     <div className="flex flex-col gap-5 my-5  ">
                       <div className="border rounded-lg py-5">
