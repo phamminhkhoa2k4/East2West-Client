@@ -1,19 +1,30 @@
+"use client";
+import { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
+import axios from 'axios';
 
 const columns = [
-  { key: "themeID", label: "ID", isNumeric: true },
-  { key: "themeName", label: "Theme Name" },
+  { key: "themeTourId", label: "ID" },
+  { key: "themeTourName", label: "Theme Name" },
 ];
 
-const data = [
-  {
-    themeID: "/boat.png",
-    themeName: "Apple Watch Series 7 pham minh khoa dda dvsd dcs cdvsd ",
-  },
-];
+const Theme = () => {
+  const [data, setData] = useState([]);
 
-const Themes = () => {
+  useEffect(() => {
+    // Fetch data from API
+    fetch("http://localhost:8080/api/tours/theme")
+      .then(response => response.json())
+      .then(data => {
+        console.log("Data fetched:", data); // Log the data to verify
+        setData(data); // Set data to state
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <>
       <DefaultLayout>
@@ -28,4 +39,4 @@ const Themes = () => {
   );
 };
 
-export default Themes;
+export default Theme;

@@ -1,11 +1,8 @@
 "use client";
-<<<<<<< HEAD
 
 import { useEffect, useState } from "react";
 import CardSearch from "./CardSearch";
 import api from "../../utils/axios";
-=======
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
 import {
   Accordion,
   AccordionContent,
@@ -22,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-<<<<<<< HEAD
 interface Car {
   carId: number;
   carName: string;
@@ -65,12 +61,6 @@ const CarSearchResult = () => {
     };
     fetchCars();
   }, []);
-=======
-import { useState } from "react";
-import CardSearch from "./CardSearch";
-const CarSearchResult = () => {
-    const [selectedValue, setSelectedValue] = useState("apple");
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
   return (
     <>
       <div className="border rounded-3xl shadow-lg mb-6">
@@ -383,19 +373,11 @@ const CarSearchResult = () => {
               </div>
             </div>
             <div className="ml-5 flex flex-col gap-5 ">
-<<<<<<< HEAD
             {cars.map((car) => (
           <CardSearch
             car={car} // Pass the entire car object to CardSearch
           />
         ))}
-=======
-              <CardSearch />
-              <CardSearch />
-              <CardSearch />
-              <CardSearch />
-              <CardSearch />
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
             </div>
           </div>
         </div>
@@ -405,11 +387,3 @@ const CarSearchResult = () => {
 };
 
 export default CarSearchResult;
-<<<<<<< HEAD
-=======
-
-
-
-
-
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
