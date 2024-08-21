@@ -1,4 +1,8 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import CardSearch from "./CardSearch";
+import api from "../../utils/axios";
 import {
   Accordion,
   AccordionContent,
@@ -15,10 +19,48 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useState } from "react";
-import CardSearch from "./CardSearch";
+interface Car {
+  carId: number;
+  carName: string;
+  model: {
+    modelId: number;
+    modelName: string;
+  };
+  make: {
+    makeId: number;
+    makeName: string;
+  };
+  type: {
+    typeId: number;
+    typeName: string;
+  };
+  year: number;
+  seatCapacity: number;
+  airConditioned: boolean;
+  pricePerDay: number;
+  status: string;
+  cargearbox: string;
+  miles: string;
+  fueltankcapacity: string;
+  fuel: string;
+  location: string;
+  imageUrl?: string;
+}
+
 const CarSearchResult = () => {
-    const [selectedValue, setSelectedValue] = useState("apple");
+  const [cars, setCars] = useState<Car[]>([]);
+  const [selectedValue, setSelectedValue] = useState("apple");
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        const response = await api.get("/cars");
+        setCars(response.data);
+      } catch (error) {
+        console.error("Error fetching cars:", error);
+      }
+    };
+    fetchCars();
+  }, []);
   return (
     <>
       <div className="border rounded-3xl shadow-lg mb-6">
@@ -331,11 +373,11 @@ const CarSearchResult = () => {
               </div>
             </div>
             <div className="ml-5 flex flex-col gap-5 ">
-              <CardSearch />
-              <CardSearch />
-              <CardSearch />
-              <CardSearch />
-              <CardSearch />
+            {cars.map((car) => (
+          <CardSearch
+            car={car} // Pass the entire car object to CardSearch
+          />
+        ))}
             </div>
           </div>
         </div>
@@ -345,8 +387,3 @@ const CarSearchResult = () => {
 };
 
 export default CarSearchResult;
-
-
-
-
-

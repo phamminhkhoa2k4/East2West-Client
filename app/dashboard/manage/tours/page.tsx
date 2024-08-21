@@ -1,3 +1,5 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 
@@ -5,7 +7,7 @@ const columns = [
   { key: "thumbnail", label: "Thumbnail" },
   { key: "title", label: "Title" },
   { key: "price", label: "Price", isNumeric: true },
-  { key: "priceReduce", label: "Price Reduce",  isNumeric: true },
+  { key: "priceReduce", label: "Price Reduce", isNumeric: true },
   { key: "groupSize", label: "Group Size" },
   { key: "deposit", label: "Deposit" },
   { key: "bookingHold", label: "Booking Hold" },
@@ -17,39 +19,142 @@ const columns = [
   { key: "itinerary", label: "Itinerary" },
 ];
 
-const data = [
-  {
-    thumbnail: "/boat.png",
-    title: "Apple Watch Series 7 pham minh khoa dda dvsd dcs cdvsd ",
-    make: "Wisdom",
-    model: "Cabin",
-    price: "Cabin",
-    priceReduce: "1234 Elm Street, Springfield, IL, 62704",
-    groupSize: "1234 Elm Street, Springfield, IL, 62704",
-    deposit: 1978,
-    bookingHold: 7,
-    bookingChange: "Manual",
-    themes: "10000",
-    suitable: "Company A",
-    category: "Sales",
-    departure: "60000",
-    itinerary: "600L",
-  },
-];
+interface Itinerary {
+  itineraryId: number;
+  accommodations: Accommodation[];
+  meals: Meal[];
+  places: Place[];
+  day: string;
+}
 
-const Theme = () => {
+interface Accommodation {
+  accommodationid: number;
+  accommodationname: string;
+  durationaccommodation: string;
+  accommodationtype: string;
+}
+
+interface Meal {
+  mealid: number;
+  mealname: string;
+  mealthumbnail: string;
+  mealduration: string;
+  mealactivity: string;
+}
+
+interface Place {
+  placeid: number;
+  placename: string;
+  placethumbnail: string;
+  description: string;
+  placeduration: string;
+}
+
+interface CategoryTour {
+  categoryTourId: number;
+  categoryTourName: string;
+}
+
+interface ThemeTour {
+  themeTourId: number;
+  themeTourName: string;
+}
+
+interface SuitableTour {
+  suitableTourId: number;
+  suitableName: string;
+}
+
+interface DepartureDate {
+  departuredateid: number;
+  departuredate: string;
+}
+
+interface TourPackage {
+  packageid: number;
+  title: string;
+  thumbnail: string;
+  price: number;
+  pricereduce: number;
+  groupsize: string;
+  deposit: string;
+  bookinghold: string;
+  bookingchange: string;
+  itineraries: Itinerary[];
+  categoryTours: CategoryTour[];
+  themeTours: ThemeTour[];
+  suitableTours: SuitableTour[];
+  departureDate: DepartureDate[];
+}
+
+interface FormattedTourData {
+  thumbnail: string;
+  title: string;
+  price: number;
+  priceReduce: number;
+  groupSize: string;
+  deposit: string;
+  bookingHold: string;
+  bookingChange: string;
+  themes: string;
+  suitable: string;
+  category: string;
+  departure: string;
+  itinerary: string;
+}
+
+
+const TourComponent = () => {
+  const [data, setData] = useState<FormattedTourData[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/tours");
+        const result: TourPackage[] = await response.json();
+
+        const formatDepartureDates = (dates: { departuredate: string }[]) => {
+          return dates.map(date => new Date(date.departuredate).toLocaleDateString()).join(", ");
+        };
+        
+        // Inside your data mapping:
+        const formattedData: FormattedTourData[] = result.map((tour: TourPackage) => ({
+          thumbnail: `/images/${tour.thumbnail}`,  // Assuming images are in the public/images folder
+          title: tour.title,
+          price: tour.price,
+          priceReduce: tour.pricereduce,
+          groupSize: tour.groupsize,
+          deposit: tour.deposit,
+          bookingHold: tour.bookinghold,
+          bookingChange: tour.bookingchange,
+          themes: tour.themeTours.map((theme) => theme.themeTourName).join(", "),
+          suitable: tour.suitableTours.map((suitable) => suitable.suitableName).join(", "),
+          category: tour.categoryTours.map((category) => category.categoryTourName).join(", "),
+          departure: tour.departureDate.map(date => new Date(date.departuredate).toLocaleDateString()).join(", "),
+          itinerary: tour.itineraries.map((itinerary) => 
+            `Day: ${new Date(itinerary.day).toLocaleDateString()} - ${itinerary.places.map(place => place.placename).join(", ")}`
+          ).join(" | "),
+        }));
+
+        setData(formattedData);
+      } catch (error) {
+        console.error("Error fetching tours:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <>
-      <DefaultLayout>
-        <CustomTable
-          columns={columns}
-          data={data}
-          title="Tours"
-          createUrl="/dashboard/manage/tours/add"
-        />
-      </DefaultLayout>
-    </>
+    <DefaultLayout>
+      <CustomTable
+        columns={columns}
+        data={data}
+        title="Tours"
+        createUrl="/dashboard/manage/tours/add"
+      />
+    </DefaultLayout>
   );
 };
 
-export default Theme;
+export default TourComponent;

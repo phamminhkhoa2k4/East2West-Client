@@ -6,14 +6,10 @@ import OurPopular from "@/components/car/OurPopular";
 import OurService from "@/components/car/OurService";
 import Categories from "@/components/Categories";
 import OtherOffers from "@/components/OtherOffers";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
+import { Metadata } from "next";export const metadata: Metadata = {
   title: "Rental Cars | East2West",
   description: "This Is Rental Cars Page Of East2West Tours and Travel",
-};
-
-const Cars = () => {
+};const Cars = () => {
   return (
     <>
       <Banner url={"/banner/car_banner.jpeg"} />
