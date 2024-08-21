@@ -1,8 +1,8 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 
 type ButtonProps = {
-  type: 'button' | 'submit';
   title: string;
   icon?: string;
   variant: string;
@@ -10,15 +10,16 @@ type ButtonProps = {
 };
 
 const Button = (props: ButtonProps) => {
-  const { type, title, icon, variant, full } = props;
+  const { title, icon, variant, full } = props;
   return (
-    <button
-      type={type}
+    <Link
+      href={"/signin"}
+     
       className={`flexCenter gap-3 rounded-full border 
         ${variant} ${full && 'w-full'}`}>
       {icon && <Image alt={title} src={icon} width={24} height={24} />}
       <label className='bold-16'>{title}</label>
-    </button>
+    </Link>
   );
 };
 
