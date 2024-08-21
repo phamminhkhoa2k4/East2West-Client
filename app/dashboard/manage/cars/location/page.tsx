@@ -1,27 +1,51 @@
-import DefaultLayout from "@/components/Layouts/DefaultLayout"
+"use client"; 
+import React, { useEffect, useState } from "react";
+import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 
-
 const columns = [
-  { key: "locationType", label: "Location Type" },
+  { key: "locationTypeId", label: "ID" },
   { key: "locationTypeName", label: "Location Type Name" },
-  
 ];
 
-const data = [
-  {
-    locationType: "/boat.png",
-    locationTypeName: "Apple Watch Series 7 pham minh khoa dda dvsd dcs cdvsd ",
-  },
-];
-const LocationType = () => {
-    return (
-      <>
-        <DefaultLayout>
-            <CustomTable columns={columns} data={data} title="Location Type" createUrl="dashboard/manage/cars/location/add"/>
-        </DefaultLayout>
-      </>
-    );
+interface LocationType {
+  locationTypeId: number;
+  locationTypeName: string;
 }
 
-export default LocationType;
+const LocationTypes = () => {
+  const [data, setData] = useState<LocationType[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/cars/locationtypes");
+        const result: LocationType[] = await response.json();
+
+        const formattedData = result.map((locationType: LocationType) => ({
+          locationTypeId: locationType.locationTypeId,
+          locationTypeName: locationType.locationTypeName,
+        }));
+
+        setData(formattedData);
+      } catch (error) {
+        console.error("Error fetching location types:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  return (
+    <DefaultLayout>
+      <CustomTable
+        columns={columns}
+        data={data}
+        title="Location Types"
+        createUrl="/dashboard/manage/cars/location/add"
+      />
+    </DefaultLayout>
+  );
+};
+
+export default LocationTypes;

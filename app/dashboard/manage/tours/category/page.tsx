@@ -1,32 +1,40 @@
+"use client";
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 
+// Define columns for CustomTable
 const columns = [
-  { key: "categoryID", label: "ID" },
-  { key: "CategoryName", label: "Category Name" },
-  
+  { key: "categoryTourId", label: "ID" },
+  { key: "categoryTourName", label: "Category Name" },
 ];
 
-const data = [
-  {
-    categoryID: "/boat.png",
-    CategoryName: "Apple Watch Series 7 pham minh khoa dda dvsd dcs cdvsd ",
-  },
-];
+const Category = () => {
+  const [data, setData] = useState([]);
 
-const Tours = () => {
+  useEffect(() => {
+    // Fetch data from API
+    fetch("http://localhost:8080/api/tours/category")
+      .then(response => response.json())
+      .then(data => {
+        console.log("Data fetched:", data); // Log the data to verify
+        setData(data); // Set data to state
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
-    <>
-      <DefaultLayout>
-        <CustomTable
-          columns={columns}
-          data={data}
-          title="Category"
-          createUrl="/dashboard/manage/tours/category/add"
-        />
-      </DefaultLayout>
-    </>
+    <DefaultLayout>
+      <CustomTable
+        columns={columns}
+        data={data}
+        title="Category"
+        createUrl="/dashboard/manage/tours/category/add"
+      />
+    </DefaultLayout>
   );
 };
 
-export default Tours;
+export default Category;

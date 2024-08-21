@@ -1,20 +1,30 @@
+"use client";
+import { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-
+import axios from 'axios';
 
 const columns = [
-  { key: "suitableID", label: "ID", isNumeric: true },
-  { key: "suitableName", label: "suitable Name" },
-];
-
-const data = [
-  {
-    suitableID: "/boat.png",
-    suitableName: "Apple Watch Series 7 pham minh khoa dda dvsd dcs cdvsd ",
-  },
+  { key: "suitableTourId", label: "ID", isNumeric: true },
+  { key: "suitableName", label: "Suitable Name" },
 ];
 
 const Suitable = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from API
+    fetch("http://localhost:8080/api/tours/suitable")
+      .then(response => response.json())
+      .then(data => {
+        console.log("Data fetched:", data); // Log the data to verify
+        setData(data); // Set data to state
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  }, []);
+
   return (
     <>
       <DefaultLayout>

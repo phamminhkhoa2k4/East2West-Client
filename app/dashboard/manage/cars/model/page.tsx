@@ -1,31 +1,52 @@
+"use client"; 
+import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 
 const columns = [
-  { key: "modelID", label: "ID" },
-  { key: "model", label: "Model" },
+  { key: "modelId", label: "ID" },
+  { key: "modelName", label: "Model Name" },
 ];
 
-const data = [
-  {
-    modelID:"1",
-    model: "Cabin",
-  },
-];
+interface Model {
+  modelId: number;
+  modelName: string;
+}
 
-const Model = () => {
+const Models = () => {
+  const [data, setData] = useState<Model[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("http://localhost:8080/api/cars/model");
+        const result: Model[] = await response.json();
+
+        const formattedData = result.map((model: Model) => ({
+          modelId: model.modelId,
+          modelName: model.modelName,
+        }));
+
+        setData(formattedData);
+      } catch (error) {
+        console.error("Error fetching models:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <>
-      <DefaultLayout>
-        <CustomTable
-          columns={columns}
-          data={data}
-          title="Model"
-          createUrl="/dashboard/manage/cars/model/add"
-        />
-      </DefaultLayout>
-    </>
+    <DefaultLayout>
+      <CustomTable
+        columns={columns}
+        data={data}
+        title="Models"
+        createUrl="/dashboard/manage/cars/model/add"
+      />
+    </DefaultLayout>
   );
 };
 
-export default Model;
+export default Models;
+
