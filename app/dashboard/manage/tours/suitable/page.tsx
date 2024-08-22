@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-import axios from 'axios';
+
 
 const columns = [
   { key: "suitableTourId", label: "ID", isNumeric: true },
