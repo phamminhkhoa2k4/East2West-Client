@@ -13,8 +13,13 @@ interface Model {
   modelName: string;
 }
 
+// Assuming DataRow is an object with string keys and any values
+interface DataRow {
+  [key: string]: any;
+}
+
 const Models = () => {
-  const [data, setData] = useState<Model[]>([]);
+  const [data, setData] = useState<DataRow[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,4 +54,3 @@ const Models = () => {
 };
 
 export default Models;
-

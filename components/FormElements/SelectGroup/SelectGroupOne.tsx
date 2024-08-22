@@ -1,23 +1,34 @@
 "use client";
 import React, { useState } from "react";
 
-type option = {
-  id : number ,
-  name : string
-}
+type Option = {
+  id: number;
+  name: string;
+};
 
 type SelectProps = {
   label: string;
   placeholder: string;
-  data: option[];
+  data: Option[];
+  name?: string;
+  onChange: (value: number) => void; // Changed to number for IDs
 };
 
-const SelectGroupOne: React.FC<SelectProps> = ({label , placeholder , data} ) => {
-  const [selectedOption, setSelectedOption] = useState<string>("");
-  const [isOptionSelected, setIsOptionSelected] = useState<boolean>(false);
+const SelectGroupOne: React.FC<SelectProps> = ({
+  label,
+  placeholder,
+  data,
+  name,
+  onChange,
+}) => {
+  const [selectedOption, setSelectedOption] = useState<number | "">("");
 
-  const changeTextColor = () => {
-    setIsOptionSelected(true);
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = parseInt(e.target.value, 10);
+    setSelectedOption(value);
+    if (onChange) {
+      onChange(value); // Call the onChange callback with the ID
+    }
   };
 
   return (
@@ -25,29 +36,24 @@ const SelectGroupOne: React.FC<SelectProps> = ({label , placeholder , data} ) =>
       <label className="mb-3 block text-body-sm text-dark dark:text-white">
         {label}
       </label>
-
       <div className="relative z-20 bg-transparent dark:bg-dark-2">
         <select
+          name={name}
           value={selectedOption}
-          onChange={(e) => {
-            setSelectedOption(e.target.value);
-            changeTextColor();
-          }}
+          onChange={handleChange}
           className={`relative z-20 w-full appearance-none rounded-[7px] border border-stroke bg-transparent px-5.5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary ${
-            isOptionSelected ? "text-dark dark:text-white" : ""
+            selectedOption ? "text-dark dark:text-white" : ""
           }`}
         >
           <option value="" disabled className="text-dark-6">
             {placeholder}
           </option>
-          {data.map((item, index) => (
-            <option key={index} value={item.id} className="text-dark-6">
+          {data.map((item) => (
+            <option key={item.id} value={item.id} className="text-dark-6">
               {item.name}
             </option>
           ))}
-          
         </select>
-
         <span className="absolute right-4 top-1/2 z-30 -translate-y-1/2">
           <svg
             className="fill-current"
