@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-
 const columns = [
   { key: "thumbnail", label: "Thumbnail" },
   { key: "title", label: "Title" },
@@ -18,7 +17,6 @@ const columns = [
   { key: "departure", label: "Departure Date" },
   { key: "itinerary", label: "Itinerary" },
 ];
-
 interface Itinerary {
   itineraryId: number;
   accommodations: Accommodation[];
@@ -26,7 +24,6 @@ interface Itinerary {
   places: Place[];
   day: string;
 }
-
 interface Accommodation {
   accommodationid: number;
   accommodationname: string;
@@ -102,22 +99,16 @@ interface FormattedTourData {
   departure: string;
   itinerary: string;
 }
-
-
 const TourComponent = () => {
   const [data, setData] = useState<FormattedTourData[]>([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/tours");
         const result: TourPackage[] = await response.json();
-
         const formatDepartureDates = (dates: { departuredate: string }[]) => {
           return dates.map(date => new Date(date.departuredate).toLocaleDateString()).join(", ");
         };
-        
-        // Inside your data mapping:
         const formattedData: FormattedTourData[] = result.map((tour: TourPackage) => ({
           thumbnail: `/images/${tour.thumbnail}`,  // Assuming images are in the public/images folder
           title: tour.title,
@@ -135,7 +126,6 @@ const TourComponent = () => {
             `Day: ${new Date(itinerary.day).toLocaleDateString()} - ${itinerary.places.map(place => place.placename).join(", ")}`
           ).join(" | "),
         }));
-
         setData(formattedData);
       } catch (error) {
         console.error("Error fetching tours:", error);

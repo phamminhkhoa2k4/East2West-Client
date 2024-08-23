@@ -8,14 +8,16 @@ const columns = [
   { key: "makeId", label: "ID" },
   { key: "makeName", label: "Make Name" },
 ];
-
+interface DataRow {
+  [key: string]: string | number; // Generic structure matching any row data
+}
 interface Make {
   makeId: number;
   makeName: string;
 }
 
 const Makes = () => {
-  const [data, setData] = useState<Make[]>([]);
+  const [data, setData] = useState<DataRow[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

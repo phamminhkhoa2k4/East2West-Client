@@ -20,6 +20,7 @@ const Update = () => {
                     type="text"
                     placeholder="Please Enter Make Name !"
                     customClasses="w-full mb-4.5"
+                    onChange={()=>{}}
                   />
 
                   <div className="mb-6"></div>

@@ -1,32 +1,35 @@
-"use client"; 
+"use client";
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 
 const columns = [
-  { key: "locationTypeId", label: "ID" },
-  { key: "locationTypeName", label: "Location Type Name" },
+  { key: "locationtypeid", label: "ID" },
+  { key: "locationtypename", label: "Location Type Name" },
 ];
 
 interface LocationType {
-  locationTypeId: number;
-  locationTypeName: string;
+  locationtypeid: number;
+  locationtypename: string;
 }
-
+interface DataRow {
+  [key: string]: string | number; // Generic structure matching any row data
+}
 const LocationTypes = () => {
-  const [data, setData] = useState<LocationType[]>([]);
+  const [data, setData] = useState<DataRow[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/cars/locationtypes");
         const result: LocationType[] = await response.json();
-
-        const formattedData = result.map((locationType: LocationType) => ({
-          locationTypeId: locationType.locationTypeId,
-          locationTypeName: locationType.locationTypeName,
+    
+        // Transform result to match DataRow structure
+        const formattedData: DataRow[] = result.map((location: LocationType) => ({
+          locationtypeid: location.locationtypeid,
+          locationtypename: location.locationtypename,
         }));
-
+    
         setData(formattedData);
       } catch (error) {
         console.error("Error fetching location types:", error);

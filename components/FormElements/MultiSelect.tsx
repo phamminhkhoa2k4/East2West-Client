@@ -56,8 +56,8 @@ const MultiSelect: React.FC<DropdownProps> = ({ id, placeholder, label, options:
       updatedOptions = [...selectedOptions, option];
     }
     setSelectedOptions(updatedOptions);
-    console.log("Updated Options:", updatedOptions); // Log dữ liệu
-    onChange(updatedOptions);  // Gọi onChange với updatedOptions
+    console.log("Updated Options:", updatedOptions); 
+    onChange(updatedOptions); 
   };
   
 
