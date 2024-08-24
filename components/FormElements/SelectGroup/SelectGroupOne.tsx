@@ -1,5 +1,4 @@
-"use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 type Option = {
   id: number;
@@ -10,25 +9,29 @@ type SelectProps = {
   label: string;
   placeholder: string;
   data: Option[];
-  name?: string;
-  onChange: (value: number) => void; // Changed to number for IDs
+  value?: number; // Allow the component to receive a pre-selected value
+  onChange: (value: number) => void;
 };
 
 const SelectGroupOne: React.FC<SelectProps> = ({
   label,
   placeholder,
   data,
-  name,
+  value, 
   onChange,
 }) => {
-  const [selectedOption, setSelectedOption] = useState<number | "">("");
+  const [selectedOption, setSelectedOption] = useState<number | "">(value ?? "");
+
+  useEffect(() => {
+    if (value !== undefined) {
+      setSelectedOption(value);
+    }
+  }, [value]);
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = parseInt(e.target.value, 10);
-    setSelectedOption(value);
-    if (onChange) {
-      onChange(value); // Call the onChange callback with the ID
-    }
+    const newValue = parseInt(e.target.value, 10);
+    setSelectedOption(newValue);
+    onChange(newValue); // Call the onChange callback with the selected value
   };
 
   return (
@@ -38,7 +41,6 @@ const SelectGroupOne: React.FC<SelectProps> = ({
       </label>
       <div className="relative z-20 bg-transparent dark:bg-dark-2">
         <select
-          name={name}
           value={selectedOption}
           onChange={handleChange}
           className={`relative z-20 w-full appearance-none rounded-[7px] border border-stroke bg-transparent px-5.5 py-3 outline-none transition focus:border-primary active:border-primary dark:border-dark-3 dark:bg-dark-2 dark:focus:border-primary ${

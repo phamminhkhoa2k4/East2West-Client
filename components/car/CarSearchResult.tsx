@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardSearch from "./CardSearch";
-import api from "../../utils/axios";
+import {api} from "../../utils/axios";
 import {
   Accordion,
   AccordionContent,

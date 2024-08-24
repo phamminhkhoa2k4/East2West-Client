@@ -72,10 +72,10 @@ interface CarTableData {
   fuelTankCapacity: string;
   fuel: string;
   airConditioned: string;
+  [key: string]: string | number; // Updated index signature
 }
-
 const Cars = () => {
-  const [data, setData] = useState<CarTableData[]>([]); // Use the new type
+  const [data, setData] = useState<CarTableData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

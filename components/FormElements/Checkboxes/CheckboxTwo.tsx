@@ -1,11 +1,12 @@
-import { useState } from "react";
+import React from "react";
 
 interface CheckboxTwoProps {
+  label: string; // Add label prop here
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const CheckboxTwo: React.FC<CheckboxTwoProps> = ({ checked, onChange }) => {
+const CheckboxTwo: React.FC<CheckboxTwoProps> = ({ label, checked, onChange }) => {
   return (
     <div>
       <label
@@ -45,7 +46,7 @@ const CheckboxTwo: React.FC<CheckboxTwoProps> = ({ checked, onChange }) => {
             </span>
           </div>
         </div>
-        Air Conditioned
+        {label} {/* Use label prop here */}
       </label>
     </div>
   );
