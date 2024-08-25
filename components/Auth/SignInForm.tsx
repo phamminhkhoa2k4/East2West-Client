@@ -2,8 +2,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 
-let userInfo: any = null;
-
 export default function SignInForm() {
   const [data, setData] = useState({
     remember: false,
@@ -11,6 +9,7 @@ export default function SignInForm() {
     password: "",
   });
   const [message, setMessage] = useState("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ ...data, [e.target.name]: e.target.value });
   };
@@ -25,12 +24,13 @@ export default function SignInForm() {
           username: data.username,
           password: data.password,
         }),
+        credentials: 'include' // Đảm bảo cookie được gửi cùng với yêu cầu
       });
       if (response.ok) {
         const result = await response.json();
-        userInfo = result;
+        localStorage.setItem('userInfo', JSON.stringify(result));
         setMessage("Đăng nhập thành công!");
-        console.log("User Info:", userInfo);
+        console.log("User Info:", result);
       } else {
         setMessage("Đăng nhập thất bại!");
       }

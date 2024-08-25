@@ -1,5 +1,5 @@
+"use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 // import Gallery from "@/components/tour/Gallery";
 import { FiMoreHorizontal, FiShare2 } from "react-icons/fi";
@@ -12,7 +12,13 @@ interface Accommodation {
   durationaccommodation: string;
   accommodationtype: string;
 }
-
+interface Transfer {
+    transferid: number;
+    transfername: string;
+    transferthumbnail: string;
+    description: string;
+    transferduration: string;
+  }
 interface Meal {
   mealid: number;
   mealname: string;
@@ -34,6 +40,7 @@ interface Itinerary {
   accommodations: Accommodation[];
   meals: Meal[];
   places: Place[];
+  transfers:Transfer[];
   day: string | null;
 }
 
@@ -73,16 +80,15 @@ interface PackageData {
   departureDates: DepartureDate[];
   suitableTours: SuitableTour[];
 }
-export default function Package() {
-  const router = useRouter();
-  const { id } = router.query;
+
+const  Package = ({ params }: { params: { id: string } }) => {
   const [packageData, setPackageData] = useState<PackageData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) {
-      fetch(`http://localhost:8080/api/tours/${id}`)
+    if (params.id) {
+      fetch(`http://localhost:8080/api/tours/${params.id}`)
         .then((response) => response.json())
         .then((data) => {
           setPackageData(data);
@@ -94,7 +100,7 @@ export default function Package() {
           setLoading(false);
         });
     }
-  }, [id]);
+  }, [params.id]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -172,9 +178,9 @@ export default function Package() {
           </TabsList>
           <div className="grid grid-cols-4 gap-10">
             <div className="col-span-3">
-              {/* <TabsContent value="Itinerary">
+              <TabsContent value="Itinerary">
                 <Itinerary itineraries={packageData.itineraries} />
-              </TabsContent> */}
+              </TabsContent>
               <TabsContent value="Policies">
                 {/* Implement the Policies tab */}
                 <div>
@@ -202,3 +208,4 @@ export default function Package() {
     </>
   );
 }
+export default Package;

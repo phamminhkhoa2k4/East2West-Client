@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import CarouselPackages from "./CarouselPackages";
-import api from "../../utils/axios";
+import {api} from "../../utils/axios";
 
 const Packages = () => {
   const [curve, setCurve] = useState<number>(0);

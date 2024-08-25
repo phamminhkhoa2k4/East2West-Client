@@ -1,55 +1,51 @@
-"use client";
+"use client"; // Đảm bảo rằng mã này chạy ở phía client
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
-const Create = () => {
-  const [categoryName, setCategoryName] = useState("");
+const EditTheme = ({ params }: { params: { id: string } }) => {
+  const [themeName, setThemeName] = useState("");
   const [error, setError] = useState("");
 
-  const checkCategoryExists = async (categoryName: string) => {
-    try {
-      const response = await fetch("http://localhost:8080/api/category");
-      if (!response.ok) throw new Error("Failed to fetch categories.");
+  useEffect(() => {
+    // Fetch data từ API để lấy thông tin của Theme dựa trên ID
+    const fetchTheme = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/tours/theme/${params.id}`);
+        if (!response.ok) throw new Error("Failed to fetch theme.");
 
-      const categories = await response.json();
-      return categories.some((category: { categoryTourName: string }) => category.categoryTourName === categoryName);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to check if category exists.");
-      return false;
-    }
-  };
+        const theme = await response.json();
+        setThemeName(theme.themeTourName); // Đặt giá trị của input
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load theme.");
+      }
+    };
+
+    if (params.id) fetchTheme();
+  }, [params.id]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Check if category already exists
-    const exists = await checkCategoryExists(categoryName);
-    if (exists) {
-      setError("Category already exists.");
-      return;
-    }
-
-    // Proceed with creating a new category
+    // Update theme
     try {
-      const response = await fetch("http://localhost:8080/api/category", {
-        method: "POST",
+      const response = await fetch(`http://localhost:8080/api/tours/theme/${params.id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ categoryTourName: categoryName }),
+        body: JSON.stringify({ themeTourName: themeName }),
       });
 
       if (response.ok) {
         // Handle success (e.g., show a success message or redirect)
-        alert("Category created successfully!");
+        alert("Theme updated successfully!");
         setError(""); // Clear any previous errors
-        setCategoryName(""); // Reset the input field
       } else {
         // Handle error (e.g., show an error message)
-        setError("Failed to create category.");
+        setError("Failed to update theme.");
       }
     } catch (err) {
       console.error(err);
@@ -63,18 +59,18 @@ const Create = () => {
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-dark-3">
             <h3 className="font-semibold text-dark dark:text-white">
-              Create Category
+              Edit Theme
             </h3>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
               <InputGroup
-                label="Category Name"
+                label="Theme Name"
                 type="text"
-                placeholder="Please Enter Category Name!"
+                placeholder="Please Enter Theme Name!"
                 customClasses="w-full mb-4.5"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
+                value={themeName}
+                onChange={(e) => setThemeName(e.target.value)}
               />
 
               {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -85,7 +81,7 @@ const Create = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-[7px] bg-primary p-[13px] font-medium text-white hover:bg-opacity-90"
               >
-                Continue
+                Update
               </button>
             </div>
           </form>
@@ -95,4 +91,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default EditTheme;
