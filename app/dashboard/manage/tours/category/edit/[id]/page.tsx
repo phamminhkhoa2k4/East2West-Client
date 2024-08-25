@@ -1,41 +1,38 @@
-"use client";
+"use client"; // Đảm bảo rằng mã này chạy ở phía client
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
-const Create = () => {
+const EditCategory = ({ params }: { params: { id: string } }) => {
   const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState("");
 
-  const checkCategoryExists = async (categoryName: string) => {
-    try {
-      const response = await fetch("http://localhost:8080/api/category");
-      if (!response.ok) throw new Error("Failed to fetch categories.");
+  useEffect(() => {
+    // Fetch data từ API để lấy thông tin của Category dựa trên ID
+    const fetchCategory = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/api/tours/category/${params.id}`);
+        if (!response.ok) throw new Error("Failed to fetch category.");
 
-      const categories = await response.json();
-      return categories.some((category: { categoryTourName: string }) => category.categoryTourName === categoryName);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to check if category exists.");
-      return false;
-    }
-  };
+        const category = await response.json();
+        setCategoryName(category.categoryTourName); // Đặt giá trị của input
+      } catch (err) {
+        console.error(err);
+        setError("Failed to load category.");
+      }
+    };
+
+    if (params.id) fetchCategory();
+  }, [params.id]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Check if category already exists
-    const exists = await checkCategoryExists(categoryName);
-    if (exists) {
-      setError("Category already exists.");
-      return;
-    }
-
-    // Proceed with creating a new category
+    // Update category
     try {
-      const response = await fetch("http://localhost:8080/api/category", {
-        method: "POST",
+      const response = await fetch(`http://localhost:8080/api/tours/category/${params.id}`, {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
@@ -44,12 +41,11 @@ const Create = () => {
 
       if (response.ok) {
         // Handle success (e.g., show a success message or redirect)
-        alert("Category created successfully!");
+        alert("Category updated successfully!");
         setError(""); // Clear any previous errors
-        setCategoryName(""); // Reset the input field
       } else {
         // Handle error (e.g., show an error message)
-        setError("Failed to create category.");
+        setError("Failed to update category.");
       }
     } catch (err) {
       console.error(err);
@@ -63,7 +59,7 @@ const Create = () => {
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-dark-3">
             <h3 className="font-semibold text-dark dark:text-white">
-              Create Category
+              Edit Category
             </h3>
           </div>
           <form onSubmit={handleSubmit}>
@@ -85,7 +81,7 @@ const Create = () => {
                 type="submit"
                 className="flex w-full justify-center rounded-[7px] bg-primary p-[13px] font-medium text-white hover:bg-opacity-90"
               >
-                Continue
+                Update
               </button>
             </div>
           </form>
@@ -95,4 +91,4 @@ const Create = () => {
   );
 };
 
-export default Create;
+export default EditCategory;

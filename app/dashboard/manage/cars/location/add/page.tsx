@@ -8,13 +8,13 @@ const Create = () => {
   const [error, setError] = useState("");
 
   // Function to check if a location type already exists
-  const checkLocationTypeExists = async (name) => {
+  const checkLocationTypeExists = async (name: string): Promise<boolean> => {
     try {
       const response = await fetch('http://localhost:8080/api/cars/locationtypes');
       if (!response.ok) throw new Error('Failed to fetch location types.');
 
       const locationTypes = await response.json();
-      return locationTypes.some(type => type.locationtypename === name);
+      return locationTypes.some((type: { locationtypename: string }) => type.locationtypename === name);
     } catch (err) {
       console.error(err);
       setError('Failed to check if location type exists.');
@@ -22,8 +22,7 @@ const Create = () => {
     }
   };
 
-  // Function to handle form submission
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Check if location type already exists
@@ -32,8 +31,6 @@ const Create = () => {
       setError('Location Type already exists.');
       return;
     }
-
-    // Proceed with creating a new location type
     try {
       const response = await fetch('http://localhost:8080/api/cars/locationtypes', {
         method: 'POST',
@@ -44,12 +41,10 @@ const Create = () => {
       });
 
       if (response.ok) {
-        // Handle success (e.g., show a success message or redirect)
         alert('Location Type created successfully!');
-        setLocationTypeName(''); // Clear the input field
-        setError(''); // Clear any previous errors
+        setLocationTypeName(''); 
+        setError(''); 
       } else {
-        // Handle error (e.g., show an error message)
         setError('Failed to create location type.');
       }
     } catch (err) {

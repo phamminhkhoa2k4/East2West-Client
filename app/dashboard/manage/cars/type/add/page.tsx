@@ -8,13 +8,13 @@ const Create = () => {
   const [error, setError] = useState("");
 
   // Function to check if a type already exists
-  const checkTypeExists = async (typeName) => {
+  const checkTypeExists = async (typeName:string) => {
     try {
       const response = await fetch('http://localhost:8080/api/cars/type');
       if (!response.ok) throw new Error('Failed to fetch types.');
 
       const types = await response.json();
-      return types.some(type => type.typeName === typeName);
+      return types.some((type: { type: string }) => types.typeName === typeName);
     } catch (err) {
       console.error(err);
       setError('Failed to check if type exists.');
@@ -23,7 +23,7 @@ const Create = () => {
   };
 
   // Function to handle form submission
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Check if type already exists
