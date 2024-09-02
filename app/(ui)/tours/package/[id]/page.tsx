@@ -6,6 +6,7 @@ import { FiMoreHorizontal, FiShare2 } from "react-icons/fi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Itinerary from "@/components/tour/Itinerary";
 import CheckoutPackage from "@/components/tour/CheckoutPackage";
+import { useRouter } from "next/navigation";
 interface Accommodation {
   accommodationid: number;
   accommodationname: string;
@@ -85,7 +86,7 @@ const  Package = ({ params }: { params: { id: string } }) => {
   const [packageData, setPackageData] = useState<PackageData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-
+  const router = useRouter();
   useEffect(() => {
     if (params.id) {
       fetch(`http://localhost:8080/api/tours/${params.id}`)
@@ -101,7 +102,10 @@ const  Package = ({ params }: { params: { id: string } }) => {
         });
     }
   }, [params.id]);
-
+  const handleBookTour = () => {
+    
+    router.push(`/tours/booking?packageId=${params.id}`);
+  };
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -116,7 +120,7 @@ const  Package = ({ params }: { params: { id: string } }) => {
 
   return (
     <>
-      <div className="mx-10">
+      <div className="mx-10 mt-36">
         <Breadcrumb />
       </div>
       <div className="mx-20">
@@ -199,8 +203,19 @@ const  Package = ({ params }: { params: { id: string } }) => {
               </TabsContent>
             </div>
             <div className="col-span-1">
-              {/* Pass the packageData to CheckoutPackage */}
-              {/* <CheckoutPackage packageData={packageData} /> */}
+            <div className="mx-20">
+        <div className="mb-5">
+          {/* Your existing code */}
+          
+          <button
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+            onClick={handleBookTour}
+          >
+            Book Tour
+          </button>
+        </div>
+        {/* Your existing code */}
+      </div>
             </div>
           </div>
         </Tabs>

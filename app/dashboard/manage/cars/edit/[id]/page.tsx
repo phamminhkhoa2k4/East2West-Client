@@ -32,6 +32,7 @@ interface Car {
 
 const EditCar = ({ params }: { params: { id: string } }) => {
     const [carData, setCarData] = useState<Car | null>(null);
+    const [carName,setCarName] = useState<string>(carData?.carName ?? "");
     const [makeOptions, setMakeOptions] = useState<Option[]>([]);
     const [modelOptions, setModelOptions] = useState<Option[]>([]);
     const [typeOptions, setTypeOptions] = useState<Option[]>([]);
@@ -157,8 +158,8 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                     type="text"
                                     placeholder="Please Enter Car Name !"
                                     customClasses="w-full mb-4.5"
-                                    value={carData.carName}
-                                    onChange={handleChange}
+                                    value={carName}
+                                    onChange={(e) =>setCarName(e.target.value)}
                                 
                                 />
                                 <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">

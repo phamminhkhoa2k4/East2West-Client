@@ -9,8 +9,9 @@ interface SignupFormData {
   lastname: string;
   phone: string;
   address: string;
-  role: Set<string>;
+  role: string[];
   remember: boolean;
+  isBusiness: boolean;
 }
 
 interface SignupErrors {
@@ -36,37 +37,41 @@ const SignUpForm: React.FC = () => {
     lastname: "",
     phone: "",
     address: "",
-    role: new Set<string>(),
+    role: ["user"],
     remember: false,
+    isBusiness: false,
   });
 
   const [errors, setErrors] = useState<SignupErrors>({});
   const [success, setSuccess] = useState<string>("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type, checked } = e.target as HTMLInputElement | HTMLSelectElement;
+    const { name, value, type, checked } = e.target;
 
     if (type === "checkbox") {
-      // Handle checkbox changes
-      setData(prev => ({ ...prev, [name]: checked }));
+      setData(prev => ({
+        ...prev,
+        [name]: checked,
+        role: name === "isBusiness" && checked ? ["business"] : ["user"],
+      }));
     } else if (type === "select-multiple") {
-      // Handle multi-select changes
       const target = e.target as HTMLSelectElement;
       const selectedOptions = Array.from(target.options)
         .filter(option => option.selected)
         .map(option => option.value);
-      setData(prev => ({ ...prev, role: new Set(selectedOptions) }));
+      setData(prev => ({ ...prev, role: selectedOptions }));
     } else {
-      // Handle other input changes
       setData(prev => ({ ...prev, [name]: value }));
     }
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    
+    setErrors({});
+    setSuccess("");
+
     if (data.password !== data.confirmPassword) {
-      setErrors((prev: any) => ({ ...prev, confirmPassword: "Passwords do not match!" }));
+      setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match!" }));
       return;
     }
 
@@ -78,7 +83,7 @@ const SignUpForm: React.FC = () => {
       lastname: data.lastname,
       phone: data.phone,
       address: data.address,
-      role: null,
+      role: data.role,
     };
 
     try {
@@ -89,7 +94,9 @@ const SignUpForm: React.FC = () => {
         },
         body: JSON.stringify(payload),
       });
-
+    
+      const result = await response.json();
+    
       if (response.ok) {
         setSuccess("Account created successfully!");
         setData({
@@ -101,16 +108,27 @@ const SignUpForm: React.FC = () => {
           lastname: "",
           phone: "",
           address: "",
-          role: new Set<string>(),
+          role: ["user"],
           remember: false,
+          isBusiness: false,
         });
         setErrors({});
       } else {
-        const result = await response.json();
-        setErrors(result);
-        setSuccess("");
+        const fieldErrors: SignupErrors = {};
+    
+        // Check if result contains errors
+        if (result.password) {
+          fieldErrors.password = result.password;
+        }
+        if (result.username) {
+          fieldErrors.username = result.username;
+        }
+    
+        // Update the state with the specific field errors
+        setErrors(fieldErrors);
       }
     } catch (error) {
+      console.error("Error occurred:", error);
       setErrors({ general: "An error occurred. Please try again." });
     }
   };
@@ -128,7 +146,7 @@ const SignUpForm: React.FC = () => {
           name="username"
           value={data.username}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.username ? 'border-red-500' : ''}`}
         />
         {errors.username && <p className="text-red-500">{errors.username}</p>}
       </div>
@@ -144,7 +162,7 @@ const SignUpForm: React.FC = () => {
           name="email"
           value={data.email}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.email ? 'border-red-500' : ''}`}
         />
         {errors.email && <p className="text-red-500">{errors.email}</p>}
       </div>
@@ -160,7 +178,7 @@ const SignUpForm: React.FC = () => {
           name="password"
           value={data.password}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.password ? 'border-red-500' : ''}`}
         />
         {errors.password && <p className="text-red-500">{errors.password}</p>}
       </div>
@@ -176,7 +194,7 @@ const SignUpForm: React.FC = () => {
           name="confirmPassword"
           value={data.confirmPassword}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.confirmPassword ? 'border-red-500' : ''}`}
         />
         {errors.confirmPassword && <p className="text-red-500">{errors.confirmPassword}</p>}
       </div>
@@ -192,7 +210,7 @@ const SignUpForm: React.FC = () => {
           name="firstname"
           value={data.firstname}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.firstname ? 'border-red-500' : ''}`}
         />
         {errors.firstname && <p className="text-red-500">{errors.firstname}</p>}
       </div>
@@ -208,7 +226,7 @@ const SignUpForm: React.FC = () => {
           name="lastname"
           value={data.lastname}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.lastname ? 'border-red-500' : ''}`}
         />
         {errors.lastname && <p className="text-red-500">{errors.lastname}</p>}
       </div>
@@ -224,7 +242,7 @@ const SignUpForm: React.FC = () => {
           name="phone"
           value={data.phone}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.phone ? 'border-red-500' : ''}`}
         />
         {errors.phone && <p className="text-red-500">{errors.phone}</p>}
       </div>
@@ -240,37 +258,51 @@ const SignUpForm: React.FC = () => {
           name="address"
           value={data.address}
           onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
+          className={`w-full rounded-lg border py-[15px] pl-6 pr-11 ${errors.address ? 'border-red-500' : ''}`}
         />
         {errors.address && <p className="text-red-500">{errors.address}</p>}
       </div>
 
-      {/* Role Selection */}
-      {/* <div className="mb-4">
-        <label className="mb-2.5 block font-medium text-dark">Role</label>
-        <select
-          name="role"
-          multiple
-          value={Array.from(data.role)}
-          onChange={handleChange}
-          className="w-full rounded-lg border py-[15px] pl-6 pr-11"
-        >
-          <option value="business">Business</option>
-          <option value="mod">Moderator</option>
-          <option value="employee">Employee</option>
-          <option value="user">User</option>
-        </select>
-        {errors.role && <p className="text-red-500">{errors.role}</p>}
-      </div> */}
+      {/* Business Account Checkbox */}
+      <div className="mb-4">
+        <label htmlFor="isBusiness" className="inline-flex items-center">
+          <input
+            type="checkbox"
+            name="isBusiness"
+            checked={data.isBusiness}
+            onChange={handleChange}
+            className="form-checkbox"
+          />
+          <span className="ml-2">Register as a business account</span>
+        </label>
+      </div>
+
+      {/* Remember Me Checkbox */}
+      <div className="mb-4">
+        <label htmlFor="remember" className="inline-flex items-center">
+          <input
+            type="checkbox"
+            name="remember"
+            checked={data.remember}
+            onChange={handleChange}
+            className="form-checkbox"
+          />
+          <span className="ml-2">Remember me</span>
+        </label>
+      </div>
 
       {/* Submit Button */}
-      <button type="submit" className="btn-primary">
-        Sign Up
-      </button>
+      <div>
+        <button type="submit" className="w-full rounded-lg bg-primary py-4 text-white">
+          Sign Up
+        </button>
+      </div>
 
-      {/* Success and Error Messages */}
-      {success && <p className="text-green-500">{success}</p>}
-      {errors.general && <p className="text-red-500">{errors.general}</p>}
+      {/* Success Message */}
+      {success && <p className="text-green-500 mt-4">{success}</p>}
+
+      {/* General Error Message */}
+      {errors.general && <p className="text-red-500 mt-4">{errors.general}</p>}
     </form>
   );
 };

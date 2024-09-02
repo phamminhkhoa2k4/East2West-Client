@@ -5,10 +5,12 @@ import SelectGroupOne from "@/components/FormElements/SelectGroup/SelectGroupOne
 import CheckboxTwo from "@/components/FormElements/Checkboxes/CheckboxTwo";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { createData } from "../../../../../utils/axios";
+
 type Option = {
   id: number;
   name: string;
 };
+
 const Create = () => {
   const [carName, setCarName] = useState("");
   const [pricePerDay, setPricePerDay] = useState("");
@@ -28,7 +30,8 @@ const Create = () => {
   const [fuelTankCapacity, setFuelTankCapacity] = useState("");
   const [miles, setMiles] = useState("");
   const [airConditioned, setAirConditioned] = useState(false);
-
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -57,6 +60,7 @@ const Create = () => {
 
     fetchData();
   }, []);
+
   const handleMakeChange = (value: number) => {
     setSelectedMake(value);
   };
@@ -73,57 +77,95 @@ const Create = () => {
     setSelectedLocationType(value);
   };
 
-  const handleGearboxChange = (value: number) => {
-    setGearbox(value.toString());
+  const handleGearboxChange = (value: string) => {
+    setGearbox(value);
   };
 
-  const handleFuelChange = (value: number) => {
-    setFuel(value.toString());
+  const handleFuelChange = (value: string) => {
+    setFuel(value);
   };
-  const handleChange = (value: number | "") => {
-    if (value === "") return; // Handle case when no selection is made
+
+  const handleChange = (value: number | null) => {
+    // Handle case when no selection is made
   };
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Validate input fields on client-side
+    if (!carName.trim() || !pricePerDay.trim() || !year.trim() || !seatCapacity.trim() || !location.trim()) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    // Check for duplicate car name
+    try {
+        const nameCheckResponse = await fetch(`http://localhost:8080/api/cars/exists?carName=${encodeURIComponent(carName)}`);
+        const nameExists = await nameCheckResponse.json();
+
+        if (nameExists) {
+            alert("Car name already exists. Please choose a different name.");
+            return;
+        }
+    } catch (error) {
+        console.error("Error checking car name existence:", error);
+        alert("An error occurred while checking car name.");
+        return;
+    }
+
     const carDTO = {
-      carId: null,
-      carName,
-      modelId: selectedModel,
-      makeId: selectedMake,
-      typeId: selectedType,
-      year: parseInt(year),
-      seatCapacity: parseInt(seatCapacity),
-      airConditioned,
-      pricePerDay: parseFloat(pricePerDay),
-      status: "Available",
-      locationTypeId: selectedLocationType,
-      cargearbox: gearbox,
-      miles,
-      fueltankcapacity: fuelTankCapacity,
-      fuel,
-      location,
+        carId: null,
+        carName,
+        modelId: selectedModel,
+        makeId: selectedMake,
+        typeId: selectedType,
+        year: parseInt(year),
+        seatCapacity: parseInt(seatCapacity),
+        airConditioned,
+        pricePerDay: parseFloat(pricePerDay),
+        status: "Available",
+        locationTypeId: selectedLocationType,
+        cargearbox: gearbox,
+        miles,
+        fueltankcapacity: fuelTankCapacity,
+        fuel,
+        location,
     };
 
     try {
-      const response = await createData({
-        endpoint: "/cars",
-        payload: carDTO,
-      });
-      console.log("Car created:", response);
+        const response = await fetch('http://localhost:8080/api/cars', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(carDTO),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            let errorMessage = "Validation failed:\n";
+            for (const [field, message] of Object.entries(errorData)) {
+                errorMessage += `${field}: ${message}\n`;
+            }
+            alert(errorMessage);
+        } else {
+            alert("Car created successfully.");
+        }
     } catch (error) {
-      console.error("Error creating car:", error);
+        console.error("Error creating car:", error);
+        alert("An error occurred while creating the car.");
     }
-  };
-  return (<>
+};
+
+
+
+  return (
     <DefaultLayout>
       <div className="flex flex-col gap-9">
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-dark-3">
-            <h3 className="font-semibold text-dark dark:text-white">
-              Create Rental Cars
-            </h3>
+            <h3 className="font-semibold text-dark dark:text-white">Create Rental Cars</h3>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
@@ -134,7 +176,7 @@ const Create = () => {
                 customClasses="w-full mb-4.5"
                 value={carName}
                 onChange={(e) => setCarName(e.target.value)}
-                
+                // error={errors.carName}
               />
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                 <InputGroup
@@ -144,7 +186,7 @@ const Create = () => {
                   customClasses="w-full xl:w-1/2"
                   value={pricePerDay}
                   onChange={(e) => setPricePerDay(e.target.value)}
-                 
+                  // error={errors.pricePerDay}
                 />
                 <InputGroup
                   label="Year"
@@ -153,120 +195,111 @@ const Create = () => {
                   customClasses="w-full xl:w-1/2"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                 
+                  // error={errors.year}
                 />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                 <InputGroup
                   label="Seating Capacity"
                   type="text"
-                  placeholder="Enter your Seating Capacity"
-                  customClasses="mb-4.5 xl:w-1/2"
-                  required
+                  placeholder="Enter your Car Seating Capacity"
+                  customClasses="w-full xl:w-1/2"
                   value={seatCapacity}
                   onChange={(e) => setSeatCapacity(e.target.value)}
-                  
+                  // error={errors.seatCapacity}
                 />
                 <InputGroup
                   label="Location"
                   type="text"
                   placeholder="Enter your Location"
-                  customClasses="mb-4.5 xl:w-1/2"
+                  customClasses="w-full xl:w-1/2"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  
+                  // error={errors.location}
                 />
               </div>
-              <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-                <SelectGroupOne
-                  label="Make Name"
-                  placeholder="Please select Make Name"
-                  data={makeOptions}
-                  onChange={(value) => handleMakeChange(value)}
-                />
-                <SelectGroupOne
-                  label="Model Name"
-                  placeholder="Please select Model Name"
-                  data={modelOptions}
-                  onChange={(value) => handleModelChange(value)}
-                />
-              </div>
-              <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-                <SelectGroupOne
-                  label="Type Name"
-                  placeholder="Please select Type Name"
-                  data={typeOptions}
-                  onChange={(value) => handleTypeChange(value)}
-                />
-                <SelectGroupOne
-                  label="Location Type Name"
-                  placeholder="Please select Location Type Name"
-                  data={locationTypeOptions}
-                  onChange={(value) => handleLocationTypeChange(value)}
-                />
-              </div>
-              <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-                <SelectGroupOne
-                  label="Gearbox"
-                  placeholder="Please select Gearbox"
-                  data={[{ id: 1, name: "Manual" }, { id: 2, name: "Automatic" }]} // Example options
-                  onChange={(value) => handleGearboxChange(value)}
-                />
-                <SelectGroupOne
-                  label="Fuel"
-                  placeholder="Please select Fuel"
-                  data={[{ id: 1, name: "Petrol" }, { id: 2, name: "Diesel" }]} // Example options
-                  onChange={(value) => handleFuelChange(value)}
-                />
-              </div>
-              <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-                <InputGroup
-                  label="Fuel Tank Capacity"
-                  type="text"
-                  placeholder="Enter your Fuel Tank Capacity"
-                  customClasses="mb-4.5 xl:w-1/2"
-                  required
-                  value={fuelTankCapacity}
-                  onChange={(e) => setFuelTankCapacity(e.target.value)}
-                  
-                />
-                <InputGroup
-                  label="Miles"
-                  type="text"
-                  placeholder="Enter your Miles"
-                  customClasses="mb-4.5 xl:w-1/2"
-                  value={miles}
-                  onChange={(e) => setMiles(e.target.value)}
-                  
-                />
-              </div>
+              <SelectGroupOne
+                data={makeOptions}
+                label="Make"
+                onChange={handleMakeChange}
+                selected={selectedMake}
+                placeholder="Select Make"
+                error={errors.make}
+              />
+              <SelectGroupOne
+                data={modelOptions}
+                label="Model"
+                onChange={handleModelChange}
+                selected={selectedModel}
+                placeholder="Select Model"
+                error={errors.model}
+              />
+              <SelectGroupOne
+                data={typeOptions}
+                label="Type"
+                onChange={handleTypeChange}
+                selected={selectedType}
+                placeholder="Select Type"
+                error={errors.type}
+              />
+              <SelectGroupOne
+                data={locationTypeOptions}
+                label="Location Type"
+                onChange={handleLocationTypeChange}
+                selected={selectedLocationType}
+                placeholder="Select Location Type"
+                error={errors.locationType}
+              />
+              <InputGroup
+                label="Gearbox"
+                type="text"
+                placeholder="Enter your Gearbox Type"
+                customClasses="w-full mb-4.5"
+                value={gearbox}
+                onChange={(e) => setGearbox(e.target.value)}
+                // error={errors.gearbox}
+              />
+              <InputGroup
+                label="Fuel"
+                type="text"
+                placeholder="Enter Fuel Type"
+                customClasses="w-full mb-4.5"
+                value={fuel}
+                onChange={(e) => setFuel(e.target.value)}
+                // error={errors.fuel}
+              />
+              <InputGroup
+                label="Fuel Tank Capacity"
+                type="text"
+                placeholder="Enter Fuel Tank Capacity"
+                customClasses="w-full mb-4.5"
+                value={fuelTankCapacity}
+                onChange={(e) => setFuelTankCapacity(e.target.value)}
+                // error={errors.fuelTankCapacity}
+              />
+              <InputGroup
+                label="Miles"
+                type="text"
+                placeholder="Enter Miles"
+                customClasses="w-full mb-4.5"
+                value={miles}
+                onChange={(e) => setMiles(e.target.value)}
+                // error={errors.miles}
+              />
               <CheckboxTwo
-                label=""
+                label="Air Conditioned"
+                onChange={() => setAirConditioned(!airConditioned)}
                 checked={airConditioned}
-                onChange={(e) => setAirConditioned(e.target.checked)}
               />
-            </div>
-            <div className="my-5">
-              <label className="mb-3 block text-body-sm font-medium text-dark dark:text-white">
-                Thumbnail 1
-              </label>
-              <input
-                type="file"
-                className="w-full cursor-pointer rounded-[7px] border-[1.5px] border-stroke bg-transparent outline-none transition file:mr-5 file:border-collapse file:cursor-pointer file:border-0 file:border-r file:border-solid file:border-stroke file:bg-[#E2E8F0] file:px-6.5 file:py-[13px] file:text-body-sm file:font-medium file:text-dark-5 file:hover:bg-primary file:hover:bg-opacity-10 focus:border-primary active:border-primary disabled:cursor-default disabled:bg-dark dark:border-dark-3 dark:bg-dark-2 dark:file:border-dark-3 dark:file:bg-white/30 dark:file:text-white dark:focus:border-primary"
-              />
-            </div>
-            <div className="my-5">
-              <button className="w-full rounded-md bg-primary py-2.5 text-center text-base font-medium text-white shadow-md transition hover:bg-opacity-80">
-                Save
-              </button>
+              <div className="flex justify-end pt-6">
+                <button type="submit" className="btn btn-primary">Submit</button>
+              </div>
             </div>
           </form>
         </div>
       </div>
     </DefaultLayout>
-  </>
   );
-}
-
+};
 
 export default Create;

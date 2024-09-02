@@ -1,6 +1,5 @@
 import Image from "next/image";
-
-const CardSearch = ({ tourPackage }) => {
+const CardSearch = ({tourPackage}) => {
   return (
     <div className="border rounded-xl overflow-hidden">
       <div className="w-full h-50">
