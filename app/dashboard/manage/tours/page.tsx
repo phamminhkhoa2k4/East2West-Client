@@ -19,7 +19,6 @@ const columns = [
   { key: "departure", label: "Departure Date" },
   { key: "itinerary", label: "Itinerary" },
 ];
-
 interface Itinerary {
   itineraryId: number;
   accommodations: Accommodation[];
@@ -27,7 +26,6 @@ interface Itinerary {
   places: Place[];
   day: string;
 }
-
 interface Accommodation {
   accommodationid: number;
   accommodationname: string;
@@ -103,16 +101,13 @@ interface FormattedTourData extends DataRow {
   departure: string;
   itinerary: string;
 }
-
 const TourComponent = () => {
   const [data, setData] = useState<FormattedTourData[]>([]);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/tours");
         const result: TourPackage[] = await response.json();
-
         const formatDepartureDates = (dates: { departuredate: string }[]) => {
           return dates
             .map((date) => new Date(date.departuredate).toLocaleDateString())

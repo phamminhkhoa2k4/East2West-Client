@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import CardSearch from "./CardSearch";
-
 import {
   Accordion,
   AccordionContent,
@@ -19,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { api } from "@/utils/axios";
+import {  getData } from "@/utils/axios";
 interface Car {
   carId: number;
   carName: string;
@@ -54,7 +53,7 @@ const CarSearchResult = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await api.get("/cars");
+        const response = await getData({ endpoint: "/cars" });
         setCars(response.data);
       } catch (error) {
         console.error("Error fetching cars:", error);

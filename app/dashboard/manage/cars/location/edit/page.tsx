@@ -20,7 +20,7 @@ const Update = () => {
                     type="text"
                     placeholder="Please Enter Location Type Name !"
                     customClasses="w-full mb-4.5"
-                    onChange={() => {}}
+                    onChange={()=>{}}
                   />
 
                   <div className="mb-6"></div>

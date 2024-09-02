@@ -73,17 +73,20 @@ interface CarTableData extends DataRow{
   fuelTankCapacity: string;
   fuel: string;
   airConditioned: string;
+  [key: string]: string | number; // Updated index signature
 }
-
 const Cars = () => {
   const [data, setData] = useState<CarTableData[]>([]); 
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars");
+        const response = await fetch("http://localhost:8080/api/cars", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // Quan trọng để gửi cookie
+      });
         const result: Car[] = await response.json();
-
         const formattedData = result.map((car) => ({
           thumbnail: car.imageUrl || "/car_thumbnail.png",
           carName: car.carName,

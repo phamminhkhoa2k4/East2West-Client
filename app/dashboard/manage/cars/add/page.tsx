@@ -49,7 +49,7 @@ const Create = () => {
         setMakeOptions(makes.map((item: any) => ({ id: item.makeId, name: item.makeName })));
         setModelOptions(models.map((item: any) => ({ id: item.modelId, name: item.modelName })));
         setTypeOptions(types.map((item: any) => ({ id: item.typeId, name: item.typeName })));
-        setLocationTypeOptions(locationTypes.map((item: any) => ({ id: item.locationTypeId, name: item.locationTypeName })));
+        setLocationTypeOptions(locationTypes.map((item: any) => ({ id: item.locationtypeid, name: item.locationtypename })));
       } catch (error) {
         console.error('Failed to fetch data:', error);
       }
@@ -60,23 +60,23 @@ const Create = () => {
   const handleMakeChange = (value: number) => {
     setSelectedMake(value);
   };
-  
+
   const handleModelChange = (value: number) => {
     setSelectedModel(value);
   };
-  
+
   const handleTypeChange = (value: number) => {
     setSelectedType(value);
   };
-  
+
   const handleLocationTypeChange = (value: number) => {
     setSelectedLocationType(value);
   };
-  
+
   const handleGearboxChange = (value: number) => {
     setGearbox(value.toString());
   };
-  
+
   const handleFuelChange = (value: number) => {
     setFuel(value.toString());
   };
@@ -86,7 +86,7 @@ const Create = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-  
+
     const carDTO = {
       carId: null,
       carName,
@@ -105,7 +105,7 @@ const Create = () => {
       fuel,
       location,
     };
-  
+
     try {
       const response = await createData({
         endpoint: "/cars",
@@ -134,7 +134,7 @@ const Create = () => {
                 customClasses="w-full mb-4.5"
                 value={carName}
                 onChange={(e) => setCarName(e.target.value)}
-            
+                
               />
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                 <InputGroup
@@ -144,7 +144,7 @@ const Create = () => {
                   customClasses="w-full xl:w-1/2"
                   value={pricePerDay}
                   onChange={(e) => setPricePerDay(e.target.value)}
-             
+                 
                 />
                 <InputGroup
                   label="Year"
@@ -153,6 +153,7 @@ const Create = () => {
                   customClasses="w-full xl:w-1/2"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
+                 
                 />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -164,6 +165,7 @@ const Create = () => {
                   required
                   value={seatCapacity}
                   onChange={(e) => setSeatCapacity(e.target.value)}
+                  
                 />
                 <InputGroup
                   label="Location"
@@ -172,49 +174,50 @@ const Create = () => {
                   customClasses="mb-4.5 xl:w-1/2"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
+                  
                 />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-              <SelectGroupOne
-  label="Make Name"
-  placeholder="Please select Make Name"
-  data={makeOptions}
-  onChange={(value) => handleMakeChange(value)}
-/>
-<SelectGroupOne
-  label="Model Name"
-  placeholder="Please select Model Name"
-  data={modelOptions}
-  onChange={(value) => handleModelChange(value)}
-/>
+                <SelectGroupOne
+                  label="Make Name"
+                  placeholder="Please select Make Name"
+                  data={makeOptions}
+                  onChange={(value) => handleMakeChange(value)}
+                />
+                <SelectGroupOne
+                  label="Model Name"
+                  placeholder="Please select Model Name"
+                  data={modelOptions}
+                  onChange={(value) => handleModelChange(value)}
+                />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-              <SelectGroupOne
-  label="Type Name"
-  placeholder="Please select Type Name"
-  data={typeOptions}
-  onChange={(value) => handleTypeChange(value)}
-/>
-<SelectGroupOne
-  label="Location Type Name"
-  placeholder="Please select Location Type Name"
-  data={locationTypeOptions}
-  onChange={(value) => handleLocationTypeChange(value)}
-/>
+                <SelectGroupOne
+                  label="Type Name"
+                  placeholder="Please select Type Name"
+                  data={typeOptions}
+                  onChange={(value) => handleTypeChange(value)}
+                />
+                <SelectGroupOne
+                  label="Location Type Name"
+                  placeholder="Please select Location Type Name"
+                  data={locationTypeOptions}
+                  onChange={(value) => handleLocationTypeChange(value)}
+                />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
-              <SelectGroupOne
-  label="Gearbox"
-  placeholder="Please select Gearbox"
-  data={[{ id: 1, name: "Manual" }, { id: 2, name: "Automatic" }]} // Example options
-  onChange={(value) => handleGearboxChange(value)}
-/>
-<SelectGroupOne
-  label="Fuel"
-  placeholder="Please select Fuel"
-  data={[{ id: 1, name: "Petrol" }, { id: 2, name: "Diesel" }]} // Example options
-  onChange={(value) => handleFuelChange(value)}
-/>
+                <SelectGroupOne
+                  label="Gearbox"
+                  placeholder="Please select Gearbox"
+                  data={[{ id: 1, name: "Manual" }, { id: 2, name: "Automatic" }]} // Example options
+                  onChange={(value) => handleGearboxChange(value)}
+                />
+                <SelectGroupOne
+                  label="Fuel"
+                  placeholder="Please select Fuel"
+                  data={[{ id: 1, name: "Petrol" }, { id: 2, name: "Diesel" }]} // Example options
+                  onChange={(value) => handleFuelChange(value)}
+                />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                 <InputGroup
@@ -225,6 +228,7 @@ const Create = () => {
                   required
                   value={fuelTankCapacity}
                   onChange={(e) => setFuelTankCapacity(e.target.value)}
+                  
                 />
                 <InputGroup
                   label="Miles"
@@ -233,9 +237,11 @@ const Create = () => {
                   customClasses="mb-4.5 xl:w-1/2"
                   value={miles}
                   onChange={(e) => setMiles(e.target.value)}
+                  
                 />
               </div>
               <CheckboxTwo
+                label=""
                 checked={airConditioned}
                 onChange={(e) => setAirConditioned(e.target.checked)}
               />
@@ -254,7 +260,7 @@ const Create = () => {
                 Save
               </button>
             </div>
-            </form>
+          </form>
         </div>
       </div>
     </DefaultLayout>

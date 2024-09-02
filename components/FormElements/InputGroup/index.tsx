@@ -9,7 +9,6 @@ interface InputGroupProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string | null | undefined;
 }
-
 const InputGroup: React.FC<InputGroupProps> = ({
   customClasses,
   label,
@@ -17,7 +16,7 @@ const InputGroup: React.FC<InputGroupProps> = ({
   placeholder,
   required,
   onChange,
-  value
+  value,
 }) => {
   return (
     <>

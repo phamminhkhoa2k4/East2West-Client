@@ -24,7 +24,7 @@ const Update = () => {
                     type="text"
                     placeholder="Please Enter Car Name !"
                     customClasses="w-full mb-4.5"
-                    onChange={() => {}}
+                    onChange={()=>{}}
                   />
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                     <InputGroup
@@ -32,14 +32,14 @@ const Update = () => {
                       type="text"
                       placeholder="Enter your Price Per Day"
                       customClasses="w-full xl:w-1/2"
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                     <InputGroup
                       label="Year"
                       type="text"
                       placeholder="Enter your Car Year"
                       customClasses="w-full xl:w-1/2"
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                   </div>
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -49,7 +49,7 @@ const Update = () => {
                       placeholder="Enter your email address"
                       customClasses="mb-4.5 xl:w-1/2"
                       required
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
 
                     <InputGroup
@@ -57,7 +57,7 @@ const Update = () => {
                       type="text"
                       placeholder="Enter your Location"
                       customClasses="mb-4.5 xl:w-1/2"
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                   </div>
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -65,13 +65,13 @@ const Update = () => {
                       label="Make Name"
                       placeholder="Please select Make Name"
                       data={[{ id: 1, name: "kaka" }]}
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                     <SelectGroupOne
                       label="Model Name"
                       placeholder="Please select Model Name"
                       data={[{ id: 1, name: "kaka" }]}
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                   </div>
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -79,13 +79,13 @@ const Update = () => {
                       label="Type Name"
                       placeholder="Please select Type Name"
                       data={[{ id: 1, name: "kaka" }]}
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                     <SelectGroupOne
                       label="Location Type Name"
                       placeholder="Please select Location Type Name"
                       data={[{ id: 1, name: "kaka" }]}
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                   </div>
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -93,13 +93,13 @@ const Update = () => {
                       label="Gearbox"
                       placeholder="Please select Gearbox"
                       data={[{ id: 1, name: "kaka" }]}
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                     <SelectGroupOne
                       label="Fuel"
                       placeholder="Please select Fuel"
                       data={[{ id: 1, name: "kaka" }]}
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                   </div>
 
@@ -110,7 +110,7 @@ const Update = () => {
                       placeholder="Enter your email address"
                       customClasses="mb-4.5 xl:w-1/2"
                       required
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
 
                     <InputGroup
@@ -118,11 +118,11 @@ const Update = () => {
                       type="text"
                       placeholder="Enter your Location"
                       customClasses="mb-4.5 xl:w-1/2"
-                      onChange={() => {}}
+                      onChange={()=>{}}
                     />
                   </div>
                   <div className="w-full flex justify-start">
-                    <CheckboxTwo  checked onChange={() => {}}/>
+                    <CheckboxTwo  checked label=""onChange={()=>{}}/>
                   </div>
 
                   <div className="my-5">
