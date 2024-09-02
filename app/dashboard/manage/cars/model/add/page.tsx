@@ -20,6 +20,7 @@ const Create = () => {
                     type="text"
                     placeholder="Please Enter Model Name !"
                     customClasses="w-full mb-4.5"
+                    onChange={() => {}}
                   />
 
                   <div className="mb-6"></div>

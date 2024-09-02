@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
+import { DataRow } from "@/types/table";
 
 const columns = [
   { key: "thumbnail", label: "Thumbnail" },
@@ -87,7 +88,7 @@ interface TourPackage {
   departureDate: DepartureDate[];
 }
 
-interface FormattedTourData {
+interface FormattedTourData extends DataRow {
   thumbnail: string;
   title: string;
   price: number;
@@ -103,7 +104,6 @@ interface FormattedTourData {
   itinerary: string;
 }
 
-
 const TourComponent = () => {
   const [data, setData] = useState<FormattedTourData[]>([]);
 
@@ -114,27 +114,46 @@ const TourComponent = () => {
         const result: TourPackage[] = await response.json();
 
         const formatDepartureDates = (dates: { departuredate: string }[]) => {
-          return dates.map(date => new Date(date.departuredate).toLocaleDateString()).join(", ");
+          return dates
+            .map((date) => new Date(date.departuredate).toLocaleDateString())
+            .join(", ");
         };
-        
+
         // Inside your data mapping:
-        const formattedData: FormattedTourData[] = result.map((tour: TourPackage) => ({
-          thumbnail: `/images/${tour.thumbnail}`,  // Assuming images are in the public/images folder
-          title: tour.title,
-          price: tour.price,
-          priceReduce: tour.pricereduce,
-          groupSize: tour.groupsize,
-          deposit: tour.deposit,
-          bookingHold: tour.bookinghold,
-          bookingChange: tour.bookingchange,
-          themes: tour.themeTours.map((theme) => theme.themeTourName).join(", "),
-          suitable: tour.suitableTours.map((suitable) => suitable.suitableName).join(", "),
-          category: tour.categoryTours.map((category) => category.categoryTourName).join(", "),
-          departure: tour.departureDate.map(date => new Date(date.departuredate).toLocaleDateString()).join(", "),
-          itinerary: tour.itineraries.map((itinerary) => 
-            `Day: ${new Date(itinerary.day).toLocaleDateString()} - ${itinerary.places.map(place => place.placename).join(", ")}`
-          ).join(" | "),
-        }));
+        const formattedData: FormattedTourData[] = result.map(
+          (tour: TourPackage) => ({
+            thumbnail: `/images/${tour.thumbnail}`, // Assuming images are in the public/images folder
+            title: tour.title,
+            price: tour.price,
+            priceReduce: tour.pricereduce,
+            groupSize: tour.groupsize,
+            deposit: tour.deposit,
+            bookingHold: tour.bookinghold,
+            bookingChange: tour.bookingchange,
+            themes: tour.themeTours
+              .map((theme) => theme.themeTourName)
+              .join(", "),
+            suitable: tour.suitableTours
+              .map((suitable) => suitable.suitableName)
+              .join(", "),
+            category: tour.categoryTours
+              .map((category) => category.categoryTourName)
+              .join(", "),
+            departure: tour.departureDate
+              .map((date) => new Date(date.departuredate).toLocaleDateString())
+              .join(", "),
+            itinerary: tour.itineraries
+              .map(
+                (itinerary) =>
+                  `Day: ${new Date(
+                    itinerary.day
+                  ).toLocaleDateString()} - ${itinerary.places
+                    .map((place) => place.placename)
+                    .join(", ")}`
+              )
+              .join(" | "),
+          })
+        );
 
         setData(formattedData);
       } catch (error) {
@@ -153,6 +172,7 @@ const TourComponent = () => {
         title="Tours"
         createUrl="/dashboard/manage/tours/add"
       />
+      <div></div>
     </DefaultLayout>
   );
 };

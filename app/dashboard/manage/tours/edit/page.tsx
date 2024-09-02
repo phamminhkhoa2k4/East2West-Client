@@ -68,6 +68,7 @@ const Update = () => {
                     type="text"
                     placeholder="Please Enter Title !"
                     customClasses="w-full mb-4.5"
+                    onChange={() => {}}
                   />
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                     <InputGroup
@@ -75,12 +76,14 @@ const Update = () => {
                       type="text"
                       placeholder="Enter your last name"
                       customClasses="w-full xl:w-1/2"
+                      onChange={() => {}}
                     />
                     <InputGroup
                       label="Price Reduce"
                       type="text"
                       placeholder="Enter your last name"
                       customClasses="w-full xl:w-1/2"
+                      onChange={() => {}}
                     />
                   </div>
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -89,6 +92,7 @@ const Update = () => {
                       type="email"
                       placeholder="Enter your email address"
                       customClasses="mb-4.5 xl:w-1/2"
+                      onChange={() => {}}
                       required
                     />
 
@@ -97,6 +101,7 @@ const Update = () => {
                       type="text"
                       placeholder="Enter your subject"
                       customClasses="mb-4.5 xl:w-1/2"
+                      onChange={() => {}}
                     />
                   </div>
                   <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -105,12 +110,14 @@ const Update = () => {
                       type="text"
                       placeholder="Enter your subject"
                       customClasses="mb-4.5 xl:w-1/2"
+                      onChange={() => {}}
                     />
                     <InputGroup
                       label="Booking Change"
                       type="text"
                       placeholder="Enter your subject"
                       customClasses="mb-4.5 xl:w-1/2"
+                      onChange={() => {}}
                     />
                   </div>
 
@@ -118,16 +125,22 @@ const Update = () => {
                     id="multiSelect"
                     placeholder="Please Choose Options"
                     label="Categories"
+                    onChange={() => {}}
+                    options={[]}
                   />
                   <MultiSelect
                     id="multiSelect"
                     placeholder="Please Choose Options"
                     label="Themes"
+                    onChange={() => {}}
+                    options={[]}
                   />
                   <MultiSelect
                     id="multiSelect"
                     placeholder="Please Choose Options"
                     label="Suitable "
+                    onChange={() => {}}
+                    options={[]}
                   />
 
                   <div className="mb-6"></div>

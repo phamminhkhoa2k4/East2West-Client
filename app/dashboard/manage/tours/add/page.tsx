@@ -60,7 +60,7 @@ const Create :React.FC= () => {
     categoryTourId: [] as number[],
     themeTourId: [] as number[],
     suitableTourId: [] as number[],
-    departureDates: [] as DateTimeOption[],  // Change this to match the DateTimeOption format
+    departureDates: [] as DateTimeOption[],  
   });
 
   const [categories, setCategories] = React.useState<CategoryTour[]>([]);
@@ -175,7 +175,6 @@ const Create :React.FC= () => {
               <InputGroup
                 label="Title"
                 type="text"
-                name="title"
                 placeholder="Please Enter Title!"
                 customClasses="w-full mb-4.5"
                 onChange={handleChange}
@@ -184,7 +183,6 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Price"
                   type="text"
-                  name="price"
                   placeholder="Enter price"
                   customClasses="w-full xl:w-1/2"
                   onChange={handleChange}
@@ -192,7 +190,6 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Price Reduce"
                   type="text"
-                  name="priceReduce"
                   placeholder="Enter price reduction"
                   customClasses="w-full xl:w-1/2"
                   onChange={handleChange}
@@ -202,7 +199,6 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Group Size"
                   type="text"
-                  name="groupSize"
                   placeholder="Enter group size"
                   customClasses="mb-4.5 xl:w-1/2"
                   required
@@ -211,7 +207,6 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Deposit"
                   type="text"
-                  name="deposit"
                   placeholder="Enter deposit amount"
                   customClasses="mb-4.5 xl:w-1/2"
                   onChange={handleChange}
@@ -221,7 +216,6 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Booking Hold"
                   type="text"
-                  name="bookingHold"
                   placeholder="Enter booking hold details"
                   customClasses="mb-4.5 xl:w-1/2"
                   onChange={handleChange}
@@ -229,7 +223,6 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Booking Change"
                   type="text"
-                  name="bookingChange"
                   placeholder="Enter booking change details"
                   customClasses="mb-4.5 xl:w-1/2"
                   onChange={handleChange}

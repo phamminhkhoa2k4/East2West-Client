@@ -134,7 +134,7 @@ const Create = () => {
                 customClasses="w-full mb-4.5"
                 value={carName}
                 onChange={(e) => setCarName(e.target.value)}
-                name=""
+            
               />
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                 <InputGroup
@@ -144,7 +144,7 @@ const Create = () => {
                   customClasses="w-full xl:w-1/2"
                   value={pricePerDay}
                   onChange={(e) => setPricePerDay(e.target.value)}
-                  name=""
+             
                 />
                 <InputGroup
                   label="Year"
@@ -153,7 +153,6 @@ const Create = () => {
                   customClasses="w-full xl:w-1/2"
                   value={year}
                   onChange={(e) => setYear(e.target.value)}
-                  name=""
                 />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -165,7 +164,6 @@ const Create = () => {
                   required
                   value={seatCapacity}
                   onChange={(e) => setSeatCapacity(e.target.value)}
-                  name=""
                 />
                 <InputGroup
                   label="Location"
@@ -174,7 +172,6 @@ const Create = () => {
                   customClasses="mb-4.5 xl:w-1/2"
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
-                  name=""
                 />
               </div>
               <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -228,7 +225,6 @@ const Create = () => {
                   required
                   value={fuelTankCapacity}
                   onChange={(e) => setFuelTankCapacity(e.target.value)}
-                  name=""
                 />
                 <InputGroup
                   label="Miles"
@@ -237,7 +233,6 @@ const Create = () => {
                   customClasses="mb-4.5 xl:w-1/2"
                   value={miles}
                   onChange={(e) => setMiles(e.target.value)}
-                  name=""
                 />
               </div>
               <CheckboxTwo
