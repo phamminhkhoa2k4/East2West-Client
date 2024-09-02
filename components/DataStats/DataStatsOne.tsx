@@ -142,7 +142,7 @@ const DataStatsOne: React.FC<dataStats> = () => {
                 <span className="text-body-sm font-medium">{item.title}</span>
               </div>
 
-              <span
+              {/* <span
                 className={`flex items-center gap-1.5 text-body-sm font-medium ${
                   item.growthRate > 0 ? "text-green" : "text-red"
                 }`}
@@ -177,7 +177,7 @@ const DataStatsOne: React.FC<dataStats> = () => {
                     />
                   </svg>
                 )}
-              </span>
+              </span> */}
             </div>
           </div>
         ))}
