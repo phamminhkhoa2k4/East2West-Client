@@ -1,11 +1,37 @@
 "use client"
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useHostContext } from "@/context/context";
+import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
 
 const Floor = () => {
-    const [countAdult, setCountAdult] = useState<number>(0);
-    const [countChildren, SetCountChildren] = useState<number>(0);
-    const [countBaby, SetCountBaby] = useState<number>(0);
+  const { state, setState } = useHostContext();
+    const [countMaxGuest, setCountMaxGuest] = useState<number | undefined>(state?.data.maxGuest ?? 0 );
+    const [countRoom, SetCountRoom] = useState<number | undefined>(0);
+    const [countBed, SetCountBed] = useState<number | undefined>(0);
+    const router = useRouter();
+    const handleClick = () => {
+      if (countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0){
+          setState({
+            data: {
+              ...state?.data!,
+              maxGuest: countMaxGuest as number,
+              // room:countRoom as number,
+              // bed:countBed as number,
+            },
+          });
+      
+          router.push("/homestays/host/standout");
+      }
+        
+    };
+
+    
+
+    const handleBack = () => {
+      router.back();
+    };
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -20,7 +46,9 @@ const Floor = () => {
             />
           </div>
           <div>
-            <button className="border px-4 py-2 rounded-full">Exit</button>
+            <Link href={"/"} className="border px-4 py-2 rounded-full">
+              Exit
+            </Link>
           </div>
         </div>
       </div>
@@ -41,7 +69,7 @@ const Floor = () => {
                 <button
                   className="border rounded-full p-2"
                   onClick={() =>
-                    setCountAdult((prev) => (prev > 0 ? prev - 1 : prev))
+                    setCountMaxGuest((prev) => (prev! > 0 ? prev! - 1 : prev))
                   }
                 >
                   <svg
@@ -59,10 +87,10 @@ const Floor = () => {
                     />
                   </svg>
                 </button>
-                <span>{countAdult}</span>
+                <span>{countMaxGuest}</span>
                 <button
                   className="border rounded-full p-2"
-                  onClick={() => setCountAdult((prev) => prev + 1)}
+                  onClick={() => setCountMaxGuest((prev) => prev! + 1)}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +117,7 @@ const Floor = () => {
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountChildren((prev) => (prev > 0 ? prev - 1 : prev));
+                    SetCountRoom((prev) => (prev! > 0 ? prev! - 1 : prev));
                   }}
                 >
                   <svg
@@ -107,11 +135,11 @@ const Floor = () => {
                     />
                   </svg>
                 </button>
-                <span>{countChildren}</span>
+                <span>{countRoom}</span>
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountChildren((prev) => prev + 1);
+                    SetCountRoom((prev) => prev! + 1);
                   }}
                 >
                   <svg
@@ -139,7 +167,7 @@ const Floor = () => {
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountBaby((prev) => (prev > 0 ? prev - 1 : prev));
+                    SetCountBed((prev) => (prev! > 0 ? prev! - 1 : prev));
                   }}
                 >
                   <svg
@@ -157,11 +185,11 @@ const Floor = () => {
                     />
                   </svg>
                 </button>
-                <span>{countBaby}</span>
+                <span>{countBed}</span>
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountBaby((prev) => prev + 1);
+                    SetCountBed((prev) => prev! + 1);
                   }}
                 >
                   <svg
@@ -185,10 +213,16 @@ const Floor = () => {
         </div>
       </div>
       <div className=" bg-white border-t-4 flex fixed left-0 right-0 bottom-0 items-center justify-between">
-        <button className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-400">
+        <button
+          onClick={handleBack}
+          className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-300"
+        >
           Back
         </button>
-        <button className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500">
+        <button
+          onClick={handleClick}
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0 ? "opacity-100" : "opacity-30"}`}
+        >
           Continue
         </button>
       </div>

@@ -1,7 +1,8 @@
-"use client"
+"use client";
 import SearchMap from "@/components/homestay/SearchMap";
 import dynamic from "next/dynamic";
-const Map = dynamic(() => import("@/components/homestay/Map"), {
+import { IoLocationOutline } from "react-icons/io5";
+const MapMove = dynamic(() => import("@/components/homestay/MapMove"), {
   ssr: false,
 });
 
@@ -22,13 +23,17 @@ type Location = {
   houseNumber: string | null;
 };
 
-type LocationSearchProps = {
+type LocationDetailProps = {
   position: Coordinates | null;
   setPosition: (value: Coordinates | null) => void;
-  setLocation: (value: Location | null) => void;
+  location: string | null
 };
 
-const LocationSearch = ({ position, setPosition , setLocation }: LocationSearchProps) => {
+const LocationDetail = ({
+  position,
+  setPosition,
+  location,
+}: LocationDetailProps) => {
   const handleSelect = (lat: number, lng: number) => {
     setPosition({ lat, lng });
   };
@@ -42,14 +47,21 @@ const LocationSearch = ({ position, setPosition , setLocation }: LocationSearchP
         công.
       </div>
       <div className="w-[640px] relative h-[500px] mt-5">
-        {!position && (
-          <div className="rounded-3xl bg-[url('/boat.png')] w-full h-full"></div>
-        )}
-        {position && <Map lat={position.lat} lng={position.lng} />}
-        <SearchMap onSelect={handleSelect} setLocation={setLocation} />
+
+        {position && <MapMove position={position} setPosition={setPosition} />}
+        <div className={`absolute left-10 top-5 w-[566px]`}>
+          <div className="relative">
+            <div className={`w-full h-full relative flex items-center bg-white rounded-3xl `}>
+              <IoLocationOutline className="ml-4 w-8 h-8" />
+              <div
+                className={`w-full h-full  p-4  `}
+              >{location}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </>
   );
 };
 
-export default LocationSearch;
+export default LocationDetail;

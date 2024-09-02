@@ -1,6 +1,17 @@
+"use client"
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Standout = () => {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push("/homestays/host/amenities");
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <div>
       <div className="mx-15 mt-5">
@@ -16,7 +27,9 @@ const Standout = () => {
               />
             </div>
             <div>
-              <button className="border px-4 py-2 rounded-full">Exit</button>
+              <Link href={"/"} className="border px-4 py-2 rounded-full">
+                Exit
+              </Link>
             </div>
           </div>
 
@@ -45,11 +58,17 @@ const Standout = () => {
         </div>
       </div>
       <div className="border-t-4 flex items-center justify-between">
-        <button className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-300">
+        <button
+          onClick={handleBack}
+          className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-300"
+        >
           Back
         </button>
-        <button className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500">
-          Start
+        <button
+          onClick={handleClick}
+          className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500"
+        >
+          Continue
         </button>
       </div>
     </div>

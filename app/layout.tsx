@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Scroll from "@/components/Scroll";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { HostProvider } from "@/context/context";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-         <ScrollArea>{children}</ScrollArea>
+        <HostProvider>{children}</HostProvider>
       </body>
     </html>
   );

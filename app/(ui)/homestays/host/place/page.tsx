@@ -1,8 +1,20 @@
+"use client"
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Place = () => {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push("/homestays/host/structure");
+  };
+
+  const handleBack = () => {
+    router.back();
+  }
+  
   return (
-    <div>
+    <>
       <div className="mx-15 mt-5">
         <div>
           <div className="flex items-center justify-between">
@@ -16,14 +28,18 @@ const Place = () => {
               />
             </div>
             <div>
-              <button className="border px-4 py-2 rounded-full">Exit</button>
+              <Link href={"/"} className="border px-4 py-2 rounded-full">
+                Exit
+              </Link>
             </div>
           </div>
 
           <div className="flex gap-5 items-center justify-center pb-11">
             <div className="flex flex-col w-[585px] gap-1">
               <div className="text-lg font-medium">Bước 1</div>
-              <div className="text-5xl font-medium">Chia sẻ thông tin về chỗ ở của bạn cho chúng tôi</div>
+              <div className="text-5xl font-medium">
+                Chia sẻ thông tin về chỗ ở của bạn cho chúng tôi
+              </div>
               <div className="text-lg font-normal text-[#222]">
                 Trong bước này, chúng tôi sẽ hỏi xem bạn cho thuê loại chỗ ở nào
                 và bạn muốn cho khách đặt toàn bộ nhà hay chỉ một phòng cụ thể.
@@ -43,15 +59,21 @@ const Place = () => {
           </div>
         </div>
       </div>
-      <div className="border-t-4 flex items-center justify-between">
-        <button className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-300">
+      <div className="fixed left-0 right-0 bottom-0 border-t-4 flex items-center justify-between">
+        <button
+          onClick={handleBack}
+          className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-300"
+        >
           Back
         </button>
-        <button className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500">
-          Start
+        <button
+          onClick={handleClick}
+          className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500"
+        >
+          Continue
         </button>
       </div>
-    </div>
+    </>
   );
 };
 

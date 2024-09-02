@@ -1,7 +1,20 @@
+"use client"
+import { useHostContext } from "@/context/context";
 import Image from "next/image";
-import { IoHomeOutline } from "react-icons/io5";
+import { useState } from "react";
 
 const Price = () => {
+  const {state,setState} = useHostContext();
+  console.log(state?.data.pricePerNight);
+  
+  const [price,setPrice] = useState<number | undefined>(state?.data.pricePerNight  ?? 0);
+
+  
+
+     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value ? Number(event.target.value) : undefined;
+    setPrice(value);      
+     }
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -30,13 +43,19 @@ const Price = () => {
           </div>
         </div>
         <div className="flex my-5">
-            <input type="number" value={0}  className="border-none outline-none font-5xl font-bold w-20"/>
+          <input
+            type="number"
+            value={price}
+            min={1}
+            onChange={(e) => handleChange(e)}
+            className="border-none outline-none font-5xl font-bold w-20 input-number"
+          />
         </div>
         <div className="flex justify-center w-[340px]  mt-5">
           <div className="border rounded-lg p-4">
             <div className="flex items-center justify-between py-3">
               <div className="text-lg text-[#666]">Giá cơ sở</div>{" "}
-              <div className="text-lg text-[#666]">$0</div>
+              <div className="text-lg text-[#666]">${price}</div>
             </div>
             <div className="flex items-center justify-between py-3">
               <div className="text-lg text-[#666]">
