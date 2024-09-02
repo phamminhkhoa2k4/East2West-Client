@@ -76,7 +76,7 @@ const Header = (props: {
 
         <div className="flex items-center justify-normal gap-2 2xsm:gap-4 lg:w-full lg:justify-between xl:w-auto xl:justify-normal">
           <ul className="flex items-center gap-2 2xsm:gap-4">
-            <SearchForm />
+           
 
             <DarkModeSwitcher />
 
