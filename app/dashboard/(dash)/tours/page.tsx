@@ -1,11 +1,12 @@
-import ECommerce from "@/components/Dashboard/E-commerce";
+
+import Dash from "@/components/Dashboard/Dash";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 const Tours = () => {
     return (
       <>
         <DefaultLayout>
-          <ECommerce />
+          <Dash />
         </DefaultLayout>
       </>
     );
