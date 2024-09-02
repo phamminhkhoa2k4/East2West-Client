@@ -6,9 +6,8 @@ interface InputGroupProps {
   type: string;
   placeholder: string;
   required?: boolean;
-  name: string; // Add name to the props
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void; 
-  value?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string | null | undefined;
 }
 
 const InputGroup: React.FC<InputGroupProps> = ({
@@ -17,8 +16,8 @@ const InputGroup: React.FC<InputGroupProps> = ({
   type,
   placeholder,
   required,
-  name,
   onChange,
+  value
 }) => {
   return (
     <>
@@ -30,8 +29,8 @@ const InputGroup: React.FC<InputGroupProps> = ({
         <input
           type={type}
           placeholder={placeholder}
-          name={name} // Add name to the input element
-          onChange={onChange} // Add onChange to the input element
+          onChange={onChange}
+          value={value ?? ""}
           className="w-full rounded-[7px] border-[1.5px] border-stroke bg-transparent px-5.5 py-3 text-dark outline-none transition placeholder:text-dark-6 focus:border-primary active:border-primary disabled:cursor-default dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
         />
       </div>

@@ -2,26 +2,17 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 import Gallery from "@/components/tour/Gallerry";
 import { FiMoreHorizontal, FiShare2 } from "react-icons/fi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import Itinerary from "@/components/tour/Itinerary";
 import CheckoutPackage from "@/components/tour/CheckoutPackage";
-<<<<<<< HEAD
-=======
-
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
 export default function Package() {
   return (
     <>
-      <div className="mx-10">
+      <div className="mx-10 mt-36">
         <Breadcrumb />
       </div>
       <div className="mx-20">
         <div className="mb-5">
-<<<<<<< HEAD
-          <div className="flex justify-between">  
-=======
           <div className="flex justify-between">
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
             <h1 className="text-3xl font-bold">
               Hanoi to Danang - Super Saver
             </h1>
@@ -40,10 +31,6 @@ export default function Package() {
               </button>
             </div>
           </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> aa0544e38407cf1589e599ba818920f672357525
           <div className="flex my-2 gap-5">
             <div className="border px-2 rounded-md">6N/7D</div>
             <div className="flex gap-1 items-center">

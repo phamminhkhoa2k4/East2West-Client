@@ -2,8 +2,9 @@
 
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import api from "../../utils/axios";
+
 import CardPopular from "./CardPopular";
+import { api } from "@/utils/axios";
 
 interface CarCardProps {
   img: string;
@@ -140,8 +141,9 @@ const Collection = () => {
         </div>
       </div>
       <div className="container mx-auto grid grid-cols-1 items-start gap-x-6 gap-y-20 md:grid-cols-2 xl:grid-cols-3">
-        {filteredCars.map((car) => (
+        {filteredCars.map((car , index) => (
           <CardPopular
+          key={index}
             img={`/path/to/car/image/${car.carId}.jpg`} 
             title={car.carName}
             desc={`Model: ${car.model.modelName}, Make: ${car.make.makeName}`}

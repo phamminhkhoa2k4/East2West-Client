@@ -42,15 +42,9 @@ const CardSearch = ({ car }: CardSearchProps) => {
   if (!car) {
     return <div>Error: Car data is missing</div>;
   }
-  const router = useRouter();
+  
 
-  const handleRentNowClick = () => {
-    if (car.carId) {
-      router.push(`/cars/${car.carId}`);
-    } else {
-      console.error("carId is undefined");
-    }
-  };
+  
   return (
     <div className="flex border rounded-xl bg-white shadow-md">
       <div className="flex items-center gap-5 p-6">
@@ -133,7 +127,7 @@ const CardSearch = ({ car }: CardSearchProps) => {
               <div className="text-base font-medium">Price For 1 Day:</div>
               <div className="text-2xl font-bold">${car.pricePerDay}</div>
             </div>
-            <button className="font-bold text-lg px-8 py-3 border shadow-sm rounded-lg text-white bg-blue-500" onClick={handleRentNowClick}>
+            <button className="font-bold text-lg px-8 py-3 border shadow-sm rounded-lg text-white bg-blue-500" >
               View Detail
             </button>
           </div>

@@ -26,12 +26,13 @@ import {
 } from "@/components/ui/pagination";
 
 import { useState } from "react";
-import { CustomTableProps } from "@/types/table";
+import { StaffTableProps } from "@/types/table";
 import Link from "next/link";
+import SearchForm from "../Header/SearchForm";
 
 
 
-const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,createUrl  }) => {
+const StaffTable: React.FC<StaffTableProps> = ({ columns, data, title }) => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((col) => col.key)
   );
@@ -45,7 +46,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
   return (
     <div className="">
       <div className="flex my-5 items-center justify-between max-w-[1135px]">
-        <Link href={createUrl} className="px-5 py-2 rounded-xl border dark:border-white">Create New</Link>
+        <SearchForm />
         <div>
           <Pagination>
             <PaginationContent>
@@ -177,4 +178,4 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
 
 
 
-export default CustomTable;
+export default StaffTable;
