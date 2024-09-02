@@ -1,8 +1,18 @@
+"use client"
 import Image from "next/image";
-import { IoHomeOutline } from "react-icons/io5";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { MdOutlineElectricBolt } from "react-icons/md";
 import { TiMessages } from "react-icons/ti";
 const Instant = () => {
+  const router = useRouter();
+  const handleClick = () => {
+    router.push("/homestays/host/price");
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -17,7 +27,9 @@ const Instant = () => {
             />
           </div>
           <div>
-            <button className="border px-4 py-2 rounded-full">Exit</button>
+            <Link href={"/"} className="border px-4 py-2 rounded-full">
+              Exit
+            </Link>
           </div>
         </div>
       </div>
@@ -51,10 +63,16 @@ const Instant = () => {
         </div>
       </div>
       <div className=" bg-white border-t-4 flex fixed left-0 right-0 bottom-0 items-center justify-between">
-        <button className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-400">
+        <button
+          onClick={handleBack}
+          className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-300"
+        >
           Back
         </button>
-        <button className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500">
+        <button
+          onClick={handleClick}
+          className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500"
+        >
           Continue
         </button>
       </div>

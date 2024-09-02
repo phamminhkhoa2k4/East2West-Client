@@ -30,6 +30,7 @@ const FormLayout = () => {
                     type="text"
                     placeholder="Enter your first name"
                     customClasses="w-full xl:w-1/2"
+                    onChange={() => {}}
                   />
 
                   <InputGroup
@@ -37,6 +38,7 @@ const FormLayout = () => {
                     type="text"
                     placeholder="Enter your last name"
                     customClasses="w-full xl:w-1/2"
+                    onChange={() => {}}
                   />
                 </div>
 
@@ -46,6 +48,7 @@ const FormLayout = () => {
                   placeholder="Enter your email address"
                   customClasses="mb-4.5"
                   required
+                  onChange={() => {}}
                 />
 
                 <InputGroup
@@ -53,6 +56,7 @@ const FormLayout = () => {
                   type="text"
                   placeholder="Enter your subject"
                   customClasses="mb-4.5"
+                  onChange={() => {}}
                 />
 
                 {/* <SelectGroupOne /> */}
@@ -91,12 +95,14 @@ const FormLayout = () => {
                   type="email"
                   placeholder="Enter your email address"
                   customClasses="mb-4.5"
+                  onChange={() => {}}
                 />
 
                 <InputGroup
                   label="Password"
                   type="password"
                   placeholder="Enter your password"
+                  onChange={() => {}}
                 />
 
                 <div className="mb-5.5 mt-5 flex items-center justify-between">
@@ -159,6 +165,7 @@ const FormLayout = () => {
                   type="text"
                   placeholder="Enter full name"
                   customClasses="mb-4.5"
+                  onChange={() => {}}
                 />
 
                 <InputGroup
@@ -166,6 +173,7 @@ const FormLayout = () => {
                   type="email"
                   placeholder="Enter email address"
                   customClasses="mb-4.5"
+                  onChange={() => {}}
                 />
 
                 <InputGroup
@@ -173,6 +181,7 @@ const FormLayout = () => {
                   type="password"
                   placeholder="Enter password"
                   customClasses="mb-4.5"
+                  onChange={() => {}}
                 />
 
                 <InputGroup
@@ -180,6 +189,7 @@ const FormLayout = () => {
                   type="password"
                   placeholder="Re-enter"
                   customClasses="mb-5.5"
+                  onChange={() => {}}
                 />
 
                 <button className="flex w-full justify-center rounded-[7px] bg-primary p-[13px] font-medium text-white hover:bg-opacity-90">

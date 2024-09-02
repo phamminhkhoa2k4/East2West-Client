@@ -154,7 +154,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
                           col.key !== "photo" &&
                           col.key !== "thumbnail" && (
                             <div className="text-sm font-medium dark:text-dark-6 text-gray-900 w-[200px] line-clamp-2">
-                              {row[col.key]}
+                              {row[col.key] ?? ""}
                             </div>
                           )}
                         {col.key === "approve" && (

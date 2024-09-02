@@ -69,4 +69,4 @@ const deleteData = async ({id, endpoint} :deleteProps) => {
   }
 };
 
-export {api, getData , createData , updateData ,deleteData  }
+export {api ,getData , createData , updateData ,deleteData  }

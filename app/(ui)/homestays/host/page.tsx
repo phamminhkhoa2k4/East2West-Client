@@ -1,6 +1,14 @@
+"use client"
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Host = () => {
+
+   const router = useRouter();
+   const handleClick = () => {
+     router.push("/homestays/host/place");
+   };
   return (
     <div>
       <div className="mx-15 mt-5">
@@ -19,7 +27,7 @@ const Host = () => {
               Begin in our platform so easy
             </div>
             <div>
-              <button className="border px-4 py-2 rounded-full">Exit</button>
+              <Link href={"/"} className="border px-4 py-2 rounded-full">Exit</Link>
             </div>
           </div>
 
@@ -90,8 +98,11 @@ const Host = () => {
           </div>
         </div>
       </div>
-      <div className="border-t-4 flex items-center justify-end">
-        <button className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500">
+      <div className=" fixed left-0 right-0 bottom-0 border-t-4 flex items-center justify-end">
+        <button
+          onClick={handleClick}
+          className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500"
+        >
           Start
         </button>
       </div>

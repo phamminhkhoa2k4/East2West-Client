@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import CardSearch from "./CardSearch";
-import {api} from "../../utils/axios";
 import {
   Accordion,
   AccordionContent,
@@ -19,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {  getData } from "@/utils/axios";
 interface Car {
   carId: number;
   carName: string;
@@ -53,7 +53,7 @@ const CarSearchResult = () => {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await api.get("/cars");
+        const response = await getData({ endpoint: "/cars" });
         setCars(response.data);
       } catch (error) {
         console.error("Error fetching cars:", error);
@@ -316,7 +316,6 @@ const CarSearchResult = () => {
                     </div>
                   </AccordionContent>
                 </AccordionItem>
-            
               </Accordion>
             </div>
           </div>
@@ -373,11 +372,12 @@ const CarSearchResult = () => {
               </div>
             </div>
             <div className="ml-5 flex flex-col gap-5 ">
-            {cars.map((car) => (
-          <CardSearch
-            car={car} // Pass the entire car object to CardSearch
-          />
-        ))}
+              {cars.map((car, index) => (
+                <CardSearch
+                  key={index}
+                  car={car} // Pass the entire car object to CardSearch
+                />
+              ))}
             </div>
           </div>
         </div>

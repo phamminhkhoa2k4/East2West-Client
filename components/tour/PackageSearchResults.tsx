@@ -1,12 +1,11 @@
-"use client";
-import { api } from "../../utils/axios";
-import { useState, useEffect } from "react";
+"use client"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import {
   Select,
   SelectContent,
@@ -16,125 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useState } from "react";
 import CardSearch from "./CardSearch";
-interface TourPackage {
-  packageId: number;
-  title: string;
-  price: number;
-  // Add other relevant fields based on your API response
-}
 
-interface Category {
-  categoryTourId: number;
-  categoryTourName: string;
-}
-
-interface Theme {
-  themeTourId: number;
-  themeTourName: string;
-}
-
-interface Suitable {
-  suitableTourId: number;
-  suitableName: string;
-}
-
-interface FilterParams {
-  categoryTourId: number[];
-  themeTourId: number[];
-  suitableTourId: number[];
-  budget: string;
-}
 const PackageSearchResult = () => {
-  const [tourPackage, setTourPackage] = useState<TourPackage[] | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedValue, setSelectedValue] = useState<string>("");
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [themes, setThemes] = useState<Theme[]>([]);
-  const [suitables, setSuitables] = useState<Suitable[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
-  const [selectedTheme, setSelectedTheme] = useState<number[]>([]);
-  const [selectedSuitable, setSelectedSuitable] = useState<number[]>([]);
-  const [budget, setBudget] = useState<string>("");
-
-  useEffect(() => {
-    const fetchTourPackage = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/tours");
-        if (!response.ok) {
-          throw new Error("Failed to fetch tour package");
-        }
-        const data: TourPackage[] = await response.json();
-        setTourPackage(data);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : "Unknown error");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    // Fetch categories
-    api.get<Category[]>("http://localhost:8080/api/tours/category").then((response) => {
-      setCategories(response.data);
-    });
-
-    // Fetch themes
-    api.get<Theme[]>("http://localhost:8080/api/tours/theme").then((response) => {
-      setThemes(response.data);
-    });
-
-    // Fetch suitables
-    api.get<Suitable[]>("http://localhost:8080/api/tours/suitable").then((response) => {
-      setSuitables(response.data);
-    });
-
-    fetchTourPackage();
-  }, []);
-
-  const sortPackages = (value: string) => {
-    if (!tourPackage) return;
-
-    let sortedPackages: TourPackage[];
-    switch (value) {
-      case "price":
-        sortedPackages = [...tourPackage].sort((a, b) => a.price - b.price);
-        break;
-      case "title":
-        sortedPackages = [...tourPackage].sort((a, b) =>
-          a.title.localeCompare(b.title)
-        );
-        break;
-      default:
-        sortedPackages = tourPackage;
-    }
-    setTourPackage(sortedPackages);
-  };
-
-  const handleFilter = () => {
-    const filterDTO: FilterParams = {
-      categoryTourId: selectedCategory,
-      themeTourId: selectedTheme,
-      suitableTourId: selectedSuitable,
-      budget: budget,
-    };
-  
-    api
-      .post("http://localhost:8080/api/tours/filter", filterDTO)
-      .then((response) => {
-        console.log(response.data); // handle the filtered data
-      })
-      .catch((error) => {
-        console.error("Error fetching filtered tours:", error);
-      });
-  };
-
-  useEffect(() => {
-    sortPackages(selectedValue);
-  }, [selectedValue]);
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+    const [selectedValue, setSelectedValue] = useState('apple');
   return (
     <>
       <div className="border rounded-3xl shadow-lg mb-6">
@@ -143,8 +28,8 @@ const PackageSearchResult = () => {
           <div className="p-5 w-3/4 font-semibold">ALL PACKAGES</div>
         </div>
         <div className="flex">
-          <div className="p-5 w-1/4 border-r">
-            <div>
+          <div className="p-5 w-1/4 border-r ">
+            <div className="">
               <Accordion
                 type="multiple"
                 defaultValue={[
@@ -159,115 +44,283 @@ const PackageSearchResult = () => {
               >
                 <AccordionItem value="item-1">
                   <AccordionTrigger>
-                    <div className="text-lg font-bold my-2">Budget (per person)</div>
+                    <div className="text-lg font-bold my-2">
+                      Duration (in Nights)
+                    </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    <input
-                      type="number"
-                      value={budget}
-                      onChange={(e) => setBudget(e.target.value)}
-                      className="border p-2 w-full rounded-lg"
-                      placeholder="Enter budget"
-                    />
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            id="link-checkbox"
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            htmlFor="link-checkbox"
+                            className="flex items-center ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="size-[10px]"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                              />
+                            </svg>
+                            <span>3N</span>
+                          </label>
+                        </div>
+                        <div>(19)</div>
+                      </div>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-2">
                   <AccordionTrigger>
-                    <div className="text-lg font-bold my-2">Categories</div>
+                    <div className="text-lg font-bold my-2">
+                      Budget (per person)
+                    </div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    {categories.map((category) => (
-                      <div key={category.categoryTourId} className="flex items-center justify-between">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <input
+                            id="link-checkbox"
                             type="checkbox"
-                            value={category.categoryTourId}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedCategory([...selectedCategory, category.categoryTourId]);
-                              } else {
-                                setSelectedCategory(
-                                  selectedCategory.filter((id) => id !== category.categoryTourId)
-                                );
-                              }
-                            }}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           />
-                          <label className="ml-2 text-sm font-medium text-gray-900">
-                            {category.categoryTourName}
+                          <label
+                            htmlFor="link-checkbox"
+                            className="flex items-center ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="size-[10px]"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                              />
+                            </svg>
+                            <span>$4000.0</span>
                           </label>
                         </div>
+                        <div>(19)</div>
                       </div>
-                    ))}
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
                   <AccordionTrigger>
-                    <div className="text-lg font-bold my-2">Themes</div>
+                    <div className="text-lg font-bold my-2">Cities</div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    {themes.map((theme) => (
-                      <div key={theme.themeTourId} className="flex items-center justify-between">
+                    <div className="flex flex-col gap-3">
+                      <div className="relative">
+                        <input
+                          type="text"
+                          className="border p-2 w-full rounded-lg"
+                        />
+                        <span className="absolute top-2 right-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            className="size-6"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <input
+                            id="link-checkbox"
                             type="checkbox"
-                            value={theme.themeTourId}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedTheme([...selectedTheme, theme.themeTourId]);
-                              } else {
-                                setSelectedTheme(
-                                  selectedTheme.filter((id) => id !== theme.themeTourId)
-                                );
-                              }
-                            }}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           />
-                          <label className="ml-2 text-sm font-medium text-gray-900">
-                            {theme.themeTourName}
+                          <label
+                            htmlFor="link-checkbox"
+                            className="flex items-center ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="size-[10px]"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                              />
+                            </svg>
+                            <span>$4000.0</span>
                           </label>
                         </div>
+                        <div>(19)</div>
                       </div>
-                    ))}
+                      <div className="text-sm font-bold text-blue-600">
+                        Show More
+                      </div>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4">
                   <AccordionTrigger>
-                    <div className="text-lg font-bold my-2">Suitable For</div>
+                    <div className="text-lg font-bold my-2">Themes</div>
                   </AccordionTrigger>
                   <AccordionContent>
-                    {suitables.map((suitable) => (
-                      <div key={suitable.suitableTourId} className="flex items-center justify-between">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <input
+                            id="link-checkbox"
                             type="checkbox"
-                            value={suitable.suitableTourId}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setSelectedSuitable([...selectedSuitable, suitable.suitableTourId]);
-                              } else {
-                                setSelectedSuitable(
-                                  selectedSuitable.filter((id) => id !== suitable.suitableTourId)
-                                );
-                              }
-                            }}
-                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           />
-                          <label className="ml-2 text-sm font-medium text-gray-900">
-                            {suitable.suitableName}
+                          <label
+                            htmlFor="link-checkbox"
+                            className="flex items-center ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="size-[10px]"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                              />
+                            </svg>
+                            <span>$4000.0</span>
                           </label>
                         </div>
+                        <div>(19)</div>
                       </div>
-                    ))}
+                      <div className="text-sm font-bold text-blue-600">
+                        Show More
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-5">
+                  <AccordionTrigger>
+                    <div className="text-lg font-bold my-2">Categories</div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            id="link-checkbox"
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            htmlFor="link-checkbox"
+                            className="flex items-center ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="size-[10px]"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                              />
+                            </svg>
+                            <span>$4000.0</span>
+                          </label>
+                        </div>
+                        <div>(19)</div>
+                      </div>
+                      <div className="text-sm font-bold text-blue-600">
+                        Show More
+                      </div>
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-6" className="border-none">
+                  <AccordionTrigger>
+                    <div className="text-lg font-bold my-2">Suitable</div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            id="link-checkbox"
+                            type="checkbox"
+                            value=""
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          />
+                          <label
+                            htmlFor="link-checkbox"
+                            className="flex items-center ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke-width="1.5"
+                              stroke="currentColor"
+                              className="size-[10px]"
+                            >
+                              <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="M15.75 19.5 8.25 12l7.5-7.5"
+                              />
+                            </svg>
+                            <span>$4000.0</span>
+                          </label>
+                        </div>
+                        <div>(19)</div>
+                      </div>
+                      <div className="text-sm font-bold text-blue-600">
+                        Show More
+                      </div>
+                    </div>
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-              <button
-                onClick={handleFilter}
-                className="mt-4 bg-blue-600 text-white py-2 px-4 rounded"
-              >
-                Apply Filters
-              </button>
             </div>
           </div>
           <div className="p-5 w-3/4 h-[1032px] overflow-y-scroll scroll-transparent">
@@ -302,24 +355,33 @@ const PackageSearchResult = () => {
                   <SelectTrigger className="w-[180px] border outline-none">
                     <SelectValue>
                       {selectedValue
-                        ? `Sort By: ${selectedValue.charAt(0).toUpperCase() + selectedValue.slice(1)
-                        }`
-                        : "Sort By:"}
+                        ? `Sort By : ${
+                            selectedValue.charAt(0).toUpperCase() +
+                            selectedValue.slice(1)
+                          }`
+                        : "Sort By :"}
                     </SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>Sort Options</SelectLabel>
-                      <SelectItem value="price">Price</SelectItem>
-                      <SelectItem value="title">Title</SelectItem>
+                      <SelectLabel>Fruits</SelectLabel>
+                      <SelectItem value="apple">Apple</SelectItem>
+                      <SelectItem value="banana">Banana</SelectItem>
+                      <SelectItem value="blueberry">Blueberry</SelectItem>
+                      <SelectItem value="grapes">Grapes</SelectItem>
+                      <SelectItem value="pineapple">Pineapple</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
               </div>
             </div>
-            {tourPackage && tourPackage.map((pkg) => (
-              <CardSearch key={pkg.packageId} tourPackage={pkg} />
-            ))}
+            <div className="ml-5 grid grid-cols-2 gap-5 ">
+              <CardSearch />
+              <CardSearch />
+              <CardSearch />
+              <CardSearch />
+              <CardSearch />
+            </div>
           </div>
         </div>
       </div>

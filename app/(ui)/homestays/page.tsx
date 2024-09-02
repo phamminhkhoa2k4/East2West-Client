@@ -3,11 +3,38 @@ import Banner from "@/components/Banner/Banner";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { format } from "date-fns";
 import { getData } from "@/utils/axios";
 // export const metadata: Metadata = {
 //   title: "Homestays | East2West",
 //   description: "This Is Homestays Page Of East2West Tours and Travel",
 // };
+interface HomestayAvailability {
+  homestayavailabilityid: number;
+  date: string;
+  pricepernight: number;
+  status: string;
+}
+
+interface Homestay {
+  homestayid: number;
+  wardId: number;
+  hometypeId: number;
+  userid: number;
+  longitude: number;
+  latitude: number;
+  title: string;
+  address: string;
+  geom: string;
+  photos: string;
+  description: string;
+  exactinfo: string;
+  cleaningfee: number;
+  isapproved: boolean;
+  maxguest: number;
+  perkIds: number[];
+  availability: HomestayAvailability[];
+}
 
 import * as React from "react";
 
@@ -22,20 +49,25 @@ import {
 import { CarouselType } from "@/components/HomestayType";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 
-function CarouselCard() {
+type photoProps = {
+  photos : string
+  url : number
+}
+
+function CarouselCard({ photos ,url }: photoProps) {
   return (
     <Carousel className="w-full">
       <CarouselContent>
         {Array.from({ length: 5 }).map((_, index): any => (
           <CarouselItem key={index}>
-            <Link href={"/"}>
+            <Link href={`/homestays/${url}`}>
               <div className="p-1">
                 <Card>
                   <CardContent className="flex aspect-square items-center justify-center overflow-hidden p-0 rounded-xl w-full h-full">
                     {/* <div className="bg-gray-500 rounded-2xl w-full h-full "> */}
                     <Image
                       className="object-cover aspect-square w-full h-full"
-                      src={"/boat.png"}
+                      src={photos}
                       alt=""
                       height={600}
                       width={600}
@@ -55,7 +87,7 @@ function CarouselCard() {
 }
 
 const Homestays: React.FC = () => {
-  const [homestays, setHomestays] = React.useState([{title : ""}]);
+  const [homestays, setHomestays] = React.useState<Homestay[]>([]);
    const [loading, setLoading] = React.useState(true);
   React.useEffect(() => {
       const getAll = async () => {
@@ -178,22 +210,27 @@ const Homestays: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="mt-3 gap-x-6 gap-y-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 mx-20">
-        {homestays?.map((homestay, index) => (
+      <div className="mt-3 gap-x-2 gap-y-8 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 mx-20">
+        {homestays?.map((homestay, index) =>  {
+          const currentDate = format(new Date(), "yyyy-MM-dd");
+            const todayAvailability = homestay.availability.find(avail => {
+        return avail.date.startsWith(currentDate);
+    });
+          return (
           <div key={index} className="w-full  border rounded-2xl p-2 shadow-lg">
-            <CarouselCard />
-            <Link href={"/"} >
-              <h2 className="font-bold text-xl font-satoshi mt-2">
+            <CarouselCard photos="/boat.png" url={homestay.homestayid}/>
+            <Link href={`/homestays/${homestay.homestayid}`}>
+              <h2 className="font-bold text-xl font-satoshi mt-2 mb-2">
                 {homestay.title}
               </h2>
               <h3 className="text-lg text-gray-500 font-satoshi mb-2">
-                1 Giuong
+                {homestay.address}
               </h3>
               <div className="mt-1 font-satoshi">
                 <span className="font-bold text-[#222] text-lg leading-5">
-                  $ 200
+                  $ {todayAvailability ? todayAvailability.pricepernight : "N/A"}
                 </span>{" "}
-                / night3
+                / night
               </div>
               <div className="flex gap-2 justify-around mt-1">
                 <div className="flex gap-2 bg-[#f8f9fd] items-center rounded-sm p-2">
@@ -232,7 +269,7 @@ const Homestays: React.FC = () => {
                       />
                     </svg>
                   </span>
-                  <span className="font-bold text-xs">6 Beds</span>
+                  <span className="font-bold text-xs">6 Bath</span>
                 </div>
                 <div className="flex gap-2 bg-[#f8f9fd] items-center rounded-sm p-2">
                   <span>
@@ -251,12 +288,12 @@ const Homestays: React.FC = () => {
                       />
                     </svg>
                   </span>
-                  <span className="font-bold text-xs">6 Beds</span>
+                  <span className="font-bold text-xs">{homestay.maxguest} Guest</span>
                 </div>
               </div>
             </Link>
           </div>
-        ))}
+        )})}
       </div>
       <div className="fixed  z-99 bottom-10 right-10">
         <button className="flex gap-3 px-6 py-4 border rounded-xl bg-slate-900">

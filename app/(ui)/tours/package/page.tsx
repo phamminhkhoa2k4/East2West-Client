@@ -110,12 +110,15 @@ export default function Package() {
 
   return (
     <>
-      <div className="mx-10">
+      <div className="mx-10 mt-36">
         <Breadcrumb />
       </div>
       <div className="mx-20">
         <div className="mb-5">
           <div className="flex justify-between">
+            {/* <h1 className="text-3xl font-bold">
+              Hanoi to Danang - Super Saver
+            </h1> */}
             <h1 className="text-3xl font-bold">{packageData.title}</h1>
             <div className="flex items-center gap-3">
               <button

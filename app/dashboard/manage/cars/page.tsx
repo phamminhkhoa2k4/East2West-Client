@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
+import { DataRow } from "@/types/table";
 
 const columns = [
   { key: "thumbnail", label: "Thumbnail" },
@@ -55,7 +56,7 @@ interface Car {
   imageUrl?: string;
 }
 
-interface CarTableData {
+interface CarTableData extends DataRow{
   thumbnail: string;
   carName: string;
   make: string;
@@ -75,7 +76,7 @@ interface CarTableData {
   [key: string]: string | number; // Updated index signature
 }
 const Cars = () => {
-  const [data, setData] = useState<CarTableData[]>([]);
+  const [data, setData] = useState<CarTableData[]>([]); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -122,6 +123,9 @@ const Cars = () => {
         title="Cars"
         createUrl="/dashboard/manage/cars/add"
       />
+      <div>
+        
+      </div>
     </DefaultLayout>
   );
 };

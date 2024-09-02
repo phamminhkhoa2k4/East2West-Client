@@ -50,7 +50,7 @@ const data = [
 const TableCar = () => {
   return (
     <>
-      <CustomTable columns={columns} data={data} title="Cars"/>
+      {/* <CustomTable columns={columns} data={data} title="Cars"/> */}
     </>
   );
 };

@@ -178,7 +178,7 @@ const FormElements = () => {
             </div>
             <div className="flex flex-col gap-5.5 p-6.5">
               <CheckboxOne />
-              <CheckboxTwo />
+              {/* <CheckboxTwo /> */}
               <CheckboxThree />
               <CheckboxFour />
               <CheckboxFive />
@@ -193,8 +193,8 @@ const FormElements = () => {
               </h3>
             </div>
             <div className="flex flex-col gap-5.5 p-6.5">
-              <SelectGroupTwo />
-              <MultiSelect id="multiSelect" placeholder="Please Choose Options" label="Category" />
+              {/* <SelectGroupTwo />
+              <MultiSelect id="multiSelect" placeholder="Please Choose Options" label="Category" /> */}
             </div>
           </div>
         </div>

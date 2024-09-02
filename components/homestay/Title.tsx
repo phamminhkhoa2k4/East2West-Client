@@ -8,12 +8,19 @@ import { FiShare2, FiMoreHorizontal } from "react-icons/fi";
 import { BsHouseDoorFill } from "react-icons/bs";
 import IconLabel from "./IconLabel";
 
+type TitleProps = {
+  title: string | undefined;
+  location: string | undefined;
+  guest: number | undefined;
+  bed: number | undefined;
+  bath: number | undefined;
+};
 
-const TitleDetails = () => {
+const TitleDetails = ({title , location , guest , bed , bath, }: TitleProps) => {
   return (
     <div className="flex flex-col space-y-4 my-8">
       <div className="flex flex-col md:flex-row justify-between">
-        <h1 className="text-4xl lg:text-5xl font-bold">Beach House Belgrade</h1>
+        <h1 className="text-4xl lg:text-5xl font-bold">{title}</h1>
         <div className="flex space-x-4 mt-4 md:mt-0">
           <button
             className="p-2 rounded-full border border-gray-300 hover:bg-gray-100"
@@ -43,25 +50,18 @@ const TitleDetails = () => {
       </div>
       <div className="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6 w-full md:w-fit">
         <IconLabel
-          icon={<HiStar className="text-yellow-400 text-xl" />}
-          separator={<span className="text-gray-500 font-bold">·</span>}
-        >
-          <span className="text-md">4.96</span>
-          <span className="text-md">26 reviews</span>
-        </IconLabel>
-        <IconLabel
           icon={<HiLocationMarker className="text-gray-500 text-xl" />}
         >
-          <span className="text-md">Belgrade, Serbia</span>
+          <span className="text-md">{location} Belgrade, Serbia</span>
         </IconLabel>
         <IconLabel
           icon={<BsHouseDoorFill className="text-gray-500 text-xl" />}
           separator={<span className="text-gray-500 font-bold">·</span>}
         >
-          <span className="text-md">4 guests</span>
-          <span className="text-md">1 bedroom</span>
-          <span className="text-md">2 beds</span>
-          <span className="text-md">1 bath</span>
+          <span className="text-md">{guest} guests</span>
+          <span className="text-md">{bed} bedroom</span>
+          <span className="text-md">{bed} beds</span>
+          <span className="text-md">{bath} bath</span>
         </IconLabel>
       </div>
     </div>

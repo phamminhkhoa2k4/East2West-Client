@@ -2,10 +2,12 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
+import { getData } from "@/utils/axios";
+import { Column  } from "@/types/table";
 
-const columns = [
-  { key: "locationtypeid", label: "ID" },
-  { key: "locationtypename", label: "Location Type Name" },
+const columns: Column[] = [
+  { key: "locationTypeId", label: "ID" },
+  { key: "locationTypeName", label: "Location Type Name" },
 ];
 
 interface LocationType {
@@ -13,7 +15,7 @@ interface LocationType {
   locationtypename: string;
 }
 interface DataRow {
-  [key: string]: string | number; // Generic structure matching any row data
+  [key: string]: string | number; 
 }
 const LocationTypes = () => {
   const [data, setData] = useState<DataRow[]>([]);

@@ -47,6 +47,7 @@ const Makes = () => {
         title="Makes"
         createUrl="/dashboard/manage/cars/make/add"
       />
+      <div></div>
     </DefaultLayout>
   );
 };

@@ -39,12 +39,13 @@ const Types = () => {
 
   return (
     <DefaultLayout>
-      <CustomTable
+      {/* <CustomTable
         columns={columns}
         data={data}
         title="Types"
         createUrl="/dashboard/manage/cars/type/add"
-      />
+      /> */}
+      <div></div>
     </DefaultLayout>
   );
 };
