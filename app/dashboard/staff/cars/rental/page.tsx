@@ -14,7 +14,6 @@ const RentalStaff = () => {
       <DefaultLayout>
         <div className="mx-auto w-full max-w-[1080px]">
           <Breadcrumb pageName="Staff" />
-
           <div>
             <div className="flex flex-col gap-9">
               <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
