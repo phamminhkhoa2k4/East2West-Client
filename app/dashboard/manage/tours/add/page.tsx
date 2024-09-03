@@ -78,7 +78,6 @@ const Create :React.FC= () => {
           fetch("http://localhost:8080/api/tours/theme"),
           fetch("http://localhost:8080/api/tours/suitable"),
         ]);
-
         if (!categoriesRes.ok || !themesRes.ok || !suitablesRes.ok) {
           throw new Error("Failed to fetch data");
         }
@@ -180,6 +179,7 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Price"
                   type="text"
+
                   placeholder="Enter price"
                   customClasses="w-full xl:w-1/2"
                   onChange={handleChange}
@@ -187,6 +187,7 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Price Reduce"
                   type="text"
+
                   placeholder="Enter price reduction"
                   customClasses="w-full xl:w-1/2"
                   onChange={handleChange}
@@ -196,6 +197,8 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Group Size"
                   type="text"
+
+
                   placeholder="Enter group size"
                   customClasses="mb-4.5 xl:w-1/2"
                   required
@@ -204,6 +207,7 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Deposit"
                   type="text"
+
                   placeholder="Enter deposit amount"
                   customClasses="mb-4.5 xl:w-1/2"
                   onChange={handleChange}
@@ -213,6 +217,7 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Booking Hold"
                   type="text"
+
                   placeholder="Enter booking hold details"
                   customClasses="mb-4.5 xl:w-1/2"
                   onChange={handleChange}
@@ -220,6 +225,7 @@ const Create :React.FC= () => {
                 <InputGroup
                   label="Booking Change"
                   type="text"
+
                   placeholder="Enter booking change details"
                   customClasses="mb-4.5 xl:w-1/2"
                   onChange={handleChange}

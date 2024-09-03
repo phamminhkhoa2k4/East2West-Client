@@ -133,6 +133,11 @@ const Navbar = () => {
               {userInfo ? (
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-lg">{userInfo.username}</span>
+                  <Link href="/mybooking" passHref>
+                    <button className="text-blue-500 hover:underline">
+                      My Booking
+                    </button>
+                  </Link>
                   <button onClick={handleLogout} className="text-blue-500 hover:underline">
                     Logout
                   </button>
