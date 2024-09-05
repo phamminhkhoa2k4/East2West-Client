@@ -1,11 +1,13 @@
+"use client"
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 // import Gallery from "@/components/tour/Gallery";
 import { FiMoreHorizontal, FiShare2 } from "react-icons/fi";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Itinerary from "@/components/tour/Itinerary";
 import CheckoutPackage from "@/components/tour/CheckoutPackage";
+import { useRouter } from "next/navigation";
 interface Accommodation {
   accommodationid: number;
   accommodationname: string;
@@ -74,39 +76,39 @@ interface PackageData {
   suitableTours: SuitableTour[];
 }
 export default function Package() {
-  const router = useRouter();
-  const { id } = router.query;
+  // const router = useRouter();
+  // const { id } = router.query;
   const [packageData, setPackageData] = useState<PackageData | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (id) {
-      fetch(`http://localhost:8080/api/tours/${id}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setPackageData(data);
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching the package data:", error);
-          setError(error.message);
-          setLoading(false);
-        });
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   if (id) {
+  //     fetch(`http://localhost:8080/api/tours/${id}`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setPackageData(data);
+  //         setLoading(false);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error fetching the package data:", error);
+  //         setError(error.message);
+  //         setLoading(false);
+  //       });
+  //   }
+  // }, [id]);
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-  if (error) {
-    return <div>Error loading package data</div>;
-  }
+  // if (error) {
+  //   return <div>Error loading package data</div>;
+  // }
 
-  if (!packageData) {
-    return <div>No package data available</div>;
-  }
+  // if (!packageData) {
+  //   return <div>No package data available</div>;
+  // }
 
   return (
     <>
@@ -119,7 +121,7 @@ export default function Package() {
             {/* <h1 className="text-3xl font-bold">
               Hanoi to Danang - Super Saver
             </h1> */}
-            <h1 className="text-3xl font-bold">{packageData.title}</h1>
+            <h1 className="text-3xl font-bold"></h1>
             <div className="flex items-center gap-3">
               <button
                 className="p-2 rounded-full border border-gray-300 hover:bg-gray-100"
@@ -139,7 +141,7 @@ export default function Package() {
             <div className="border px-2 rounded-md">e</div>
             <div className="flex gap-1 items-center">
               {/* Replace with actual itinerary details */}
-              <div className="text-lg font-medium">3N {packageData.title}</div>
+              <div className="text-lg font-medium">3N </div>
               <div>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -175,23 +177,23 @@ export default function Package() {
           </TabsList>
           <div className="grid grid-cols-4 gap-10">
             <div className="col-span-3">
-              {/* <TabsContent value="Itinerary">
-                <Itinerary itineraries={packageData.itineraries} />
-              </TabsContent> */}
+              <TabsContent value="Itinerary">
+                <Itinerary itineraries={[]} />
+              </TabsContent>
               <TabsContent value="Policies">
                 {/* Implement the Policies tab */}
                 <div>
-                  <h2>Booking Hold: {packageData.bookinghold}</h2>
-                  <p>Booking Change: {packageData.bookingchange}</p>
-                  <p>Deposit: {packageData.deposit}</p>
+                  <h2>Booking Hold: </h2>
+                  <p>Booking Change: </p>
+                  <p>Deposit: </p>
                 </div>
               </TabsContent>
               <TabsContent value="Summary">
                 {/* Implement the Summary tab */}
                 <div>
-                  <h2>Group Size: {packageData.groupsize}</h2>
-                  <p>Price: ${packageData.price}</p>
-                  <p>Price Reduce: ${packageData.pricereduce}</p>
+                  <h2>Group Size:</h2>
+                  <p>Price: $</p>
+                  <p>Price Reduce: $</p>
                 </div>
               </TabsContent>
             </div>
