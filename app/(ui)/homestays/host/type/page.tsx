@@ -1,5 +1,5 @@
-"use client"
-import { useHostContext } from "@/context/context";
+"use client";
+import { useHostContext } from "@/store/Hostcontext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,13 +10,13 @@ import { MdOutlineBedroomParent } from "react-icons/md";
 
 const Type = () => {
   const router = useRouter();
-  const {state , setState } = useHostContext();
-  const [type,setType] = useState<string | null>(state?.data.type ?? null);
+  const { state, setState } = useHostContext();
+  const [type, setType] = useState<string | null>(state?.data.type ?? null);
   const handleClick = () => {
     setState({
       data: {
         ...state?.data!,
-       type : type as string,
+        type: type as string,
       },
     });
     router.push("/homestays/host/location");
@@ -26,7 +26,6 @@ const Type = () => {
     router.back();
   };
 
-  
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -122,4 +121,4 @@ const Type = () => {
   );
 };
 
-export default  Type;
+export default Type;

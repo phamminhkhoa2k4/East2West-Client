@@ -5,21 +5,21 @@ import { useRouter } from "next/navigation";
 import { useHostContext } from "@/store/Hostcontext";
 import { useState } from "react";
 
-const Description = () => {
+const ExtraInfo = () => {
   const { state, setState } = useHostContext();
-  const [description, setDescription] = useState<string>(
-    state?.data.description ?? ""
+  const [extraInfo, setExtraInfo] = useState<string>(
+    state?.data.extraInfo ?? ""
   );
   const router = useRouter();
   const handleClick = () => {
-    if (description.length > 0) {
+    if (extraInfo.length > 0) {
       setState({
         data: {
           ...state?.data!,
-          description: description,
+          extraInfo: extraInfo,
         },
       });
-      router.push("/homestays/host/extraInfo");
+      router.push("/homestays/host/finish");
     }
   };
 
@@ -48,25 +48,27 @@ const Description = () => {
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="w-[640px]">
-          <div className="text-3xl font-medium py-5">Tạo phần mô tả</div>
+          <div className="text-3xl font-medium py-5">
+            Tạo phần thông tin bổ sung
+          </div>
           <div className="text-lg font-medium text-[#666]">
-            Chia sẻ những điều tạo nên nét đặc biệt cho chỗ ở của bạn.
+            Ghi chú các phần thông tin bổ sung của bạn
           </div>
         </div>
         <div className="w-[640px]  mt-5">
           <div className="mb-6">
             <textarea
               rows={6}
-              placeholder="Type your message"
+              placeholder="Enter Your Extra Information"
               maxLength={500}
               className="w-full rounded-[7px] border-[1.5px] border-stroke bg-transparent px-5 py-3 text-dark outline-none transition placeholder:text-dark-6 focus:border-primary active:border-primary disabled:cursor-default dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
-              onChange={(e) => setDescription(e.target.value)}
+              onChange={(e) => setExtraInfo(e.target.value)}
             >
-              {description}
+              {extraInfo}
             </textarea>
           </div>
           <span className="text-[#666] font-medium">
-            {description.length}/500
+            {extraInfo.length}/500
           </span>
         </div>
       </div>
@@ -80,7 +82,7 @@ const Description = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            description.length === 0 ? "opacity-30" : ""
+            extraInfo.length === 0 ? "opacity-30" : ""
           }`}
         >
           Continue
@@ -90,4 +92,4 @@ const Description = () => {
   );
 };
 
-export default Description;
+export default ExtraInfo;

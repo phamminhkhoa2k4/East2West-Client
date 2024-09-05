@@ -1,21 +1,23 @@
-"use client"
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { IoHomeOutline } from "react-icons/io5";
-import { useHostContext } from "@/context/context";
+import { useHostContext } from "@/store/Hostcontext";
 import { useEffect, useState } from "react";
 import { getData } from "@/utils/axios";
 
 type AmenitiesType = {
-  amenitiesid : number
-  amenitiesname : string
+  amenitiesid: number;
+  amenitiesname: string;
 };
 
 const Amenities = () => {
   const { state, setState } = useHostContext();
   const [amenities, setAmenities] = useState<AmenitiesType[] | null>([]);
-  const [checkAmenities, setCheckAmenities] = useState<number[]>(state?.data.perkIds ?? []);
+  const [checkAmenities, setCheckAmenities] = useState<number[]>(
+    state?.data.perkIds ?? []
+  );
   const router = useRouter();
   const handleClick = () => {
     if (checkAmenities.length > 0) {
@@ -26,10 +28,9 @@ const Amenities = () => {
         },
       });
       console.log(state);
-      
+
       router.push("/homestays/host/photos");
     }
-    
   };
 
   const handleBack = () => {
@@ -45,17 +46,19 @@ const Amenities = () => {
   };
 
   useEffect(() => {
-      const fetchAmenities = async () => {
-        try{
-            const response = await getData({ endpoint: `/homestays/host/amenities`});
-            setAmenities(response);
-        }catch(err){
-          console.log(err);
-        }
+    const fetchAmenities = async () => {
+      try {
+        const response = await getData({
+          endpoint: `/homestays/host/amenities`,
+        });
+        setAmenities(response);
+      } catch (err) {
+        console.log(err);
       }
+    };
 
-      fetchAmenities();
-  },[])
+    fetchAmenities();
+  }, []);
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -109,7 +112,9 @@ const Amenities = () => {
         </button>
         <button
           onClick={handleClick}
-          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${checkAmenities.length == 0 ? "opacity-30" : ""}`}
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            checkAmenities.length == 0 ? "opacity-30" : ""
+          }`}
         >
           Continue
         </button>

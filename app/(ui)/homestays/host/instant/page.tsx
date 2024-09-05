@@ -1,13 +1,25 @@
 "use client"
+import { useHostContext } from "@/store/Hostcontext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { MdOutlineElectricBolt } from "react-icons/md";
 import { TiMessages } from "react-icons/ti";
 const Instant = () => {
   const router = useRouter();
+  const [instant,setInstant] = useState<boolean>(false);
+  const {state , setState} = useHostContext();
   const handleClick = () => {
-    router.push("/homestays/host/price");
+   
+      setState({
+        data : {
+            ...state?.data!,
+            instant:instant
+        }
+      })
+      router.push("/homestays/host/cleaning");
+    
   };
 
   const handleBack = () => {
@@ -38,7 +50,12 @@ const Instant = () => {
           Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn?
         </div>
         <div className="w-[630px] flex flex-col gap-5 my-5">
-          <div className="flex items-center justify-between border rounded-lg p-6">
+          <div
+            className={`flex items-center justify-between border rounded-lg p-6 ${
+              !instant ? "border-blue-500 border-2" : ""
+            }`}
+            onClick={() => setInstant(false)}
+          >
             <div className="flex flex-col gap-2">
               <div className="text-lg font-medium">
                 Chấp thuận hoặc từ chối yêu cầu
@@ -49,7 +66,12 @@ const Instant = () => {
             </div>
             <TiMessages className="w-11 h-11" />
           </div>
-          <div className="flex items-center justify-between border rounded-lg p-6">
+          <div
+            className={`flex items-center justify-between border rounded-lg p-6 ${
+              instant ? "border-blue-500 border-2" : ""
+            }`}
+            onClick={() => setInstant(true)}
+          >
             <div className="flex flex-col gap-2">
               <div className="text-lg font-medium">
                 Sử dụng tính năng Đặt ngay

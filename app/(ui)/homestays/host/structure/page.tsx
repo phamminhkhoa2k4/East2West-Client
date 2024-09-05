@@ -1,5 +1,5 @@
-"use client"
-import { useHostContext } from "@/context/context";
+"use client";
+import { useHostContext } from "@/store/Hostcontext";
 import { getData } from "@/utils/axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,18 +8,18 @@ import { useEffect, useState } from "react";
 
 import { IoHomeOutline } from "react-icons/io5";
 
-
-
 type StructureType = {
   structureid: number;
-  structurename : string
+  structurename: string;
 };
 
 const Structure = () => {
-  const {state, setState } = useHostContext();
+  const { state, setState } = useHostContext();
   const [structures, setStructures] = useState<StructureType[]>();
-  const [structure, setStructure] = useState<number | null>(state?.data.structureId ?? null);
-  const [loading,setLoading] = useState<boolean>(false);
+  const [structure, setStructure] = useState<number | null>(
+    state?.data.structureId ?? null
+  );
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,28 +29,25 @@ const Structure = () => {
         setStructures(data);
       } catch (err) {
         console.log(err);
-        
-      }finally {
+      } finally {
         setLoading(true);
       }
-    }
+    };
 
     getAllStructure();
-  },[])
+  }, []);
 
- const handleClick = () => {
-   setState({
-     data: {
-       ...state?.data!,
-       structureId: structure as number,
-     },
-   });
-   router.push("/homestays/host/type");
- };
- 
+  const handleClick = () => {
+    setState({
+      data: {
+        ...state?.data!,
+        structureId: structure as number,
+      },
+    });
+    router.push("/homestays/host/type");
+  };
 
   const handleBack = () => {
-    
     router.back();
   };
   return (
@@ -83,7 +80,9 @@ const Structure = () => {
               onClick={() => setStructure(struct.structureid)}
               key={struct.structureid}
               className={`flex flex-col p-5  ${
-                structure === struct.structureid ? "border-4 border-[#666]" : "border-2"
+                structure === struct.structureid
+                  ? "border-4 border-[#666]"
+                  : "border-2"
               } rounded-lg`}
             >
               <IoHomeOutline className="w-8 h-8" />

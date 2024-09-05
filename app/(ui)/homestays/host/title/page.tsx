@@ -2,7 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useHostContext } from "@/context/context";
+import { useHostContext } from "@/store/Hostcontext";
 import { useState } from "react";
 
 const Title = () => {
@@ -10,14 +10,14 @@ const Title = () => {
   const [title, setTitle] = useState<string>(state?.data.title ?? "");
   const router = useRouter();
   const handleClick = () => {
-    if(title.length > 0){
-       setState({
-         data: {
-           ...state?.data!,
-           title: title,
-         },
-       });
-       router.push("/homestays/host/description");
+    if (title.length > 0) {
+      setState({
+        data: {
+          ...state?.data!,
+          title: title,
+        },
+      });
+      router.push("/homestays/host/description");
     }
   };
 
@@ -78,7 +78,9 @@ const Title = () => {
         </button>
         <button
           onClick={handleClick}
-          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${title.length === 0 ? "opacity-30" : ""}`}
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            title.length === 0 ? "opacity-30" : ""
+          }`}
         >
           Continue
         </button>

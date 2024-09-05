@@ -1,20 +1,47 @@
-"use client"
-import { useHostContext } from "@/context/context";
+"use client";
+import { useHostContext } from "@/store/Hostcontext";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const Price = () => {
-  const {state,setState} = useHostContext();
+  const { state, setState } = useHostContext();
   console.log(state?.data.pricePerNight);
-  
-  const [price,setPrice] = useState<number | undefined>(state?.data.pricePerNight  ?? 0);
+  const [isExpand, setIsExpand] = useState<boolean>(false);
+  const [price, setPrice] = useState<string>(
+    state?.data.pricePerNight?.toString() ?? "0"
+  );
+  const router = useRouter();
+  const numericPrice = Number(price) || 0;
+  const FeeForGuest = numericPrice * 0.03;
+  const FeeForHost = numericPrice * 0.04;
 
-  
+  const TotalForGuest = numericPrice + FeeForGuest;
 
-     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value ? Number(event.target.value) : undefined;
-    setPrice(value);      
-     }
+  const Earn = numericPrice - FeeForHost;
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+
+    if (/^\d*$/.test(value)) {
+      setPrice(value);
+    }
+  };
+
+  const handleClick = () => {
+    if (numericPrice ?? 0 > 0) {
+      setState({
+        data: {
+          ...state?.data!,
+          pricePerNight: numericPrice,
+        },
+      });
+      router.push("/homestays/host/receipt");
+    }
+  };
+
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -45,44 +72,96 @@ const Price = () => {
         <div className="flex my-5">
           <input
             type="number"
-            value={price}
+            value={price?.toString() || ""}
             min={1}
             onChange={(e) => handleChange(e)}
             className="border-none outline-none font-5xl font-bold w-20 input-number"
           />
         </div>
-        <div className="flex justify-center w-[340px]  mt-5">
+        <div
+          className="flex justify-center w-[400px]  mt-5"
+          onClick={() => setIsExpand(false)}
+        >
           <div className="border rounded-lg p-4">
-            <div className="flex items-center justify-between py-3">
-              <div className="text-lg text-[#666]">Giá cơ sở</div>{" "}
-              <div className="text-lg text-[#666]">${price}</div>
-            </div>
-            <div className="flex items-center justify-between py-3">
+            {!isExpand && (
+              <>
+                <div className="flex items-center justify-between py-3">
+                  <div className="text-lg text-[#666]">Giá cơ sở</div>{" "}
+                  <div className="text-lg text-[#666]">
+                    ${numericPrice.toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between py-3 gap-10">
+                  <div className="text-lg text-[#666]">
+                    Phí dịch vụ dành cho khách
+                  </div>{" "}
+                  <div className="text-lg text-[#666]">
+                    ${FeeForGuest.toFixed(2)}
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div
+              className={`flex items-center justify-between  gap-44 py-3 ${
+                !isExpand ? "border-t-2" : ""
+              }`}
+            >
+              <div className="text-lg text-[#666]">Giá cho khách</div>{" "}
               <div className="text-lg text-[#666]">
-                Phí dịch vụ dành cho khách
-              </div>{" "}
-              <div className="text-lg text-[#666]">$0</div>
-            </div>
-            <div className="flex items-center justify-between border-t-2  py-3">
-              <div className="text-lg text-[#666]">
-                Giá cho khách (trước thuế)
-              </div>{" "}
-              <div className="text-lg text-[#666]">$0</div>
+                ${TotalForGuest.toFixed(2)}
+              </div>
             </div>
           </div>
         </div>
-        <div className="flex justify-center w-[340px]  mt-5">
-          <div className="flex w-full border rounded-xl justify-between p-6">
-            <div>Ban Kiem Duoc</div>
-            <div>$0</div>
+        <div
+          className="flex justify-center w-[400px]  mt-5"
+          onClick={() => setIsExpand(true)}
+        >
+          <div className="border rounded-lg p-4">
+            {isExpand && (
+              <>
+                <div className="flex items-center justify-between py-3">
+                  <div className="text-lg text-[#666]">Giá cơ sở</div>{" "}
+                  <div className="text-lg text-[#666]">
+                    ${numericPrice.toFixed(2)}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between py-3 gap-10">
+                  <div className="text-lg text-[#666]">
+                    Phí dịch vụ dành cho chủ nhà
+                  </div>{" "}
+                  <div className="text-lg text-[#666]">
+                    $ -{FeeForHost.toFixed(2)}
+                  </div>
+                </div>
+              </>
+            )}
+
+            <div
+              className={`flex items-center justify-between  gap-44 py-3 ${
+                isExpand ? "border-t-2" : ""
+              }`}
+            >
+              <div className="text-lg text-[#666]">Bạn Kiếm Được</div>{" "}
+              <div className="text-lg text-[#666]">${Earn.toFixed(2)}</div>
+            </div>
           </div>
         </div>
       </div>
       <div className=" bg-white border-t-4 flex fixed left-0 right-0 bottom-0 items-center justify-between">
-        <button className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-400">
+        <button
+          className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-400"
+          onClick={handleBack}
+        >
           Back
         </button>
-        <button className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500">
+        <button
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            numericPrice === 0 ? "opacity-30" : ""
+          }`}
+          onClick={handleClick}
+        >
           Continue
         </button>
       </div>
