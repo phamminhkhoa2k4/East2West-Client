@@ -1,26 +1,35 @@
-"use client"; // Đảm bảo rằng mã này chạy ở phía client
+"use client"; // Ensure this code runs on the client side
 
 import React, { useState, useEffect } from "react";
-
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 const EditSuitable = ({ params }: { params: { id: string } }) => {
   const [suitableName, setSuitableName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data từ API để lấy thông tin của Suitable dựa trên ID
     const fetchSuitable = async () => {
+      setLoading(true); // Start loading
+
       try {
         const response = await fetch(`http://localhost:8080/api/tours/suitable/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch suitable option.");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch suitable option. Status: ${response.status}`);
+        }
 
-        const suitable = await response.json();
-        setSuitableName(suitable.suitableName); // Đặt giá trị của input
+        const data = await response.json();
+        if (data) {
+          setSuitableName(data.suitableName); // Update according to API response structure
+        } else {
+          throw new Error("No data received from API.");
+        }
       } catch (err) {
         console.error(err);
         setError("Failed to load suitable option.");
+      } finally {
+        setLoading(false); // End loading
       }
     };
 
@@ -30,7 +39,6 @@ const EditSuitable = ({ params }: { params: { id: string } }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Update suitable option
     try {
       const response = await fetch(`http://localhost:8080/api/tours/suitable/${params.id}`, {
         method: "PUT",
@@ -41,18 +49,19 @@ const EditSuitable = ({ params }: { params: { id: string } }) => {
       });
 
       if (response.ok) {
-        // Handle success (e.g., show a success message or redirect)
         alert("Suitable option updated successfully!");
         setError(""); // Clear any previous errors
       } else {
-        // Handle error (e.g., show an error message)
-        setError("Failed to update suitable option.");
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to update suitable option.");
       }
     } catch (err) {
       console.error(err);
       setError("An unexpected error occurred.");
     }
   };
+
+  if (loading) return <div>Loading...</div>; // Loading state
 
   return (
     <DefaultLayout>
@@ -72,6 +81,7 @@ const EditSuitable = ({ params }: { params: { id: string } }) => {
                 customClasses="w-full mb-4.5"
                 value={suitableName}
                 onChange={(e) => setSuitableName(e.target.value)}
+                name=""
               />
 
               {error && <div className="mb-4 text-red-500">{error}</div>}

@@ -7,9 +7,13 @@ const BookingPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const packageId = searchParams.get("packageId");
-  
+  const [userInfo, setUserInfo] = useState<any>(null);
+  const storedUserInfo = localStorage.getItem('userInfo');
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
+    }
   const [bookingData, setBookingData] = useState({
-    userId: 1, // ID người dùng (hardcoded); thay thế bằng ID thực tế nếu có
+    userId: userInfo.userId, // ID người dùng (hardcoded); thay thế bằng ID thực tế nếu có
     paymentId: 1, // ID thanh toán (hardcoded); thay thế bằng ID thực tế nếu có
     packageId: packageId ? parseInt(packageId) : 1,
     bookingDate: new Date().toISOString(),
@@ -116,3 +120,4 @@ const BookingPage = () => {
 };
 
 export default BookingPage;
+

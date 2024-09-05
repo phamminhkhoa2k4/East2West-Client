@@ -15,7 +15,7 @@ interface Car {
     carId: number;
     carName: string;
     pricePerDay: string;
-    status:string;
+    status: string;
     year: string;
     seatCapacity: string;
     location: string;
@@ -23,7 +23,7 @@ interface Car {
     model: Option | null;
     type: Option | null;
     locationType: Option | null;
-    gearbox: string;
+    cargearbox: string;
     fuel: string;
     fueltankcapacity: string;
     miles: string;
@@ -32,7 +32,6 @@ interface Car {
 
 const EditCar = ({ params }: { params: { id: string } }) => {
     const [carData, setCarData] = useState<Car | null>(null);
-    const [carName,setCarName] = useState<string>(carData?.carName ?? "");
     const [makeOptions, setMakeOptions] = useState<Option[]>([]);
     const [modelOptions, setModelOptions] = useState<Option[]>([]);
     const [typeOptions, setTypeOptions] = useState<Option[]>([]);
@@ -41,21 +40,27 @@ const EditCar = ({ params }: { params: { id: string } }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const makeResponse = await fetch('http://localhost:8080/api/cars/make');
-                const makeData = await makeResponse.json();
+                const [makeResponse, modelResponse, typeResponse, locationTypeResponse, carResponse] = await Promise.all([
+                    fetch('http://localhost:8080/api/cars/make'),
+                    fetch('http://localhost:8080/api/cars/model'),
+                    fetch('http://localhost:8080/api/cars/type'),
+                    fetch('http://localhost:8080/api/cars/locationtypes'),
+                    fetch(`http://localhost:8080/api/cars/${params.id}`)
+                ]);
+
+                const [makeData, modelData, typeData, locationTypeData, carData] = await Promise.all([
+                    makeResponse.json(),
+                    modelResponse.json(),
+                    typeResponse.json(),
+                    locationTypeResponse.json(),
+                    carResponse.json()
+                ]);
+
                 setMakeOptions(makeData.map((item: any) => ({ id: item.makeId, name: item.makeName })));
-                const modelResponse = await fetch('http://localhost:8080/api/cars/model');
-                const modelData = await modelResponse.json();
                 setModelOptions(modelData.map((item: any) => ({ id: item.modelId, name: item.modelName })));
-                const typeResponse = await fetch('http://localhost:8080/api/cars/type');
-                const typeData = await typeResponse.json();
                 setTypeOptions(typeData.map((item: any) => ({ id: item.typeId, name: item.typeName })));
-                const locationTypeResponse = await fetch('http://localhost:8080/api/cars/locationtypes');
-                const locationTypeData = await locationTypeResponse.json();
                 setLocationTypeOptions(locationTypeData.map((item: any) => ({ id: item.locationtypeid, name: item.locationtypename })));
-                // Fetch car data
-                const carResponse = await fetch(`http://localhost:8080/api/cars/${params.id}`);
-                const carData = await carResponse.json();
+
                 setCarData({
                     ...carData,
                     make: carData.make ? { id: carData.make.makeId, name: carData.make.makeName } : null,
@@ -75,26 +80,26 @@ const EditCar = ({ params }: { params: { id: string } }) => {
         event.preventDefault();
         try {
             if (carData) {
-                const response = await fetch(`http://localhost:8080/api/cars`, {
+                const response = await fetch('http://localhost:8080/api/cars', {
                     method: 'POST',  // Use PUT for updates
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        "carId": carData.carId,
-                        "carName": carData.carName,
-                        "modelId": carData.model?.id,
-                        "makeId":carData.make?.id,
-                        "typeId": carData.type?.id,
-                        "year": carData.year,
-                        "seatCapacity": carData.seatCapacity,
-                        "airConditioned": carData.airConditioned,
-                        "pricePerDay": carData.pricePerDay,
-                        "status": carData.status,
-                        "locationTypeId": carData.locationType?.id,
-                        "cargearbox": carData.gearbox,
-                        "miles": carData.miles,
-                        "fueltankcapacity": carData.fueltankcapacity,
-                        "fuel": carData.fuel,
-                        "location": carData.location
+                        carId: carData.carId,
+                        carName: carData.carName,
+                        modelId: carData.model?.id,
+                        makeId: carData.make?.id,
+                        typeId: carData.type?.id,
+                        year: carData.year,
+                        seatCapacity: carData.seatCapacity,
+                        airConditioned: carData.airConditioned,
+                        pricePerDay: carData.pricePerDay,
+                        status: carData.status,
+                        locationTypeId: carData.locationType?.id,
+                        cargearbox: carData.cargearbox,
+                        miles: carData.miles,
+                        fueltankcapacity: carData.fueltankcapacity,
+                        fuel: carData.fuel,
+                        location: carData.location
                     }),
                 });
 
@@ -108,47 +113,59 @@ const EditCar = ({ params }: { params: { id: string } }) => {
             console.error('Error updating car:', error);
         }
     };
-
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target;
-    
+        const { name, value, type, checked } = e.target;
+
         if (type === 'checkbox') {
-            const isChecked = (e.target as HTMLInputElement).checked;
-            setCarData(prev => prev ? { ...prev, [name]: isChecked } : null);
+            setCarData(prev => prev ? { ...prev, [name]: checked } : null);
         } else {
             setCarData(prev => prev ? { ...prev, [name]: value } : null);
         }
     };
-    
+
+
 
     const handleSelectChange = (name: keyof Car, value: number) => {
         setCarData(prev => {
             if (!prev) return null;
-
-            const optionsMap: { [key in keyof Car]?: Option[] } = {
-                make: makeOptions,
-                model: modelOptions,
-                type: typeOptions,
-                locationType: locationTypeOptions,
-            };
-
-            const options = optionsMap[name];
-            const selectedOption = options?.find(option => option.id === value);
-
+    
+            let newValue;
+    
+            switch (name) {
+                case 'cargearbox':
+                    newValue = value === 1 ? 'Manual' : 'Automatic';
+                    break;
+                case 'fuel':
+                    newValue = value === 1 ? 'Petrol' : 'Diesel';
+                    break;
+                default:
+                    // For other keys, find the selected option based on the value
+                    const optionsMap: { [key in keyof Car]?: Option[] } = {
+                        make: makeOptions,
+                        model: modelOptions,
+                        type: typeOptions,
+                        locationType: locationTypeOptions,
+                    };
+    
+                    const options = optionsMap[name];
+                    const selectedOption = options?.find(option => option.id === value);
+                    newValue = selectedOption || null;
+            }
+    
             return {
                 ...prev,
-                [name]: selectedOption || null,
+                [name]: newValue,
             };
         });
     };
+    
+
     return (
         <DefaultLayout>
             <div className="flex flex-col gap-9">
                 <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
                     <div className="border-b border-stroke px-6.5 py-4 dark:border-dark-3">
-                        <h3 className="font-semibold text-dark dark:text-white">
-                            Edit Rental Car
-                        </h3>
+                        <h3 className="font-semibold text-dark dark:text-white">Edit Rental Car</h3>
                     </div>
                     {carData?.make?.id ? (
                         <form onSubmit={handleSubmit}>
@@ -158,40 +175,40 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                     type="text"
                                     placeholder="Please Enter Car Name !"
                                     customClasses="w-full mb-4.5"
-                                    value={carName}
-                                    onChange={(e) =>setCarName(e.target.value)}
-                                
+                                    value={carData?.carName ?? ''}
+                                    onChange={handleChange}
+                                    name="carName" // Ensure this matches the key in your state
                                 />
                                 <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                                     <InputGroup
                                         label="Price Per Day"
-                                        type="text"
+                                        type="number"
                                         placeholder="Enter your Price Per Day"
                                         customClasses="w-full xl:w-1/2"
                                         value={carData.pricePerDay}
                                         onChange={handleChange}
-                                        
+                                        name="pricePerDay"
                                     />
                                     <InputGroup
                                         label="Year"
-                                        type="text"
+                                        type="number"
                                         placeholder="Enter your Car Year"
                                         customClasses="w-full xl:w-1/2"
                                         value={carData.year}
                                         onChange={handleChange}
-                                       
+                                        name="year"
                                     />
                                 </div>
                                 <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
                                     <InputGroup
                                         label="Seating Capacity"
-                                        type="text"
+                                        type="number"
                                         placeholder="Enter your Seating Capacity"
                                         customClasses="mb-4.5 xl:w-1/2"
                                         required
                                         value={carData.seatCapacity}
                                         onChange={handleChange}
-                                        
+                                        name="seatCapacity"
                                     />
                                     <InputGroup
                                         label="Location"
@@ -200,7 +217,7 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         customClasses="mb-4.5 xl:w-1/2"
                                         value={carData.location}
                                         onChange={handleChange}
-                                       
+                                        name="location"
                                     />
                                     <InputGroup
                                         label="Status"
@@ -209,7 +226,7 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         customClasses="mb-4.5 xl:w-1/2"
                                         value={carData.status}
                                         onChange={handleChange}
-                                    
+                                        name="status"
                                     />
                                 </div>
                                 <div className="mb-4.5 flex flex-col gap-4.5 xl:flex-row">
@@ -217,7 +234,6 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         label="Make Name"
                                         placeholder="Please select Make Name"
                                         data={makeOptions}
-                                     
                                         value={carData?.make?.id}
                                         onChange={(value) => handleSelectChange('make', value)}
                                     />
@@ -225,7 +241,6 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         label="Model Name"
                                         placeholder="Please select Model Name"
                                         data={modelOptions}
-                                       
                                         value={carData?.model?.id}
                                         onChange={(value) => handleSelectChange('model', value)}
                                     />
@@ -235,7 +250,6 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         label="Type Name"
                                         placeholder="Please select Type Name"
                                         data={typeOptions}
-                                        
                                         value={carData?.type?.id}
                                         onChange={(value) => handleSelectChange('type', value)}
                                     />
@@ -243,7 +257,6 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         label="Location Type Name"
                                         placeholder="Please select Location Type Name"
                                         data={locationTypeOptions}
-                                        
                                         value={carData?.locationType?.id}
                                         onChange={(value) => handleSelectChange('locationType', value)}
                                     />
@@ -253,16 +266,14 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         label="Gearbox"
                                         placeholder="Please select Gearbox"
                                         data={[{ id: 1, name: "Manual" }, { id: 2, name: "Automatic" }]}
-                                       
-                                        value={carData?.gearbox == 'Manual' ? 1 : 2}
-                                        onChange={(value) => handleSelectChange('gearbox', value)}
+                                        value={carData?.cargearbox === 'Manual' ? 1 : 2} // Ensure this is properly set
+                                        onChange={(value) => handleSelectChange('cargearbox', value)}
                                     />
                                     <SelectGroupOne
                                         label="Fuel"
                                         placeholder="Please select Fuel"
                                         data={[{ id: 1, name: "Petrol" }, { id: 2, name: "Diesel" }]}
-                                        
-                                        value={carData?.fuel == 'Petrol' ? 1 : 2}
+                                        value={carData?.fuel === 'Petrol' ? 1 : 2} // Ensure this is properly set
                                         onChange={(value) => handleSelectChange('fuel', value)}
                                     />
                                 </div>
@@ -275,7 +286,7 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         required
                                         value={carData?.fueltankcapacity || ''}
                                         onChange={handleChange}
-                                       
+                                        name="fueltankcapacity"
                                     />
                                     <InputGroup
                                         label="Miles"
@@ -285,13 +296,13 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                         required
                                         value={carData?.miles || ''}
                                         onChange={handleChange}
-                                        
+                                        name="miles"
                                     />
                                 </div>
                                 <CheckboxTwo
                                     label="Air Conditioned"
                                     checked={carData?.airConditioned || false}
-                                    onChange={handleChange}
+                                    onChange={(e) => handleChange(e as React.ChangeEvent<HTMLInputElement>)}
                                 />
                             </div>
                             <div className="flex justify-end gap-4 border-t border-stroke py-4.5 px-6.5 dark:border-dark-3">
@@ -310,13 +321,13 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                             </div>
                         </form>
                     ) : (
-                        <div>Loading...</div>
+                        <div className="p-6.5">Loading car data...</div>
                     )}
                 </div>
             </div>
         </DefaultLayout>
     );
-
 };
 
 export default EditCar;
+

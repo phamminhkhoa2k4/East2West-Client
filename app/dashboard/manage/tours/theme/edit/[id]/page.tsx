@@ -1,51 +1,59 @@
-"use client"; // Đảm bảo rằng mã này chạy ở phía client
+"use client"; // Ensure this code runs on the client side
 
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
-const EditTheme = ({ params }: { params: { id: string } }) => {
-  const [themeName, setThemeName] = useState("");
+const Edittheme = ({ params }: { params: { id: string } }) => {
+  const [themeTourName, setthemeTourName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data từ API để lấy thông tin của Theme dựa trên ID
-    const fetchTheme = async () => {
+    const fetchtheme = async () => {
+      setLoading(true); // Start loading
+
       try {
         const response = await fetch(`http://localhost:8080/api/tours/theme/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch theme.");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch theme option. Status: ${response.status}`);
+        }
 
-        const theme = await response.json();
-        setThemeName(theme.themeTourName); // Đặt giá trị của input
+        const data = await response.json();
+        if (data) {
+          setthemeTourName(data.themeTourName); // Update according to API response structure
+        } else {
+          throw new Error("No data received from API.");
+        }
       } catch (err) {
         console.error(err);
-        setError("Failed to load theme.");
+        setError("Failed to load theme option.");
+      } finally {
+        setLoading(false); // End loading
       }
     };
 
-    if (params.id) fetchTheme();
+    if (params.id) fetchtheme();
   }, [params.id]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Update theme
     try {
       const response = await fetch(`http://localhost:8080/api/tours/theme/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ themeTourName: themeName }),
+        body: JSON.stringify({ themeTourName: themeTourName }),
       });
 
       if (response.ok) {
-        // Handle success (e.g., show a success message or redirect)
-        alert("Theme updated successfully!");
+        alert("theme option updated successfully!");
         setError(""); // Clear any previous errors
       } else {
-        // Handle error (e.g., show an error message)
-        setError("Failed to update theme.");
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to update theme option.");
       }
     } catch (err) {
       console.error(err);
@@ -53,24 +61,27 @@ const EditTheme = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  if (loading) return <div>Loading...</div>; // Loading state
+
   return (
     <DefaultLayout>
       <div className="flex flex-col gap-9">
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-dark-3">
             <h3 className="font-semibold text-dark dark:text-white">
-              Edit Theme
+              Edit theme
             </h3>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
               <InputGroup
-                label="Theme Name"
+                label="theme Name"
                 type="text"
-                placeholder="Please Enter Theme Name!"
+                placeholder="Please Enter theme Name!"
                 customClasses="w-full mb-4.5"
-                value={themeName}
-                onChange={(e) => setThemeName(e.target.value)}
+                value={themeTourName}
+                onChange={(e) => setthemeTourName(e.target.value)}
+                name=""
               />
 
               {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -91,4 +102,4 @@ const EditTheme = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default EditTheme;
+export default Edittheme;

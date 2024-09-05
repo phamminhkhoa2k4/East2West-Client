@@ -4,12 +4,9 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 import Gallery from "@/components/car/Gallery";
 import InfoCar from "@/components/car/InfoCar";
 import IconLabel from "@/components/homestay/IconLabel";
-import Image from "next/image";
 import { BsHouseDoorFill } from "react-icons/bs";
-import { CgHeart } from "react-icons/cg";
 import { FiMoreHorizontal, FiShare2 } from "react-icons/fi";
-import { HiOutlineLocationMarker, HiStar } from "react-icons/hi";
-import { IoIosArrowDown } from "react-icons/io";
+import { HiOutlineLocationMarker } from "react-icons/hi";
 
 interface Model {
   modelId: number;
@@ -26,6 +23,11 @@ interface Type {
   typeName: string;
 }
 
+interface Locationtype {
+  locationtypeid: number;
+  locationtypename: string;
+}
+
 interface Car {
   carId: number;
   carName: string;
@@ -37,7 +39,7 @@ interface Car {
   airConditioned: boolean;
   pricePerDay: number;
   status: string;
-  locationtype: string | null;
+  locationtype: Locationtype;
   cargearbox: string;
   miles: string;
   fueltankcapacity: string;
@@ -63,14 +65,24 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
     "/boat.png",
     "/boat.png",
   ]);
+  const [rentalDate, setRentalDate] = useState<string>('');
+  const [returnDate, setReturnDate] = useState<string>('');
+  const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(Number(storedUserId));
+    }
+
     const getCarData = async () => {
       try {
         const carData = await fetchCarData(params.id);
         setCar(carData);
       } catch (error) {
         console.error('Error fetching car data:', error);
+        setError('Failed to fetch car data');
       }
     };
 
@@ -81,6 +93,41 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
     return <div>Loading...</div>;
   }
 
+  const days = Math.ceil((new Date(returnDate).getTime() - new Date(rentalDate).getTime()) / (1000 * 3600 * 24));
+  const totalAmount = car.pricePerDay * days;
+
+  const handleSubmit = async () => {
+    if (!car || userId === null) return;
+
+    console.log('Submitting rental data', { userId, carId: car.carId, rentalDate, returnDate, totalAmount });
+
+    const paymentId = 1;
+
+    const rentalData = {
+      userId,
+      carId: car.carId,
+      paymentId,
+      rentalDate,
+      returnDate,
+      totalAmount,
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/rental', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(rentalData),
+      });
+
+      if (!response.ok) throw new Error('Failed to submit rental data');
+      alert('Rental successfully booked!');
+    } catch (error) {
+      setError('Failed to book rental');
+      console.error('Error:', error);
+    }
+  };
 
   return (
     <>
@@ -92,41 +139,33 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
         <div className="flex flex-col gap-2 my-15 w-2/3">
           <div className="text-4xl font-bold mt-5 mb-3">{car.carName}</div>
           <div className="text-xl text-blue-500 font-semibold">{car.make.makeName}</div>
+          <div className="text-lg text-gray-700">{car.model.modelName}</div>
+          <div className="text-lg text-gray-700">{car.type.typeName}</div>
         </div>
         <div className="flex flex-col space-y-4 my-8">
           <div className="flex flex-col md:flex-row justify-between">
             <div className="flex flex-col md:flex-row justify-between space-y-6 md:space-y-0 md:space-x-6 w-full md:w-fit">
-              <IconLabel
-                icon={<HiOutlineLocationMarker className="text-gray-500 text-xl" />}
-              >
-                <span className="text-md">{car.location}</span>
+              <IconLabel icon={<HiOutlineLocationMarker className="text-gray-500 text-xl" />}>
+                <span className="text-md">{car.locationtype.locationtypename}</span>
               </IconLabel>
-              <IconLabel
-                icon={<BsHouseDoorFill className="text-gray-500 text-xl" />}
-                separator={<span className="text-gray-500 font-bold">·</span>}
-              >
+              <IconLabel icon={<BsHouseDoorFill className="text-gray-500 text-xl" />} separator={<span className="text-gray-500 font-bold">·</span>}>
                 <span className="text-md">Seats: {car.seatCapacity}</span>
                 <span className="text-md">Type: {car.type.typeName}</span>
                 <span className="text-md">Year: {car.year}</span>
+                <span className="text-md">Gearbox: {car.cargearbox}</span>
+                <span className="text-md">Fuel: {car.fuel}</span>
+                <span className="text-md">Miles: {car.miles}</span>
+                <span className="text-md">Fuel Capacity: {car.fueltankcapacity}</span>
               </IconLabel>
             </div>
             <div className="flex space-x-4 mt-4 md:mt-0">
-              <button
-                className="p-2 rounded-full border border-gray-300 hover:bg-gray-100"
-                aria-label="Get location"
-              >
+              <button className="p-2 rounded-full border border-gray-300 hover:bg-gray-100" aria-label="Get location">
                 <HiOutlineLocationMarker className="text-xl" />
               </button>
-              <button
-                className="p-2 rounded-full border border-gray-300 hover:bg-gray-100"
-                aria-label="Share"
-              >
+              <button className="p-2 rounded-full border border-gray-300 hover:bg-gray-100" aria-label="Share">
                 <FiShare2 className="text-xl" />
               </button>
-              <button
-                className="p-2 rounded-full border border-gray-300 hover:bg-gray-100"
-                aria-label="More options"
-              >
+              <button className="p-2 rounded-full border border-gray-300 hover:bg-gray-100" aria-label="More options">
                 <FiMoreHorizontal className="text-xl" />
               </button>
             </div>
@@ -134,7 +173,7 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
         </div>
         <div className="flex gap-5 w-full">
           <div className="w-2/3">
-            <InfoCar />
+            <InfoCar car={car} />
             <div className="mt-5 border rounded-lg p-5">
               <div className="text-3xl font-bold mx-5">Overview</div>
               <p className="m-5">
@@ -147,9 +186,7 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
               <div className="flex justify-between">
                 <div>
                   <div className="flex items-baseline space-x-2">
-                    <span className="text-lg line-through text-gray-500">
-                      ${car.pricePerDay + 20}
-                    </span>
+                    <span className="text-lg line-through text-gray-500">${car.pricePerDay + 20}</span>
                     <span className="text-xl font-bold">${car.pricePerDay}</span>
                     <span className="text-gray-500">/ Day</span>
                   </div>
@@ -157,88 +194,46 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
               </div>
               <div className="grid grid-cols-2 gap-3 p-3 border border-gray-300 rounded-lg">
                 <div className="flex flex-col space-y-1">
-                  <label
-                    className="text-xs font-bold uppercase"
-                    htmlFor="pick-up"
-                  >
-                    Pick-up
-                  </label>
-                  <button
-                    id="pick-up"
-                    className="w-full p-2 text-left bg-white border border-gray-300 rounded-lg text-sm flex"
-                  >
-                    09/03/2021 <IoIosArrowDown className="inline-block ml-2" />
-                  </button>
+                  <label className="text-xs font-bold uppercase" htmlFor="rental-date">Rental Date</label>
+                  <input
+                    id="rental-date"
+                    type="date"
+                    value={rentalDate}
+                    onChange={(e) => setRentalDate(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg text-sm"
+                  />
                 </div>
                 <div className="flex flex-col space-y-1">
-                  <label
-                    className="text-xs font-bold uppercase"
-                    htmlFor="drop-off"
-                  >
-                    Drop-Off
-                  </label>
-                  <button
-                    id="drop-off"
-                    className="w-full p-2 text-left bg-white border border-gray-300 rounded-lg text-sm flex"
-                  >
-                    09/10/2021 <IoIosArrowDown className="inline-block ml-2" />
-                  </button>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label
-                    className="text-xs font-bold uppercase"
-                    htmlFor="pick-up-time"
-                  >
-                    Time
-                  </label>
-                  <button
-                    id="pick-up-time"
-                    className="w-full p-2 text-left bg-white border border-gray-300 rounded-lg text-sm flex"
-                  >
-                    12:00 <IoIosArrowDown className="inline-block ml-2" />
-                  </button>
-                </div>
-                <div className="flex flex-col space-y-1">
-                  <label
-                    className="text-xs font-bold uppercase"
-                    htmlFor="drop-off-time"
-                  >
-                    Time
-                  </label>
-                  <button
-                    id="drop-off-time"
-                    className="w-full p-2 text-left bg-white border border-gray-300 rounded-lg text-sm flex"
-                  >
-                    12:00 <IoIosArrowDown className="inline-block ml-2" />
-                  </button>
+                  <label className="text-xs font-bold uppercase" htmlFor="return-date">Return Date</label>
+                  <input
+                    id="return-date"
+                    type="date"
+                    value={returnDate}
+                    onChange={(e) => setReturnDate(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-lg text-sm"
+                  />
                 </div>
               </div>
-              <div className="flex flex-col mt-20">
-                <button className="w-full p-4 text-white bg-blue-500 rounded-lg text-lg">
-                  Reserve
+              <div className="border border-gray-300 rounded-2xl mt-5 p-4 px-6">
+                <div className="flex flex-col space-y-3">
+                  <div className="flex justify-between">
+                    <span>${car.pricePerDay} x {days} Days</span>
+                    <span>${totalAmount}</span>
+                  </div>
+                  <hr />
+                  <div className="flex justify-between font-bold">
+                    <span>Total</span>
+                    <span>${totalAmount}</span>
+                  </div>
+                </div>
+              </div>
+              <div className="m-5">
+                <button
+                  onClick={handleSubmit}
+                  className="w-full rounded-md bg-primary py-2.5 text-center text-base font-medium text-white shadow-md transition hover:bg-opacity-80"
+                >
+                  Rent
                 </button>
-                <span className="text-gray-500 text-center">
-                  You won’t be charged yet
-                </span>
-              </div>
-              <div className="flex flex-col space-y-3">
-                <div className="flex justify-between">
-                  <span>${car.pricePerDay} x 7 nights</span>
-                  <span>${car.pricePerDay * 7}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>8% weekly price discount</span>
-                  <span className="text-green-500">-${car.pricePerDay * 0.08}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Service fee</span>
-                  <span>$97</span>
-                </div>
-                <hr />
-                <div className="flex justify-between font-bold">
-                  <span>Total</span>
-                  <span>${car.pricePerDay * 7 - car.pricePerDay * 0.08 + 97}</span>
-                </div>
               </div>
             </div>
           </div>
