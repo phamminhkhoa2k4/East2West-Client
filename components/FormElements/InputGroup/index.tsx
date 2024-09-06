@@ -49,7 +49,7 @@ interface InputGroupProps {
   required?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   value?: string | null | undefined;
-  name: string; // Add name to the props
+  name?: string; // Add name to the props
 }
 
 const InputGroup: React.FC<InputGroupProps> = ({

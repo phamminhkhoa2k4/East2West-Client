@@ -19,6 +19,7 @@ import {
 } from "ol/style";
 import { Extent, getCenter } from "ol/extent";
 import { getDistance } from "ol/sphere";
+
 interface OpenLayersMapProps {
   coordinates: [number, number][];
 }
@@ -26,97 +27,116 @@ interface OpenLayersMapProps {
 const OpenLayersMap: React.FC<OpenLayersMapProps> = ({ coordinates }) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const [radius, setRadius] = useState<number | null>(null);
+  const [map, setMap] = useState<Map | null>(null);
+  const vectorSourceRef = useRef<VectorSource>(new VectorSource());
 
   useEffect(() => {
-    const features = coordinates.map(
-      ([longitude, latitude]) =>
-        new Feature({
-          geometry: new OlPoint(fromLonLat([longitude, latitude])),
-          name: (1).toString(),
-        })
-    );
+    if (!mapRef.current) return;
 
-    const vectorSource = new VectorSource({
-      features,
-    });
-
-    const vectorLayer = new VectorLayer({
-      source: vectorSource,
-      //   style: new Style({
-      //     image: new Icon({
-      //       src: "https://openlayers.org/en/v4.6.5/examples/data/icon.png",
-      //       scale: 2,
-      //     }),
-      //   }),
-      style: (feature) => {
-        const text = feature.get("name");
-        return [
-          new Style({
-            image: new CircleStyle({
-              radius: 20, // Adjust radius to fit the text background
-              fill: new Fill({ color: "#fff" }), // Background fill color
-              stroke: new Stroke({ color: "#aaa", width: 1 }), // Border stroke color
-            }),
-          }),
-          new Style({
-            text: new Text({
-              text: text,
-              offsetY: 0,
-              font: "bold 12px Arial",
-              fill: new Fill({ color: "#000" }), // Text fill color
-              backgroundFill: new Fill({ color: "transparent" }), // Transparent background for the text
-              padding: [5, 8, 5, 8], // Top, right, bottom, left padding
-              overflow: true, // Ensure the text overflows to fit the background
-            }),
-          }),
-        ];
-      },
-    });
-
-    const map = new Map({
+    // Initialize map
+    const newMap = new Map({
       target: mapRef.current!,
       layers: [
         new TileLayer({
           source: new OSM(),
         }),
-        vectorLayer,
+        new VectorLayer({
+          source: vectorSourceRef.current,
+          style: (feature) => {
+            const text = feature.get("name");
+            return [
+              new Style({
+                image: new CircleStyle({
+                  radius: 20, // Adjust radius to fit the text background
+                  fill: new Fill({ color: "#fff" }), // Background fill color
+                  stroke: new Stroke({ color: "#aaa", width: 1 }), // Border stroke color
+                }),
+              }),
+              new Style({
+                text: new Text({
+                  text: text,
+                  offsetY: 0,
+                  font: "bold 12px Arial",
+                  fill: new Fill({ color: "#000" }), // Text fill color
+                  backgroundFill: new Fill({ color: "transparent" }), // Transparent background for the text
+                  padding: [5, 8, 5, 8], // Top, right, bottom, left padding
+                  overflow: true, // Ensure the text overflows to fit the background
+                }),
+              }),
+            ];
+          },
+        }),
       ],
       view: new View({
         center: fromLonLat(coordinates[0]),
-        zoom: 13,
+        zoom: 20,
       }),
+      
+      
     });
 
-    // if (coordinates.length > 1) {
-    //   const extent: Extent = vectorSource.getExtent();
-    //   const center = getCenter(extent);
-    //   map.getView().setCenter(center);
-    //   map.getView().fit(extent, { padding: [50, 50, 50, 50] }); // Adjust padding as needed
-    // }
-
-     const calculateRadius = () => {
-       const view = map.getView();
-       const center = view.getCenter();
-       if (center) {
-         const lonLatCenter = toLonLat(center);
-         const resolution = view.getResolution();
-         const extent = view.calculateExtent();
-         const bottomLeft = toLonLat([extent[0], extent[1]]);
-         const distance = getDistance(lonLatCenter, bottomLeft);
-         setRadius(distance);
-         console.log(distance);
-       }
-     };
-
-
-    map.on("moveend", calculateRadius);
-    calculateRadius(); // Initial calculation
+    setMap(newMap);
+    
     // Clean up on component unmount
     return () => {
-      map.setTarget();
-      map.un("moveend", calculateRadius);
+      newMap.setTarget(undefined);
+      newMap.un("moveend", calculateRadius);
     };
   }, [coordinates]);
+
+  useEffect(() => {
+    if (!map || !mapRef.current) return;
+
+    // Remove old features
+    vectorSourceRef.current.clear();
+
+    // Add new features
+    const features = coordinates.map(
+      ([longitude, latitude]) =>
+        new Feature({
+          geometry: new OlPoint(fromLonLat([longitude, latitude])),
+          name: (2).toString(),
+        })
+    );
+    vectorSourceRef.current.addFeatures(features);
+
+    // Update map view
+    if (coordinates.length > 0) {
+      const extent: Extent = vectorSourceRef.current.getExtent();
+      map.getView().fit(extent, { padding: [75, 75, 75, 75] });
+      map.getView().setZoom(20);
+    }
+  }, [coordinates, map]);
+
+  const calculateRadius = () => {
+    if (!map) return;
+
+    const view = map.getView();
+    const center = view.getCenter();
+    if (center) {
+      const lonLatCenter = toLonLat(center);
+      const resolution = view.getResolution();
+      const extent = view.calculateExtent();
+      const bottomLeft = toLonLat([extent[0], extent[1]]);
+      const distance = getDistance(lonLatCenter, bottomLeft);
+      setRadius(distance);
+      console.log(distance);
+      
+    }
+  };
+
+  useEffect(() => {
+    if (map) {
+      map.on("moveend", calculateRadius);
+      calculateRadius(); // Initial calculation
+    }
+    // Clean up on component unmount
+    return () => {
+      if (map) map.un("moveend", calculateRadius);
+    };
+  }, [map]);
+
+
 
   return (
     <>

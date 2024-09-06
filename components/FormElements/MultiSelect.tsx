@@ -18,7 +18,7 @@ interface DropdownProps {
 
 const MultiSelect: React.FC<DropdownProps> = ({ id, placeholder, label, options: propOptions, selectedOptions: propSelectedOptions, onChange }) => {
   const [options, setOptions] = useState<Option[]>(propOptions);
-  const [selectedOptions, setSelectedOptions] = useState<Option[]>(propSelectedOptions);
+  const [selectedOptions, setSelectedOptions] = useState<Option[]>(propSelectedOptions ?? []);
   const [show, setShow] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -28,7 +28,9 @@ const MultiSelect: React.FC<DropdownProps> = ({ id, placeholder, label, options:
   }, [propOptions]);
 
   useEffect(() => {
-    setSelectedOptions(propSelectedOptions);
+    if (propSelectedOptions){
+        setSelectedOptions(propSelectedOptions);
+    } 
   }, [propSelectedOptions]);
 
   useEffect(() => {
