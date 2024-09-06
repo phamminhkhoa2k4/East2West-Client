@@ -1,5 +1,6 @@
 "use client"
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import SearchForm from "@/components/Header/SearchForm";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import StaffTable from "@/components/Tables/StaffTable";
 import { DataRow } from "@/types/table";
@@ -74,47 +75,53 @@ interface CarTableData extends DataRow {
   airConditioned: string;
 }
 const Staff = () => {
-    const [data, setData] = useState<CarTableData[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [data, setData] = useState<FormattedCarData[]>([]);
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch("http://localhost:8080/api/cars");
-          const result: Car[] = await response.json();
+  const fetchData = async (query = "") => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/cars${query ? `/search?name=${query}` : ""}`
+      );
+      const result: Car[] = await response.json();
+      const formattedData: FormattedCarData[] = result.map((car: Car) => ({
+        thumbnail: car.imageUrl || "/car_thumbnail.png",
+        carName: car.carName,
+        make: car.make?.makeName || "Unknown",
+        model: car.model?.modelName || "Unknown",
+        type: car.type?.typeName || "Unknown",
+        locationType: car.locationtype?.locationtypename || "Not Specified",
+        year: car.year,
+        seatingCapacity: car.seatCapacity,
+        airConditioned: car.airConditioned ? "Yes" : "No",
+        pricePerDay: car.pricePerDay,
+        gearbox: car.cargearbox || "Unknown",
+        status: car.status,
+        mileages: car.miles || "Unknown",
+        fuelTankCapacity: car.fueltankcapacity || "Unknown",
+        fuel: car.fuel || "Unknown",
+        location: car.location || "Not Specified",
+      }));
+      setData(formattedData);
+    } catch (error) {
+      console.error("Error fetching car data:", error);
+    }
+  };
 
-          const formattedData = result.map((car) => ({
-            thumbnail: car.imageUrl || "/car_thumbnail.png",
-            carName: car.carName,
-            make: car.make?.makeName || "Unknown",
-            model: car.model?.modelName || "Unknown",
-            type: car.type?.typeName || "Unknown",
-            locationType: car.locationtype?.locationtypename || "Not Specified",
-            year: car.year,
-            seatingCapacity: car.seatCapacity,
-            airConditioned: car.airConditioned ? "Yes" : "No",
-            pricePerDay: car.pricePerDay,
-            gearbox: car.cargearbox || "Unknown",
-            status: car.status,
-            mileages: car.miles || "Unknown",
-            fuelTankCapacity: car.fueltankcapacity || "Unknown",
-            fuel: car.fuel || "Unknown",
-            location: car.location || "Not Specified",
-          }));
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    fetchData(query);
+  };
 
-          setData(formattedData);
-        } catch (error) {
-          console.error("Error fetching car data:", error);
-        }
-      };
-
-      fetchData();
-    }, []);
-
+  useEffect(() => {
+    fetchData(); // Fetch all data when the page loads
+  }, []);
   return (
     <>
       <DefaultLayout>
         <div className="mx-auto w-full max-w-[1080px]">
           <Breadcrumb pageName="Staff" />
+          <SearchForm onSearch={handleSearch} />
           <StaffTable
             columns={columns}
             data={data}

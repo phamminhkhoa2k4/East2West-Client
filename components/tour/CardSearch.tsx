@@ -1,28 +1,23 @@
 import Image from "next/image";
 
-const CardSearch = () => {
+const CardSearch = ({tourPackage} : any) => {
   return (
-    <>
-      <div className="border rounded-xl overflow-hidden">
-        <div className="w-full h-50">
-          <Image
-            src={"/boat.png"}
-            alt=""
-            height={300}
-            width={300}
-            className="object-cover object-center w-full h-full"
-          />
-        </div>
-        <div>
-          <div className="p-4 ">
-            <div className="border-b">
-              <div className="flex items-center justify-between ">
-                <div className="text-base font-extrabold">
-                  Spectacular Krabi ang Phuket Gateway
-                </div>
-                <div className="border rounded-md border-blue-600 text-blue-600 px-[5px] py-[3px] text-xs">
-                  5N/6D
-                </div>
+    <div className="border rounded-xl overflow-hidden">
+      <div className="w-full h-50">
+        <Image
+          src={`/${tourPackage.thumbnail}`}
+          alt={tourPackage.title}
+          height={300}
+          width={300}
+          className="object-cover object-center w-full h-full"
+        />
+      </div>
+      <div>
+        <div className="p-4 ">
+          <div className="border-b">
+            <div className="flex items-center justify-between ">
+              <div className="text-base font-extrabold">
+                {tourPackage.title}
               </div>
               <div className="flex items-center gap-1 mt-1 mb-2">
                 <span className="text-sm">2N Hanoi</span>
@@ -68,7 +63,7 @@ const CardSearch = () => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

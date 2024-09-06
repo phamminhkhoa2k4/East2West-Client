@@ -3,11 +3,12 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import CheckboxTwo from "@/components/FormElements/Checkboxes/CheckboxTwo";
 import InputGroup from "@/components/FormElements/InputGroup";
 import SelectGroupOne from "@/components/FormElements/SelectGroup/SelectGroupOne";
+import SearchForm from "@/components/Header/SearchForm";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import StaffTable from "@/components/Tables/StaffTable";
 import { DataRow } from "@/types/table";
 import { useEffect, useState } from "react";
-
+import { useRouter } from "next/navigation"; // Import useRouter
 
 const columns = [
   { key: "thumbnail", label: "Thumbnail" },
@@ -23,8 +24,8 @@ const columns = [
   { key: "category", label: "Category" },
   { key: "departure", label: "Departure Date" },
   { key: "itinerary", label: "Itinerary" },
+  { key: "action", label: "Action" } // Add Action column
 ];
-
 
 interface Itinerary {
   itineraryId: number;
@@ -94,7 +95,7 @@ interface TourPackage {
   departureDate: DepartureDate[];
 }
 
-interface FormattedTourData extends DataRow {
+interface FormattedTourData {
   thumbnail: string;
   title: string;
   price: number;
@@ -108,91 +109,77 @@ interface FormattedTourData extends DataRow {
   category: string;
   departure: string;
   itinerary: string;
+  action?: JSX.Element; // Use optional property if not always needed
 }
 const Staff = () => {
-    const [data, setData] = useState<FormattedTourData[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [data, setData] = useState<FormattedTourData[]>([]);
+  const router = useRouter(); // Initialize useRouter
 
-    useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch("http://localhost:8080/api/tours");
-          const result: TourPackage[] = await response.json();
+  const fetchData = async (query = "") => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/api/tours${query ? `/search?title=${query}` : ""}`
+      );
+      const result: TourPackage[] = await response.json();
+      const formattedData: FormattedTourData[] = result.map((tour: TourPackage) => ({
+        thumbnail: `/images/${tour.thumbnail}`,
+        title: tour.title,
+        price: tour.price,
+        priceReduce: tour.pricereduce,
+        groupSize: tour.groupsize,
+        deposit: tour.deposit,
+        bookingHold: tour.bookinghold,
+        bookingChange: tour.bookingchange,
+        themes: tour.themeTours.map((theme) => theme.themeTourName).join(", "),
+        suitable: tour.suitableTours.map((suitable) => suitable.suitableName).join(", "),
+        category: tour.categoryTours.map((category) => category.categoryTourName).join(", "),
+        departure: tour.departureDate
+          .map((date) => new Date(date.departuredate).toLocaleDateString())
+          .join(", "),
+        itinerary: tour.itineraries
+          .map(
+            (itinerary) =>
+              `Day: ${new Date(itinerary.day).toLocaleDateString()} - ${itinerary.places
+                .map((place) => place.placename)
+                .join(", ")}`
+          )
+          .join(" | "),
+        action: (
+          <button
+            className="bg-primary text-white py-1 px-3 rounded"
+            onClick={() => router.push(`/dashboard/staff/tours/booking/${tour.packageid}`)} // Navigate to RentalStaff with tour id
+          >
+            Book
+          </button>
+        )
+      }));
+      setData(formattedData);
+    } catch (error) {
+      console.error("Error fetching tours:", error);
+    }
+  };
 
-          const formatDepartureDates = (dates: { departuredate: string }[]) => {
-            return dates
-              .map((date) => new Date(date.departuredate).toLocaleDateString())
-              .join(", ");
-          };
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    fetchData(query);
+  };
 
-          // Inside your data mapping:
-          const formattedData: FormattedTourData[] = result.map(
-            (tour: TourPackage) => ({
-              thumbnail: `/images/${tour.thumbnail}`, // Assuming images are in the public/images folder
-              title: tour.title,
-              price: tour.price,
-              priceReduce: tour.pricereduce,
-              groupSize: tour.groupsize,
-              deposit: tour.deposit,
-              bookingHold: tour.bookinghold,
-              bookingChange: tour.bookingchange,
-              themes: tour.themeTours
-                .map((theme) => theme.themeTourName)
-                .join(", "),
-              suitable: tour.suitableTours
-                .map((suitable) => suitable.suitableName)
-                .join(", "),
-              category: tour.categoryTours
-                .map((category) => category.categoryTourName)
-                .join(", "),
-              departure: tour.departureDate
-                .map((date) =>
-                  new Date(date.departuredate).toLocaleDateString()
-                )
-                .join(", "),
-              itinerary: tour.itineraries
-                .map(
-                  (itinerary) =>
-                    `Day: ${new Date(
-                      itinerary.day
-                    ).toLocaleDateString()} - ${itinerary.places
-                      .map((place) => place.placename)
-                      .join(", ")}`
-                )
-                .join(" | "),
-            })
-          );
+  useEffect(() => {
+    fetchData(); // Fetch all data when the page loads
+  }, []);
 
-          setData(formattedData);
-        } catch (error) {
-          console.error("Error fetching tours:", error);
-        }
-      };
-
-      fetchData();
-    }, []);
   return (
     <>
       <DefaultLayout>
         <div className="mx-auto w-full max-w-[1080px]">
           <Breadcrumb pageName="Staff" />
-
+          <SearchForm onSearch={handleSearch} />
           <StaffTable columns={columns} data={data} title="Tours" />
-          
         </div>
       </DefaultLayout>
-      
     </>
   );
 };
 
 export default Staff;
-
-
-
-
-
-
-
-
-
-

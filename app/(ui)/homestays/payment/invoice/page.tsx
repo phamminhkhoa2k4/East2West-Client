@@ -252,7 +252,4 @@
         </>
       );
   }
-
-
-
   export default Invoice;

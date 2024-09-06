@@ -48,7 +48,6 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      // Gửi yêu cầu POST đến API /signout
       const response = await fetch('http://localhost:8080/api/auth/signout', {
         method: 'POST',
         headers: {
@@ -57,9 +56,8 @@ const Navbar = () => {
       });
 
       if (response.ok) {
-        // Xóa dữ liệu người dùng khỏi localStorage
         localStorage.removeItem('userInfo');
-        setUserInfo(null); // Cập nhật state để cập nhật giao diện
+        setUserInfo(null);
       } else {
         console.error('Logout failed');
       }
@@ -72,73 +70,61 @@ const Navbar = () => {
     <>
       {!pathname.startsWith("/homestays/host") && (
         <nav
-          className={`flex flex-col shadow-md bg-white w-full fixed top-0 right-0 left-0 padding-container z-30 transition-all duration-1000 ease-in-out ${isScroll ? "" : "py-5 gap-y-5"}`}
+          className={`flex flex-col shadow-md bg-white w-full fixed top-0 right-0 left-0 z-30 transition-all duration-500 ease-in-out ${isScroll ? "py-3 gap-y-2" : "py-5 gap-y-5"}`}
         >
-          <div className="flexEvenly">
-            <Link href="/" passHref>
+          <div className="container mx-auto flex justify-between items-center px-4">
+            <Link href="/">
               <Image
                 src="/Logo.png"
                 alt="logo"
                 width={140}
                 height={59}
-                className={`transition-all duration-1000 ease-in-out ${isScroll ? "scale-[0.7]" : ""}`}
+                className={`transition-transform duration-500 ${isScroll ? "scale-75" : ""}`}
               />
             </Link>
-            <ul className="hidden h-full gap-12 lg:flex lg:items-end">
+            <ul className="hidden lg:flex lg:items-center gap-8">
               {NAV_LINKS.map((item) => {
                 const isActive =
                   pathname === item.href ||
                   pathname.startsWith(item.href + "/");
                 return (
-                  <li
-                    key={item.label}
-                    className="regular-16 text-gray-50 flexCenter"
-                  >
-                    {isActive ? (
-                      <Link href={item.href} passHref>
-                        <div className="flex flex-col gap-4">
-                          <Image
-                            className="h-[50px]"
-                            src={item.icon_active}
-                            width={60}
-                            height={60}
-                            alt={item.key}
-                          />
-                          <span className={`${isScroll ? "hidden" : ""} transition-all duration-1000 ease-in-out text-center`}>
-                            {item.label}
-                          </span>
-                        </div>
-                      </Link>
-                    ) : (
-                      <Link href={item.href} passHref>
-                        <div className="flex flex-col gap-4">
-                          <Image
-                            className="h-[50px]"
-                            src={item.icon}
-                            width={60}
-                            height={60}
-                            alt={item.key}
-                          />
-                          <span className={`${isScroll ? "hidden" : ""} transition-all duration-500 ease-in-out text-center`}>
-                            {item.label}
-                          </span>
-                        </div>
-                      </Link>
-                    )}
+                  <li key={item.label} className="flex flex-col items-center">
+                    <Link href={item.href}>
+                      <div className={`flex flex-col items-center ${isActive ? "text-blue-600" : "text-gray-600"} transition-colors duration-300`}>
+                        <Image
+                          className="h-12"
+                          src={isActive ? item.icon_active : item.icon}
+                          width={60}
+                          height={60}
+                          alt={item.key}
+                        />
+                        <span className={`${isScroll ? "hidden" : "block"} text-sm mt-2`}>
+                          {item.label}
+                        </span>
+                      </div>
+                    </Link>
                   </li>
                 );
               })}
             </ul>
-            <div className="hidden lg:flexCenter lg:flex lg:flex-row-reverse gap-2 relative">
+            <div className="flex items-center gap-4 lg:gap-8">
               {userInfo ? (
-                <div className="flex items-center gap-2">
-                  <span className="font-medium text-lg">{userInfo.username}</span>
-                  <button onClick={handleLogout} className="text-blue-500 hover:underline">
+                <div className="flex items-center gap-4">
+                  <span className="text-lg font-medium">{userInfo.username}</span>
+                  <Link href="/mybooking">
+                    <div className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300">
+                      My Booking
+                    </div>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-red-600 hover:text-red-800 font-medium transition-colors duration-300"
+                  >
                     Logout
                   </button>
                 </div>
               ) : (
-                <Link href="/auth/signin" passHref>
+                <Link href="/auth/signin">
                   <Button
                     title="Sign In"
                     icon="/user.svg"
@@ -146,28 +132,17 @@ const Navbar = () => {
                   />
                 </Link>
               )}
-
-              <div className="absolute -right-20">
+              <div className="relative">
                 <Select value={selectedValue} onValueChange={setSelectedValue}>
-                  <SelectTrigger className="w-[50px] p-3 ">
+                  <SelectTrigger className="w-24 p-2 bg-gray-200 rounded-md border border-gray-300">
                     <SelectValue>
-                      <div className="flex gap-2 items-center">
-                        {selectedValue === "Vietnamese" && (
-                          <Image
-                            src="/flag/vietnam.png"
-                            alt="vietnamese"
-                            height={100}
-                            width={100}
-                          />
-                        )}
-                        {selectedValue === "English" && (
-                          <Image
-                            src="/flag/united-kingdom.png"
-                            alt="english"
-                            height={100}
-                            width={100}
-                          />
-                        )}
+                      <div className="flex items-center gap-2">
+                        <Image
+                          src={selectedValue === "Vietnamese" ? "/flag/vietnam.png" : "/flag/united-kingdom.png"}
+                          alt={selectedValue}
+                          height={24}
+                          width={24}
+                        />
                         <span>{selectedValue}</span>
                       </div>
                     </SelectValue>
@@ -176,10 +151,10 @@ const Navbar = () => {
                     <SelectGroup>
                       <SelectLabel>Languages</SelectLabel>
                       <SelectItem value="Vietnamese">
-                        <div className="flex gap-2 items-center">
+                        <div className="flex items-center gap-2">
                           <Image
                             src="/flag/vietnam.png"
-                            alt="vietnamese"
+                            alt="Vietnamese"
                             height={24}
                             width={24}
                           />
@@ -187,10 +162,10 @@ const Navbar = () => {
                         </div>
                       </SelectItem>
                       <SelectItem value="English">
-                        <div className="flex gap-2 items-center">
+                        <div className="flex items-center gap-2">
                           <Image
                             src="/flag/united-kingdom.png"
-                            alt="english"
+                            alt="English"
                             height={24}
                             width={24}
                           />
@@ -201,29 +176,27 @@ const Navbar = () => {
                   </SelectContent>
                 </Select>
               </div>
+              <Image
+                src="/menu.svg"
+                width={32}
+                height={32}
+                alt="menu"
+                className="lg:hidden cursor-pointer"
+              />
             </div>
-
-            <Image
-              src="/menu.svg"
-              width={32}
-              height={32}
-              alt="menu"
-              className="inline-block cursor-pointer lg:hidden"
-              suppressHydrationWarning={true}
-            />
           </div>
           {pathname === "/homestays" && (
-            <div className="flex justify-center">
+            <div className="bg-white py-4">
               <Search isScroll={isScroll} />
             </div>
           )}
           {pathname === "/tours" && (
-            <div className="flex justify-center">
+            <div className="bg-white py-4">
               <SearchTour isScroll={isScroll} />
             </div>
           )}
           {pathname === "/cars" && (
-            <div className="flex justify-center">
+            <div className="bg-white py-4">
               <SearchCar isScroll={isScroll} />
             </div>
           )}

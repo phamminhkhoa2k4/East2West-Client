@@ -1,0 +1,49 @@
+import React from 'react';
+import { RentalFetch } from './types'; // Import types từ file types
+
+interface RentalCarListProps {
+  rentals: RentalFetch[];
+}
+
+const RentalCarList: React.FC<RentalCarListProps> = ({ rentals }) => {
+  const confirmRental = (rentalId: number) => {
+    fetch(`/api/confirmations/rental/${rentalId}/confirm`, {
+      method: 'PUT',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        alert('Rental confirmed');
+        // Cập nhật danh sách hoặc tải lại dữ liệu ở đây nếu cần
+      })
+      .catch((error) => console.error('Error confirming rental:', error));
+  };
+
+  return (
+    <div>
+      <h2 className="text-xl font-semibold mb-4">Rental Car List</h2>
+      {rentals.map((rental) => (
+        <div 
+          key={rental.rentalId} 
+          className="border border-gray-300 rounded-lg p-4 mb-4 shadow-md"
+        >
+          <p><strong>Car Name:</strong> {rental.carName}</p>
+          <p><strong>User:</strong> {rental.user.firstname} {rental.user.lastname}</p>
+          <p><strong>Phone:</strong> {rental.user.phone}</p>
+          <p><strong>Status:</strong> {rental.status}</p>
+          <p><strong>Rental Date:</strong> {rental.rentalDate ? new Date(rental.rentalDate).toLocaleDateString() : 'N/A'}</p>
+          <p><strong>Total Amount:</strong> ${rental.totalAmount ? rental.totalAmount.toFixed(2) : 'N/A'}</p>
+          {rental.status === 'Waiting' && (
+            <button 
+              className="mt-2 py-1 px-4 bg-green-500 text-white rounded"
+              onClick={() => confirmRental(rental.rentalId)}
+            >
+              Confirm Rental
+            </button>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default RentalCarList;
