@@ -5,6 +5,7 @@ import { HostProvider } from "@/store/Hostcontext";
 import { LoadingProvider } from "@/store/loadingContext";
 import { SearchHomestayProvider } from "@/store/HomestaySearchContext";
 import { HomestaysProvider } from "@/store/HomestaysContext";
+import { UserProvider } from "@/store/UserContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,7 +26,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <HostProvider>
           <LoadingProvider>
+            <UserProvider>
             <HomestaysProvider>{children}</HomestaysProvider>
+            </UserProvider>
           </LoadingProvider>
         </HostProvider>
       </body>

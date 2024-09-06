@@ -1,8 +1,8 @@
 "use client";
-import { NAV_LINKS } from '@/constants/constant.index';
-import Image from 'next/image';
-import Link from 'next/link';
-import Button from './Button';
+import { NAV_LINKS } from "@/constants/constant.index";
+import Image from "next/image";
+import Link from "next/link";
+import Button from "./Button";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -14,33 +14,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import Search from './homestay/Search';
+import Search from "./homestay/Search";
 import SearchTour from "./tour/Search";
-import SearchCar from './car/SearchCar';
-
+import SearchCar from "./car/SearchCar";
+import { useUser } from "@/store/UserContext";
+interface User {
+  userId: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  address?: string;
+  phone?: string;
+  roles: string[];
+}
 const Navbar = () => {
   const [selectedValue, setSelectedValue] = useState("Vietnamese");
   const [isScroll, setIsScroll] = useState(false);
-  const [userInfo, setUserInfo] = useState<any>(null);
+  const { user, setUser } = useUser();
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 70) {
-        setIsScroll(true);
-      } else {
-        setIsScroll(false);
-      }
+      setIsScroll(window.scrollY > 70);
     };
 
     window.addEventListener("scroll", handleScroll);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
-    const storedUserInfo = localStorage.getItem('userInfo');
-    if (storedUserInfo) {
-      setUserInfo(JSON.parse(storedUserInfo));
+    if (typeof window !== "undefined") {
+      const storedUserInfo = localStorage.getItem("userInfo");
+      if (storedUserInfo) {
+        setUser(JSON.parse(storedUserInfo));
+      }
     }
   }, []);
 
@@ -48,21 +55,19 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/signout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await fetch("http://localhost:8080/api/auth/signout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
       });
 
       if (response.ok) {
-        localStorage.removeItem('userInfo');
-        setUserInfo(null);
+        localStorage.removeItem("userInfo");
+        setUser(null);
       } else {
-        console.error('Logout failed');
+        console.error("Logout failed");
       }
     } catch (error) {
-      console.error('An error occurred during logout', error);
+      console.error("An error occurred during logout", error);
     }
   };
 
@@ -70,16 +75,20 @@ const Navbar = () => {
     <>
       {!pathname.startsWith("/homestays/host") && (
         <nav
-          className={`flex flex-col shadow-md bg-white w-full fixed top-0 right-0 left-0 z-30 transition-all duration-500 ease-in-out ${isScroll ? "py-3 gap-y-2" : "py-5 gap-y-5"}`}
+          className={`flex flex-col shadow-md bg-white w-full fixed top-0 right-0 left-0 padding-container z-30 transition-all duration-1000 ease-in-out ${
+            isScroll ? "" : "py-5 gap-y-5"
+          }`}
         >
-          <div className="container mx-auto flex justify-between items-center px-4">
-            <Link href="/">
+          <div className="flexEvenly">
+            <Link href="/" passHref>
               <Image
                 src="/Logo.png"
                 alt="logo"
                 width={140}
                 height={59}
-                className={`transition-transform duration-500 ${isScroll ? "scale-75" : ""}`}
+                className={`transition-all duration-1000 ease-in-out ${
+                  isScroll ? "scale-[0.7]" : ""
+                }`}
               />
             </Link>
             <ul className="hidden lg:flex lg:items-center gap-8">
@@ -88,34 +97,61 @@ const Navbar = () => {
                   pathname === item.href ||
                   pathname.startsWith(item.href + "/");
                 return (
-                  <li key={item.label} className="flex flex-col items-center">
-                    <Link href={item.href}>
-                      <div className={`flex flex-col items-center ${isActive ? "text-blue-600" : "text-gray-600"} transition-colors duration-300`}>
-                        <Image
-                          className="h-12"
-                          src={isActive ? item.icon_active : item.icon}
-                          width={60}
-                          height={60}
-                          alt={item.key}
-                        />
-                        <span className={`${isScroll ? "hidden" : "block"} text-sm mt-2`}>
-                          {item.label}
-                        </span>
-                      </div>
-                    </Link>
+                  <li
+                    key={item.label}
+                    className="regular-16 text-gray-50 flexCenter"
+                  >
+                    {isActive ? (
+                      <Link href={item.href} passHref>
+                        <div className="flex flex-col gap-4">
+                          <Image
+                            className="h-[50px]"
+                            src={item.icon_active}
+                            width={60}
+                            height={60}
+                            alt={item.key}
+                          />
+                          <span
+                            className={`${
+                              isScroll ? "hidden" : ""
+                            } transition-all duration-1000 ease-in-out text-center`}
+                          >
+                            {item.label}
+                          </span>
+                        </div>
+                      </Link>
+                    ) : (
+                      <Link href={item.href} passHref>
+                        <div className="flex flex-col gap-4">
+                          <Image
+                            className="h-[50px]"
+                            src={item.icon}
+                            width={60}
+                            height={60}
+                            alt={item.key}
+                          />
+                          <span
+                            className={`${
+                              isScroll ? "hidden" : ""
+                            } transition-all duration-500 ease-in-out text-center`}
+                          >
+                            {item.label}
+                          </span>
+                        </div>
+                      </Link>
+                    )}
                   </li>
                 );
               })}
             </ul>
+
             <div className="flex items-center gap-4 lg:gap-8">
-              {userInfo ? (
+              {user ? (
                 <div className="flex items-center gap-4">
-                  <span className="text-lg font-medium">{userInfo.username}</span>
-                  <Link href="/mybooking">
-                    <div className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300">
-                      My Booking
-                    </div>
-                  </Link>
+                  <span className="text-lg font-medium">{user.username}</span>
+                  <div className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300">
+                    <Link href="/mybooking">My Booking</Link>
+                  </div>
                   <button
                     onClick={handleLogout}
                     className="text-red-600 hover:text-red-800 font-medium transition-colors duration-300"
@@ -124,21 +160,26 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <Link href="/auth/signin">
-                  <Button
-                    title="Sign In"
-                    icon="/user.svg"
-                    variant="btn_dark_green"
-                  />
-                </Link>
+   
+                <Button
+                  title="Sign In"
+                  icon="/user.svg"
+                  variant="btn_dark_green"
+                  url="/auth/signin"
+                />
+     
               )}
               <div className="relative">
                 <Select value={selectedValue} onValueChange={setSelectedValue}>
-                  <SelectTrigger className="w-24 p-2 bg-gray-200 rounded-md border border-gray-300">
+                  <SelectTrigger className="p-3 w-[50px] outline-none">
                     <SelectValue>
                       <div className="flex items-center gap-2">
                         <Image
-                          src={selectedValue === "Vietnamese" ? "/flag/vietnam.png" : "/flag/united-kingdom.png"}
+                          src={
+                            selectedValue === "Vietnamese"
+                              ? "/flag/vietnam.png"
+                              : "/flag/united-kingdom.png"
+                          }
                           alt={selectedValue}
                           height={24}
                           width={24}
@@ -182,21 +223,22 @@ const Navbar = () => {
                 height={32}
                 alt="menu"
                 className="lg:hidden cursor-pointer"
+                suppressHydrationWarning={true}
               />
             </div>
           </div>
           {pathname === "/homestays" && (
-            <div className="bg-white py-4">
+            <div className="flex justify-center">
               <Search isScroll={isScroll} />
             </div>
           )}
           {pathname === "/tours" && (
-            <div className="bg-white py-4">
+            <div className="flex justify-center">
               <SearchTour isScroll={isScroll} />
             </div>
           )}
           {pathname === "/cars" && (
-            <div className="bg-white py-4">
+            <div className="flex justify-center">
               <SearchCar isScroll={isScroll} />
             </div>
           )}
