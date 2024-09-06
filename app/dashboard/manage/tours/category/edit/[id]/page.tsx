@@ -1,51 +1,59 @@
-"use client"; // Đảm bảo rằng mã này chạy ở phía client
+"use client"; // Ensure this code runs on the client side
 
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
-const EditCategory = ({ params }: { params: { id: string } }) => {
-  const [categoryName, setCategoryName] = useState("");
+const Editcategory = ({ params }: { params: { id: string } }) => {
+  const [categoryTourName, setcategoryTourName] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch data từ API để lấy thông tin của Category dựa trên ID
-    const fetchCategory = async () => {
+    const fetchcategory = async () => {
+      setLoading(true); // Start loading
+
       try {
         const response = await fetch(`http://localhost:8080/api/tours/category/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch category.");
+        if (!response.ok) {
+          throw new Error(`Failed to fetch category option. Status: ${response.status}`);
+        }
 
-        const category = await response.json();
-        setCategoryName(category.categoryTourName); // Đặt giá trị của input
+        const data = await response.json();
+        if (data) {
+          setcategoryTourName(data.categoryTourName); // Update according to API response structure
+        } else {
+          throw new Error("No data received from API.");
+        }
       } catch (err) {
         console.error(err);
-        setError("Failed to load category.");
+        setError("Failed to load category option.");
+      } finally {
+        setLoading(false); // End loading
       }
     };
 
-    if (params.id) fetchCategory();
+    if (params.id) fetchcategory();
   }, [params.id]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Update category
     try {
       const response = await fetch(`http://localhost:8080/api/tours/category/${params.id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ categoryTourName: categoryName }),
+        body: JSON.stringify({ categoryTourName: categoryTourName }),
       });
 
       if (response.ok) {
-        // Handle success (e.g., show a success message or redirect)
-        alert("Category updated successfully!");
+        alert("category option updated successfully!");
         setError(""); // Clear any previous errors
       } else {
-        // Handle error (e.g., show an error message)
-        setError("Failed to update category.");
+        const errorData = await response.json();
+        setError(errorData.message || "Failed to update category option.");
       }
     } catch (err) {
       console.error(err);
@@ -53,24 +61,27 @@ const EditCategory = ({ params }: { params: { id: string } }) => {
     }
   };
 
+  if (loading) return <div>Loading...</div>; // Loading state
+
   return (
     <DefaultLayout>
       <div className="flex flex-col gap-9">
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
           <div className="border-b border-stroke px-6.5 py-4 dark:border-dark-3">
             <h3 className="font-semibold text-dark dark:text-white">
-              Edit Category
+              Edit category
             </h3>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="p-6.5">
               <InputGroup
-                label="Category Name"
+                label="category Name"
                 type="text"
-                placeholder="Please Enter Category Name!"
+                placeholder="Please Enter category Name!"
                 customClasses="w-full mb-4.5"
-                value={categoryName}
-                onChange={(e) => setCategoryName(e.target.value)}
+                value={categoryTourName}
+                onChange={(e) => setcategoryTourName(e.target.value)}
+                name=""
               />
 
               {error && <div className="mb-4 text-red-500">{error}</div>}
@@ -91,4 +102,4 @@ const EditCategory = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default EditCategory;
+export default Editcategory;

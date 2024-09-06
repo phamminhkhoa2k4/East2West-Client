@@ -10,7 +10,7 @@ const Create = () => {
 
   const checkCategoryExists = async (categoryName: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/category");
+      const response = await fetch("http://localhost:8080/api/cars/make");
       if (!response.ok) throw new Error("Failed to fetch categories.");
 
       const categories = await response.json();
