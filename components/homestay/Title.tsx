@@ -7,16 +7,35 @@ import { CgHeart } from "react-icons/cg";
 import { FiShare2, FiMoreHorizontal } from "react-icons/fi";
 import { BsHouseDoorFill } from "react-icons/bs";
 import IconLabel from "./IconLabel";
+import { IoBed } from "react-icons/io5";
+import { MdBathroom } from "react-icons/md";
+import { MdBedroomParent } from "react-icons/md";
+import { MdPerson } from "react-icons/md";
 
 type TitleProps = {
   title: string | undefined;
   location: string | undefined;
   guest: number | undefined;
   bed: number | undefined;
-  bath: number | undefined;
+  bathroom: number | undefined;
+  room: number | null | undefined;
+  ward: string | undefined;
+  district: string | undefined;
+  province: string | undefined;
 };
 
-const TitleDetails = ({title , location , guest , bed , bath, }: TitleProps) => {
+const TitleDetails = ({
+  title,
+  location,
+  guest,
+  bed,
+  bathroom,
+  room,
+  ward,
+  district,
+  province 
+
+}: TitleProps) => {
   return (
     <div className="flex flex-col space-y-4 my-8">
       <div className="flex flex-col md:flex-row justify-between">
@@ -52,16 +71,20 @@ const TitleDetails = ({title , location , guest , bed , bath, }: TitleProps) => 
         <IconLabel
           icon={<HiLocationMarker className="text-gray-500 text-xl" />}
         >
-          <span className="text-md">{location} Belgrade, Serbia</span>
+          <span className="text-md">{location}, {ward}, {district}, {province}</span>
         </IconLabel>
         <IconLabel
           icon={<BsHouseDoorFill className="text-gray-500 text-xl" />}
           separator={<span className="text-gray-500 font-bold">·</span>}
-        >
+        > 
+          <MdPerson className="bg-gray-500 h-5 w-5" />
           <span className="text-md">{guest} guests</span>
-          <span className="text-md">{bed} bedroom</span>
+          <MdBedroomParent className="bg-gray-500 h-5 w-5" />
+          <span className="text-md">{room} bedroom</span>
+          <IoBed className="text-gray-500 h-5 w-5" />
           <span className="text-md">{bed} beds</span>
-          <span className="text-md">{bath} bath</span>
+          <MdBathroom className="text-gray-500h-5 w-5" />
+          <span className="text-md">{bathroom} bathroom</span>
         </IconLabel>
       </div>
     </div>

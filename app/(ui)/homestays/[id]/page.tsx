@@ -8,13 +8,25 @@ import WhatsIncluded from "@/components/homestay/WhatsIncluded";
 import { getData } from "@/utils/axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
-
+type Role = {
+  roleId: number;
+  roleName: string;
+};
+type User = {
+  userId: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  address: string;
+  roles: Role;
+};
  const Detail  = ({ params }: { params: { id: string } }) => {
 const [homestay, setHomestay] = useState<Homestay>();
-const [owner, setOwner] = useState();
+const [owner, setOwner] = useState <User>();
 const [loading, setLoading] = useState(true);
-const [checkIn, setCheckIn] = useState();
-const [checkOut, setCheckOut] = useState();
+
 
 
 
@@ -23,12 +35,18 @@ const [checkOut, setCheckOut] = useState();
    useEffect(() => {
        const getById = async () => {
          try {
-           const data = await getData({ endpoint: `/homestays/${Number(params.id)}` });
-           const owner = await getData({
-             endpoint: `/homestays/owner/${Number(homestay?.userid)}`,
-           });
-           setHomestay(data);
-           setOwner(owner);
+            await getData({ endpoint: `/homestays/${Number(params.id)}` }).then( async (data : Homestay ) => {
+                await getData({
+                  endpoint: `/auth/${data.userId}`,
+                }).then((owner: User) => {
+                  setHomestay(data);
+                  setOwner(owner);
+                });
+            })
+       
+ 
+           
+           
          } catch (err) {
            console.log(err);
          } finally {
@@ -52,18 +70,22 @@ const [checkOut, setCheckOut] = useState();
          <TitleDetails
            title={homestay?.title}
            location={homestay?.address}
-           guest={homestay?.maxguest}
-           bath={1}
-           bed={2}
+           ward={homestay?.wardName}
+           district={homestay?.districtName}
+           province={homestay?.cityProvinceName}
+           guest={homestay?.maxGuest}
+           bathroom={homestay?.bathroom}
+           bed={homestay?.beds}
+           room={homestay?.room}
          />
-         <Gallery />
+         <Gallery photos={homestay?.photos ?? []} />
          <ListingDetails
            description={homestay?.description}
-           extraInfo={homestay?.exactinfo}
+           extraInfo={homestay?.extraInfo}
            pricePerNight={todayAvailability?.pricepernight}
-           cleaningFee={homestay?.cleaningfee}
+           cleaningFee={homestay?.cleaningFee}
            owner={owner}
-           maxGuest={homestay?.maxguest}
+           maxGuest={homestay?.maxGuest}
            homestayId={homestay?.homestayid}
          />
          <WhatsIncluded />

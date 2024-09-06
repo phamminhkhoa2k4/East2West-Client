@@ -8,7 +8,7 @@ import {
 } from "react";
 
 
-export type Homestay = {
+ type Homestay = {
   homestayid: number | null;
   wardName: string; //
   districtName: string; //

@@ -6,7 +6,7 @@ import { CiUser } from "react-icons/ci";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { getData } from "@/utils/axios";
+
 import { useState } from "react";
 
 import {
@@ -17,14 +17,29 @@ import {
 import Guest from "./GuestSmall";
 import Calendar from "./CalendarSmall";
 
+type Role = {
+  roleId: number;
+  roleName: string;
+};
+type User = {
+  userId: number;
+  username: string;
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: string;
+  address: string;
+  roles: Role;
+};
+
 type ListingDetailsProps = {
   description: string | undefined;
   extraInfo: string | undefined;
   pricePerNight: number | undefined;
   cleaningFee: number | undefined;
   maxGuest: number | undefined;
-  homestayId : number  |  undefined;
-  owner: any;
+  homestayId: number | undefined | null;
+  owner: User | undefined;
 };
 
 const ListingDetails = ({
@@ -34,6 +49,7 @@ const ListingDetails = ({
   maxGuest,
   cleaningFee,
   homestayId,
+  owner,
 }: ListingDetailsProps) => {
   const [amount, setAmount] = useState<number>();
   const [checkInDate, setCheckInDate] = useState<string | null>(null);
@@ -77,12 +93,11 @@ const ListingDetails = ({
     effectivePricePerNight * numberOfDays + effectiveCleaningFee + serviceFee;
 
   const router = useRouter();
-  
+
   const HandleSubmit = async () => {
     setAmount(totalCost);
-   
+
     setTimeout(async () => {
-      
       const paymentUrl = `/homestays/payment?checkIn=${checkInDate}&checkOut=${checkOutDate}&numberOfAdults=${countAdult}&numberOfGuests=${guest}&numberOfChildren=${countChildren}&numberOfInfants=${countBaby}&homestayId=${homestayId}`;
       if (paymentUrl) {
         router.push(paymentUrl);
@@ -95,17 +110,22 @@ const ListingDetails = ({
     <div className="flex justify-between flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-8 my-8">
       <div className="flex w-full flex-col space-y-6">
         <div className="flex flex-col space-y-2">
-          <h2 className="text-lg font-bold">All about Wisdom place</h2>
+          <h2 className="text-lg font-bold">
+            All about {owner?.username ?? ""} place
+          </h2>
           <div className="flex items-center space-x-2">
             <span className="text-gray-500">Hosted by</span>
-            <Image
+            {/* <Image
               src="/image/service/blog-3.png"
               alt="Lazar"
               className="w-6 h-6 rounded-full"
               height={100}
               width={100}
-            />
-            <span className="text-brand-500">wisdom pham</span>
+            /> */}
+            <div className="h-8 w-8 flex items-center justify-center rounded-full text-lg text-white font-bold bg-black">
+              {owner?.username[0]}
+            </div>
+            <span className="text-brand-500">{owner?.username}</span>
           </div>
         </div>
         <hr />
@@ -128,14 +148,17 @@ const ListingDetails = ({
             </div>
           </div>
           <div className="relative">
-            <Image
+            {/* <Image
               src="/image/service/blog-3.png"
               alt="Lazar"
               className="w-12 h-12 rounded-full"
               height={100}
               width={100}
-            />
-            <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+            /> */}
+            <div className="h-12 w-12 flex items-center justify-center rounded-full text-xl text-white font-bold bg-black">
+              {owner?.username[0]}
+            </div>
+            {/* <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div> */}
           </div>
         </div>
         <div className="grid grid-cols-2 gap-3 p-3 border  border-gray-300 rounded-lg">
