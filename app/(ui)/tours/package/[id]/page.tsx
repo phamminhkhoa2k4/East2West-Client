@@ -179,7 +179,7 @@ const  Package = ({ params }: { params: { id: string } }) => {
           <div className="grid grid-cols-4 gap-10">
             <div className="col-span-3">
               <TabsContent value="Itinerary">
-                <Itinerary itineraries={packageData.itineraries} />
+                {/* <Itinerary itineraries={packageData.itineraries} /> */}
               </TabsContent>
               <TabsContent value="Policies">
                 {/* Implement the Policies tab */}
