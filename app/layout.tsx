@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { HostProvider } from "@/store/Hostcontext";
 import { LoadingProvider } from "@/store/loadingContext";
+import { SearchHomestayProvider } from "@/store/HomestaySearchContext";
+import { HomestaysProvider } from "@/store/HomestaysContext";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,7 +24,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <HostProvider>
-          <LoadingProvider>{children}</LoadingProvider>
+          <LoadingProvider>
+            <HomestaysProvider>{children}</HomestaysProvider>
+          </LoadingProvider>
         </HostProvider>
       </body>
     </html>

@@ -75,7 +75,7 @@ const Search: React.FC<{
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState<Item[]>([]);
   const [isOpenSearch, setIsOpenSearch] = useState<boolean>(false);
-  const [error, D] = useState<{
+  const [error, setError] = useState<{
     title: string;
     description: string;
   } | null>(null);
@@ -164,98 +164,7 @@ const Search: React.FC<{
           endpoint: `https://geocode.search.hereapi.com/v1/geocode?q=${query}&apiKey=${APIKEY}`,
         });
        
-        const items = response.items || [
-          {
-            title: "Canada",
-            id: "here:cm:namedplace:21041602",
-            resultType: "administrativeArea",
-            administrativeAreaType: "country",
-            address: {
-              label: "Canada",
-              countryCode: "CAN",
-              countryName: "Canada",
-            },
-            position: {
-              lat: 45.42177,
-              lng: -75.69122,
-            },
-            mapView: {
-              west: -141.00271,
-              south: 41.67659,
-              east: -52.61901,
-              north: 83.11062,
-            },
-            scoring: {
-              queryScore: 1.0,
-              fieldScore: {
-                country: 1.0,
-              },
-            },
-          },
-          {
-            title: "Cần Thơ",
-            id: "here:cm:namedplace:12345678",
-            resultType: "administrativeArea",
-            administrativeAreaType: "city",
-            address: {
-              label: "Cần Thơ",
-              countryCode: "VNM",
-              countryName: "Vietnam",
-            },
-            position: {
-              lat: 10.04517,
-              lng: 105.74629,
-            },
-            mapView: {
-              west: 105.7035,
-              south: 10.0153,
-              east: 105.7881,
-              north: 10.0708,
-            },
-            scoring: {
-              queryScore: 1.0,
-              fieldScore: {
-                city: 1.0,
-              },
-            },
-          },
-          {
-            title:
-              "6 Đường Ấp 1-4, Xã Vĩnh Tân, Huyện Vĩnh Cửu, VN-39, Vietnam",
-            id: "here:af:streetsection:iHo52nFhEkSSZeOMxGN60A:CggIBCCE7OHnAhABGgE2",
-            language: "vi",
-            resultType: "houseNumber",
-            houseNumberType: "PA",
-            address: {
-              label:
-                "6 Đường Ấp 1-4, Xã Vĩnh Tân, Huyện Vĩnh Cửu, VN-39, Vietnam",
-              countryCode: "VNM",
-              countryName: "Vietnam",
-              county: "VN-39",
-              city: "Huyện Vĩnh Cửu",
-              district: "Xã Vĩnh Tân",
-              street: "Đường Ấp 1-4",
-              postalCode: "76912",
-              houseNumber: "6",
-            },
-            position: {
-              lat: 11.05402,
-              lng: 107.02483,
-            },
-            access: [
-              {
-                lat: 11.05409,
-                lng: 107.02478,
-              },
-            ],
-            mapView: {
-              west: 107.02254,
-              south: 11.05262,
-              east: 107.0337,
-              north: 11.05647,
-            },
-          },
-        ];
+        const items = response.items || [];
         setSuggestions(items);
       } catch (error) {
         console.error("Error fetching suggestions:", error);

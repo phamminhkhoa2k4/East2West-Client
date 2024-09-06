@@ -8,9 +8,18 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+type StructureType = {
+  structureid: number;
+  structurename: string;
+};
 
+type StructureProps = {
+  structures: StructureType[];
+  setStructuresId : (value : number) => void;
+  structuresId : number | undefined;
+};
 
-export function CarouselType() {
+export function CarouselType({ structures, setStructuresId , structuresId }: StructureProps) {
   return (
     <Carousel
       opts={{
@@ -19,8 +28,12 @@ export function CarouselType() {
       className="w-full "
     >
       <CarouselContent>
-        {Array.from({ length: 12 }).map((_, index) => (
-          <CarouselItem key={index} className="md:basis-1/6 lg:basis-1/12">
+        {structures?.map((structure) => (
+          <CarouselItem
+            key={structure.structureid}
+            className="md:basis-1/6 lg:basis-1/12"
+            onClick={() => setStructuresId(structure.structureid)}
+          >
             <div className="p-1">
               <Card>
                 <CardContent className="flex flex-col gap-2 items-center justify-center p-2">
@@ -40,7 +53,9 @@ export function CarouselType() {
                       />
                     </svg>
                   </span>
-                  <span className="text-sm font-semibold">Tonwe</span>
+                  <span className={`text-sm font-semibold ${structuresId === structure.structureid ? "text-blue-500" :""}`}>
+                    {structure.structurename}
+                  </span>
                 </CardContent>
               </Card>
             </div>
