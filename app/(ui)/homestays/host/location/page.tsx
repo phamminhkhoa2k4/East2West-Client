@@ -5,10 +5,10 @@ import LocationForm from "./LocationForm";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import {getData} from "@/utils/axios";
+import { getData } from "@/utils/axios";
 import LocationDetail from "./LocationDetail";
-import { useHostContext } from "@/context/context";
-import { useToast } from "@/components/ui/use-toast"; 
+import { useHostContext } from "@/store/Hostcontext";
+import { useToast } from "@/components/ui/use-toast";
 
 type Coordinates = {
   lat: number;
@@ -60,7 +60,6 @@ type Response = {
   items: Item[];
 };
 
-
 type Location = {
   label: string | null;
   countryCode: string | null;
@@ -73,20 +72,30 @@ type Location = {
   houseNumber: string | null;
 };
 
-
-
 const Location = () => {
   const { state, setState } = useHostContext();
   const [position, setPosition] = useState<{
-    lat: number | undefined ;
+    lat: number | undefined;
     lng: number | undefined;
-  } | null>({ lat: state?.data.latitude , lng : state?.data.longitude  });
+  } | null>({ lat: state?.data.latitude, lng: state?.data.longitude });
   const [positionConfirm, setPositionConfirm] = useState<{
     lat: number;
     lng: number;
   } | null>(null);
-  const [location, setLocation] = useState<Location | null>({street : state?.data.address, district : state?.data.wardName , city : state?.data.districtName , county : state?.data.cityProvinceName,countryCode:null,countryName:null,houseNumber:null,label:null,postalCode:null});
-  const [confirmLocationInfo, setConfirmLocationInfo] = useState<string | null>(null);
+  const [location, setLocation] = useState<Location | null>({
+    street: state?.data.address,
+    district: state?.data.wardName,
+    city: state?.data.districtName,
+    county: state?.data.cityProvinceName,
+    countryCode: null,
+    countryName: null,
+    houseNumber: null,
+    label: null,
+    postalCode: null,
+  });
+  const [confirmLocationInfo, setConfirmLocationInfo] = useState<string | null>(
+    null
+  );
   const [isValidateLocation, setIsValidateLocation] = useState<boolean>(false);
   const [error, setError] = useState<{
     title: string;
@@ -108,8 +117,8 @@ const Location = () => {
   };
 
   useEffect(() => {
-      setPosition(positionConfirm ?? null)
-  },[positionConfirm])
+    setPosition(positionConfirm ?? null);
+  }, [positionConfirm]);
   useEffect(() => {
     if (error) {
       toast({
@@ -119,9 +128,6 @@ const Location = () => {
       setError(null);
     }
   }, [error, toast]);
-
-
-
 
   const getBestMatch = (items: Item[], locationString: string): Item | null => {
     const getMatchScore = (item: Item): number => {
@@ -142,7 +148,7 @@ const Location = () => {
 
       addressParts.forEach((part) => {
         if (locationParts.includes(part)) {
-          score += 1; 
+          score += 1;
         }
       });
 
@@ -156,67 +162,61 @@ const Location = () => {
     return bestMatch;
   };
 
-
   const locationString = useMemo(() => formatLocation(location), [location]);
   console.log(locationString);
-  
-  const handleConfirmLocation = async () => {
-    
 
+  const handleConfirmLocation = async () => {
     if (
       location?.city != "" &&
       location?.countryName != "" &&
       location?.district != "" &&
       location?.street != "" &&
-      location?.county !=""
+      location?.county != ""
     ) {
-        try {
-          const response: Response = await getData({
-            endpoint: `https://geocode.search.hereapi.com/v1/geocode?q=${locationString}&apiKey=${APIKEY}`,
-          });
+      try {
+        const response: Response = await getData({
+          endpoint: `https://geocode.search.hereapi.com/v1/geocode?q=${locationString}&apiKey=${APIKEY}`,
+        });
 
-          if (response && response.items.length > 0) {
-            const bestMatch = getBestMatch(response.items, locationString);
-            if (bestMatch) {
-              const bestMatchString = formatLocation(bestMatch.address);
-              setConfirmLocationInfo(bestMatchString);
-              setPositionConfirm({
-                lat: bestMatch.position.lat,
-                lng: bestMatch.position.lng,
-              });
-              setIsValidateLocation(true);
-            } else {
-              setIsValidateLocation(false);
-            }
+        if (response && response.items.length > 0) {
+          const bestMatch = getBestMatch(response.items, locationString);
+          if (bestMatch) {
+            const bestMatchString = formatLocation(bestMatch.address);
+            setConfirmLocationInfo(bestMatchString);
+            setPositionConfirm({
+              lat: bestMatch.position.lat,
+              lng: bestMatch.position.lng,
+            });
+            setIsValidateLocation(true);
           } else {
-            setError({ title : "Address Invalid or Not found", description : " please enter address valid !!!" });
+            setIsValidateLocation(false);
           }
-        } catch (err) {
-          console.error(err);
+        } else {
+          setError({
+            title: "Address Invalid or Not found",
+            description: " please enter address valid !!!",
+          });
         }
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
+  };
 
+  const handleClick = () => {
+    setState({
+      data: {
+        ...state?.data!,
+        latitude: position?.lat as number,
+        longitude: position?.lng as number,
+        address: location?.street as string,
+        wardName: location?.district as string,
+        districtName: location?.city as string,
+        cityProvinceName: location?.county as string,
+      },
+    });
 
-  const handleClick = () => { 
-    
-      setState({
-        data: {
-          ...state?.data!,
-          latitude: position?.lat as number,
-          longitude: position?.lng as number,
-          address : location?.street as string,
-          wardName : location?.district as string,
-          districtName: location?.city as string,
-          cityProvinceName: location?.county as string
-        },
-      });
-
-      if(isValidateLocation)  router.push("/homestays/host/floor");
-       
-   
-    
-         
+    if (isValidateLocation) router.push("/homestays/host/floor");
   };
 
   const handleBack = () => {

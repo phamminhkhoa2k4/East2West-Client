@@ -1,4 +1,3 @@
-
 "use client";
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -56,7 +55,7 @@ interface Car {
   imageUrl?: string;
 }
 
-interface CarTableData extends DataRow{
+interface CarTableData extends DataRow {
   thumbnail: string;
   carName: string;
   make: string;
@@ -76,7 +75,7 @@ interface CarTableData extends DataRow{
   [key: string]: string | number; // Updated index signature
 }
 const Cars = () => {
-  const [data, setData] = useState<CarTableData[]>([]); 
+  const [data, setData] = useState<CarTableData[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -85,7 +84,7 @@ const Cars = () => {
           method: "GET",
           headers: { "Content-Type": "application/json" },
           credentials: "include", // Quan trọng để gửi cookie
-      });
+        });
         const result: Car[] = await response.json();
         const formattedData = result.map((car) => ({
           thumbnail: car.imageUrl || "/car_thumbnail.png",
@@ -123,9 +122,7 @@ const Cars = () => {
         title="Cars"
         createUrl="/dashboard/manage/cars/add"
       />
-      <div>
-        
-      </div>
+      <div></div>
     </DefaultLayout>
   );
 };

@@ -1,25 +1,23 @@
-"use client"
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState  } from "react";
+import { useEffect, useState } from "react";
 import OpenButton from "./OpenButton";
 import Gallery from "./Gallery";
-import { useHostContext } from "@/context/context";
-
-
-
+import { useHostContext } from "@/store/Hostcontext";
 
 interface FileWithPreview extends File {
   preview: string;
 }
 const Photos = () => {
-  
   const { state, setState } = useHostContext();
   const router = useRouter();
-    const [files, setFiles] = useState<FileWithPreview[]>([]);
-    const [imageUrls, setImageUrls] = useState<string[]>(state?.data.photos ?? []);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>(
+    state?.data.photos ?? []
+  );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const handleClick = () => {
     if (imageUrls.length >= 5) {
       setState({
@@ -30,64 +28,60 @@ const Photos = () => {
       });
       router.push("/homestays/host/title");
     }
-    
-
-    
   };
 
   const handleBack = () => {
     router.back();
   };
 
-   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-     if (e.target.files) {
-       const selectedFiles = Array.from(e.target.files).map((file) => {
-         const preview = URL.createObjectURL(file);
-         return Object.assign(file, { preview });
-       });
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files).map((file) => {
+        const preview = URL.createObjectURL(file);
+        return Object.assign(file, { preview });
+      });
 
-       setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
-     }
-   };
-   const handleUpload = async () => {
-     if (files.length === 0) {
-       console.error("No files selected");
-       return;
-     }
+      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+    }
+  };
+  const handleUpload = async () => {
+    if (files.length === 0) {
+      console.error("No files selected");
+      return;
+    }
 
-     const uploadPromises = files.map(async (file) => {
-       const formData = new FormData();
-       formData.append("file", file);
-       formData.append("upload_preset", "homestays");
+    const uploadPromises = files.map(async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "homestays");
 
-       try {
-         const response = await fetch(
-           `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
-           {
-             method: "POST",
-             body: formData,
-           }
-         );
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
-         const result = await response.json();
-         return result.secure_url;
-       } catch (error) {
-         console.error("Upload failed:", error);
-         return null;
-       }
- 
-     });
+        const result = await response.json();
+        return result.secure_url;
+      } catch (error) {
+        console.error("Upload failed:", error);
+        return null;
+      }
+    });
 
-     const uploadedUrls = await Promise.all(uploadPromises);
-     const newImageUrl =  uploadedUrls.filter((url) => url !== null) as string[];
-     setImageUrls((url) => [...url,...newImageUrl]);
-   };
+    const uploadedUrls = await Promise.all(uploadPromises);
+    const newImageUrl = uploadedUrls.filter((url) => url !== null) as string[];
+    setImageUrls((url) => [...url, ...newImageUrl]);
+  };
 
-   useEffect(() => {
-     if (imageUrls.length > 0) {
-       setFiles([]);
-     }
-   }, [imageUrls]);
+  useEffect(() => {
+    if (imageUrls.length > 0) {
+      setFiles([]);
+    }
+  }, [imageUrls]);
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-9 border-b">
@@ -109,7 +103,6 @@ const Photos = () => {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
-        
         {imageUrls.length === 0 && (
           <>
             <div className="w-[640px]">
@@ -153,7 +146,9 @@ const Photos = () => {
         </button>
         <button
           onClick={handleClick}
-          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${imageUrls.length < 5 ? "opacity-30" : ""}`}
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            imageUrls.length < 5 ? "opacity-30" : ""
+          }`}
         >
           Continue
         </button>

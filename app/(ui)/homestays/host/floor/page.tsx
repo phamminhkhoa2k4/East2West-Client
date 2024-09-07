@@ -1,37 +1,38 @@
-"use client"
+"use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useHostContext } from "@/context/context";
+import { useHostContext } from "@/store/Hostcontext";
 import Link from "next/link";
 import Image from "next/image";
 
 const Floor = () => {
   const { state, setState } = useHostContext();
-    const [countMaxGuest, setCountMaxGuest] = useState<number | undefined>(state?.data.maxGuest ?? 0 );
-    const [countRoom, SetCountRoom] = useState<number | undefined>(0);
-    const [countBed, SetCountBed] = useState<number | undefined>(0);
-    const router = useRouter();
-    const handleClick = () => {
-      if (countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0){
-          setState({
-            data: {
-              ...state?.data!,
-              maxGuest: countMaxGuest as number,
-              // room:countRoom as number,
-              // bed:countBed as number,
-            },
-          });
-      
-          router.push("/homestays/host/standout");
-      }
-        
-    };
+  const [countMaxGuest, setCountMaxGuest] = useState<number | undefined>(
+    state?.data.maxGuest ?? 0
+  );
+  const [countRoom, SetCountRoom] = useState<number | undefined>(state?.data.room ?? 0);
+  const [countBed, SetCountBed] = useState<number | undefined>(state?.data.beds ?? 0);
+  const [countBathroom, SetCountBathroom] = useState<number | undefined>(state?.data.bathroom ?? 0);
+  const router = useRouter();
+  const handleClick = () => {
+    if (countMaxGuest! > 0 && countBed! > 0 ) {
+      setState({
+        data: {
+          ...state?.data!,
+          maxGuest: countMaxGuest as number,
+          room:countRoom as number,
+          beds:countBed as number,
+          bathroom:countBathroom as number,
+        },
+      });
 
-    
+      router.push("/homestays/host/standout");
+    }
+  };
 
-    const handleBack = () => {
-      router.back();
-    };
+  const handleBack = () => {
+    router.back();
+  };
   return (
     <div>
       <div className="bg-white fixed right-0 left-0 top-0  px-15 pt-5 pb-5 z-999 border-b">
@@ -109,15 +110,68 @@ const Floor = () => {
                 </button>
               </div>
             </div>
+            {state?.data.type === "entire-house" && (
+              <div className="flex items-center w-full justify-between py-6 border-b-2">
+                <div>
+                  <h3 className="font-medium text-lg">Phòng Ngủ</h3>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button
+                    className="border rounded-full p-2"
+                    onClick={() => {
+                      SetCountRoom((prev) => (prev! > 0 ? prev! - 1 : prev));
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M5 12h14"
+                      />
+                    </svg>
+                  </button>
+                  <span>{countRoom}</span>
+                  <button
+                    className="border rounded-full p-2"
+                    onClick={() => {
+                      SetCountRoom((prev) => prev! + 1);
+                    }}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      className="size-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 4.5v15m7.5-7.5h-15"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center w-full justify-between py-6 border-b-2">
               <div>
-                <h3 className="font-medium text-lg">Phòng Ngủ</h3>
+                <h3 className="font-medium text-lg">Phòng Tắm</h3>
               </div>
               <div className="flex items-center gap-3">
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountRoom((prev) => (prev! > 0 ? prev! - 1 : prev));
+                    SetCountBathroom((prev) => (prev! > 0 ? prev! - 1 : prev));
                   }}
                 >
                   <svg
@@ -135,11 +189,11 @@ const Floor = () => {
                     />
                   </svg>
                 </button>
-                <span>{countRoom}</span>
+                <span>{countBathroom}</span>
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountRoom((prev) => prev! + 1);
+                    SetCountBathroom((prev) => prev! + 1);
                   }}
                 >
                   <svg
@@ -221,7 +275,11 @@ const Floor = () => {
         </button>
         <button
           onClick={handleClick}
-          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0 ? "opacity-100" : "opacity-30"}`}
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0
+              ? "opacity-100"
+              : "opacity-30"
+          }`}
         >
           Continue
         </button>

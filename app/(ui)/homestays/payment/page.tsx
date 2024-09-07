@@ -36,7 +36,7 @@ const Payment = () => {
           endpoint: `/homestays/${homestayId}`,
         });
         setInfo(data);
-      } catch (err) {
+      } catch (err) { 
         console.log(err);
       } finally {
         setLoading(false);
@@ -44,7 +44,7 @@ const Payment = () => {
     };
 
     getById();
-  }, []);
+  }, [homestayId]);
 
   const currentDate = format(new Date(), "yyyy-MM-dd");
   const todayAvailability = info?.availability.find((avail) => {
@@ -69,14 +69,12 @@ const Payment = () => {
   const numberOfDays = countDaysBetweenDates(checkIn, checkOut);
 
   const effectivePricePerNight = todayAvailability?.pricepernight ?? 0;
-  const effectiveCleaningFee = info?.cleaningfee ?? 0;
+  const effectiveCleaningFee = info?.cleaningFee ?? 0;
   const totalPriceAllDay = effectivePricePerNight * numberOfDays;
-  const serviceFee = effectivePricePerNight * numberOfDays * 0.03;
-  const totalCost =
-    effectivePricePerNight * numberOfDays + effectiveCleaningFee + serviceFee;
+  const serviceFee = Math.floor(effectivePricePerNight * numberOfDays * 0.03);
+  const totalCost =  (effectivePricePerNight * numberOfDays) + effectiveCleaningFee + serviceFee;
   const countAdults = numberOfAdults ?? 0;
   const countChildren = numberOfChildren ?? 0;
-  const checkInDate = checkIn ?? 0;
   function convertDateFormat(dateStr: string | null): string | null {
   
     if (!dateStr) {
@@ -96,32 +94,38 @@ const Payment = () => {
     return formattedDate;
   }
 
-  const getUrlVNPay = async () => {
-    setPaymentData({
-      checkin: convertDateFormat(checkIn),
-      checkout: convertDateFormat(checkIn),
-      homestayavailabilityId: todayAvailability?.homestayavailabilityid,
-      feeamount: serviceFee,
-      numberofguest: Number(countAdults) + Number(countChildren),
-      status: "",
-      totalPrice: totalCost,
-      userId: info?.userid,
-    } as BookingHomestay);
+  
 
-    setAmount(totalCost);
-    try {
-      console.log(paymentData);
+ const getUrlVNPay = async () => {
+   const formattedCheckIn = convertDateFormat(checkIn);
+   const formattedCheckOut = convertDateFormat(checkOut);
 
-      const response = await createData({
-        endpoint: `/homestays/bookings/create_payment/${amount}`,
-        payload: paymentData,
-      });
-      return response.url;
-    } catch (error) {
-      console.error("Error fetching VNPay URL:", error);
-      return null;
-    }
-  };
+   const paymentData = {
+     checkin: formattedCheckIn,
+     checkout: formattedCheckOut,
+     homestayavailabilityId: todayAvailability?.homestayavailabilityid || 0,
+     feeamount: serviceFee,
+     numberofguest: Number(countAdults) + Number(countChildren),
+     status: "",
+     totalPrice: totalCost,
+     userId: info?.userId || 0,
+   } as BookingHomestay;
+
+   setPaymentData(paymentData); 
+   setAmount(totalCost); 
+
+   try {
+     const response = await createData({
+       endpoint: `/homestays/bookings/create_payment/${totalCost}`, 
+       payload: paymentData,
+     });
+     return response.url;
+   } catch (error) {
+     console.error("Error fetching VNPay URL:", error);
+     return null;
+   }
+ };
+
   const router = useRouter();
   const handleSubmit = async () => {
     const url = await getUrlVNPay();

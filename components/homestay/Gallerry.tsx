@@ -1,12 +1,10 @@
 import Image from "next/image";
+type PhotosProps = {
+  photos : string[] ;
+}
 
-const Gallery = () => {
-  const images = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(
-    (index) => `/homestay/${index}.jpg`
-  );
-
-  const first = images[0];
-  const nextTwo = [images[1], images[2]];
+const Gallery = ({ photos }: PhotosProps) => {
+  
 
   return (
     <div className="grid grid-cols-3 grid-rows-4 gap-3 md:grid-cols-4 md:grid-rows-3 my-8">
@@ -14,14 +12,14 @@ const Gallery = () => {
         <div className="relative w-full h-0 pt-[100%]">
           <Image
             className="absolute inset-0 w-full h-full object-cover rounded-xl md:rounded-3xl"
-            src={first}
+            src={photos[0]}
             alt="Beach House Photo"
             width={1000}
             height={1000}
           />
         </div>
       </div>
-      {nextTwo.map((image, index) => (
+      {photos.slice(1).map((image, index) => (
         <div
           key={image}
           className={`col-span-1 row-span-1 ${
@@ -43,7 +41,7 @@ const Gallery = () => {
         <div className="relative w-full h-0 pt-[100%]">
           <button className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-xl md:rounded-3xl">
             <span className="text-xs md:text-xl text-gray-500">
-              View {images.length - 3}+ photos
+              View {photos.length - 3}+ photos
             </span>
           </button>
         </div>

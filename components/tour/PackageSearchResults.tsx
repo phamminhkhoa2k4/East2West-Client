@@ -1,6 +1,15 @@
 "use client";
 import { api } from "../../utils/axios";
 import { useState, useEffect } from "react";
+<<<<<<< HEAD
+=======
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
 import {
   Select,
   SelectContent,
@@ -11,12 +20,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import CardSearch from "./CardSearch";
+<<<<<<< HEAD
 import Slider from "@/components/ui/Slider";
 
+=======
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
 interface TourPackage {
   packageId: number;
   title: string;
   price: number;
+<<<<<<< HEAD
 }
 
 interface Category {
@@ -41,8 +54,32 @@ interface FilterParams {
   categoryId?: number;
   themeId?: number;
   suitableId?: number;
+=======
+  // Add other relevant fields based on your API response
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
 }
 
+interface Category {
+  categoryTourId: number;
+  categoryTourName: string;
+}
+
+interface Theme {
+  themeTourId: number;
+  themeTourName: string;
+}
+
+interface Suitable {
+  suitableTourId: number;
+  suitableName: string;
+}
+
+interface FilterParams {
+  categoryTourId: number[];
+  themeTourId: number[];
+  suitableTourId: number[];
+  budget: string;
+}
 const PackageSearchResult = () => {
   const [tourPackage, setTourPackage] = useState<TourPackage[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -51,16 +88,32 @@ const PackageSearchResult = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [themes, setThemes] = useState<Theme[]>([]);
   const [suitables, setSuitables] = useState<Suitable[]>([]);
+<<<<<<< HEAD
   const [filters, setFilters] = useState<FilterParams>({
     minPrice: 0,
     maxPrice: 1000
   });
+=======
+  const [selectedCategory, setSelectedCategory] = useState<number[]>([]);
+  const [selectedTheme, setSelectedTheme] = useState<number[]>([]);
+  const [selectedSuitable, setSelectedSuitable] = useState<number[]>([]);
+  const [budget, setBudget] = useState<string>("");
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
 
   useEffect(() => {
     const fetchTourPackage = async () => {
       try {
+<<<<<<< HEAD
         const response = await api.get<TourPackage[]>("/tours");
         setTourPackage(response.data);
+=======
+        const response = await fetch("http://localhost:8080/api/tours");
+        if (!response.ok) {
+          throw new Error("Failed to fetch tour package");
+        }
+        const data: TourPackage[] = await response.json();
+        setTourPackage(data);
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
       } catch (error) {
         setError(error instanceof Error ? error.message : "Unknown error");
       } finally {
@@ -68,6 +121,7 @@ const PackageSearchResult = () => {
       }
     };
 
+<<<<<<< HEAD
     const fetchCategories = async () => {
       try {
         const response = await api.get<Category[]>("/tours/category");
@@ -107,6 +161,26 @@ const PackageSearchResult = () => {
     }
   }, [selectedValue, tourPackage]);
 
+=======
+    // Fetch categories
+    api.get<Category[]>("http://localhost:8080/api/tours/category").then((response) => {
+      setCategories(response.data);
+    });
+
+    // Fetch themes
+    api.get<Theme[]>("http://localhost:8080/api/tours/theme").then((response) => {
+      setThemes(response.data);
+    });
+
+    // Fetch suitables
+    api.get<Suitable[]>("http://localhost:8080/api/tours/suitable").then((response) => {
+      setSuitables(response.data);
+    });
+
+    fetchTourPackage();
+  }, []);
+
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
   const sortPackages = (value: string) => {
     if (!tourPackage) return;
 
@@ -116,7 +190,13 @@ const PackageSearchResult = () => {
         sortedPackages = [...tourPackage].sort((a, b) => a.price - b.price);
         break;
       case "title":
+<<<<<<< HEAD
         sortedPackages = [...tourPackage].sort((a, b) => a.title.localeCompare(b.title));
+=======
+        sortedPackages = [...tourPackage].sort((a, b) =>
+          a.title.localeCompare(b.title)
+        );
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
         break;
       default:
         sortedPackages = tourPackage;
@@ -124,6 +204,7 @@ const PackageSearchResult = () => {
     setTourPackage(sortedPackages);
   };
 
+<<<<<<< HEAD
   const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
@@ -150,6 +231,32 @@ const PackageSearchResult = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error}</div>;
 
+=======
+  const handleFilter = () => {
+    const filterDTO: FilterParams = {
+      categoryTourId: selectedCategory,
+      themeTourId: selectedTheme,
+      suitableTourId: selectedSuitable,
+      budget: budget,
+    };
+  
+    api
+      .post("http://localhost:8080/api/tours/filter", filterDTO)
+      .then((response) => {
+        console.log(response.data); // handle the filtered data
+      })
+      .catch((error) => {
+        console.error("Error fetching filtered tours:", error);
+      });
+  };
+
+  useEffect(() => {
+    sortPackages(selectedValue);
+  }, [selectedValue]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
   return (
     <>
       <div className="border rounded-3xl shadow-lg mb-6">
@@ -159,6 +266,7 @@ const PackageSearchResult = () => {
         </div>
         <div className="flex">
           <div className="p-5 w-1/4 border-r">
+<<<<<<< HEAD
             <div className="filters">
               <div>
               <div>
@@ -251,6 +359,132 @@ const PackageSearchResult = () => {
               </div>
               <button onClick={handleSearch}>Search</button>
               <button onClick={handleClearAll} className="ml-2 bg-gray-500 text-white px-4 py-2 rounded">Clear All</button>
+=======
+            <div>
+              <Accordion
+                type="multiple"
+                defaultValue={[
+                  "item-1",
+                  "item-2",
+                  "item-3",
+                  "item-4",
+                  "item-5",
+                  "item-6",
+                ]}
+                className="w-full"
+              >
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>
+                    <div className="text-lg font-bold my-2">Budget (per person)</div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <input
+                      type="number"
+                      value={budget}
+                      onChange={(e) => setBudget(e.target.value)}
+                      className="border p-2 w-full rounded-lg"
+                      placeholder="Enter budget"
+                    />
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-2">
+                  <AccordionTrigger>
+                    <div className="text-lg font-bold my-2">Categories</div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {categories.map((category) => (
+                      <div key={category.categoryTourId} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            value={category.categoryTourId}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedCategory([...selectedCategory, category.categoryTourId]);
+                              } else {
+                                setSelectedCategory(
+                                  selectedCategory.filter((id) => id !== category.categoryTourId)
+                                );
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 text-sm font-medium text-gray-900">
+                            {category.categoryTourName}
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-3">
+                  <AccordionTrigger>
+                    <div className="text-lg font-bold my-2">Themes</div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {themes.map((theme) => (
+                      <div key={theme.themeTourId} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            value={theme.themeTourId}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedTheme([...selectedTheme, theme.themeTourId]);
+                              } else {
+                                setSelectedTheme(
+                                  selectedTheme.filter((id) => id !== theme.themeTourId)
+                                );
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 text-sm font-medium text-gray-900">
+                            {theme.themeTourName}
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-4">
+                  <AccordionTrigger>
+                    <div className="text-lg font-bold my-2">Suitable For</div>
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    {suitables.map((suitable) => (
+                      <div key={suitable.suitableTourId} className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            value={suitable.suitableTourId}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedSuitable([...selectedSuitable, suitable.suitableTourId]);
+                              } else {
+                                setSelectedSuitable(
+                                  selectedSuitable.filter((id) => id !== suitable.suitableTourId)
+                                );
+                              }
+                            }}
+                            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded"
+                          />
+                          <label className="ml-2 text-sm font-medium text-gray-900">
+                            {suitable.suitableName}
+                          </label>
+                        </div>
+                      </div>
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+              <button
+                onClick={handleFilter}
+                className="mt-4 bg-blue-600 text-white py-2 px-4 rounded"
+              >
+                Apply Filters
+              </button>
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
             </div>
           </div>
           <div className="p-5 w-3/4 h-[1032px] overflow-y-scroll scroll-transparent">

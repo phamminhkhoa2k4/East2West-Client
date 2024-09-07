@@ -41,7 +41,46 @@ body {
   font-family: Inter;
 }
 
+
+
+
 @layer utilities {
+   .animate-loader-spin {
+    @apply animate-spin;
+    animation: loader-spin 2s linear infinite;
+  }
+
+  .svg-calLoader {
+  @apply w-[230px] h-[230px] origin-center animate-loader-spin;
+}
+
+.cal-loader__plane {
+  fill: #00b7ff; 
+
+}
+
+.cal-loader__path {
+  stroke: #a4a4a4; 
+  animation: loader-path 1.4s ease-in-out infinite;
+}
+
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loader-path {
+  0% {
+    stroke-dasharray: 0, 580, 0, 0, 0, 0, 0, 0, 0;
+  }
+  50% {
+    stroke-dasharray: 0, 450, 10, 30, 10, 30, 10, 30, 10;
+  }
+  100% {
+    stroke-dasharray: 0, 580, 0, 0, 0, 0, 0, 0, 0;
+  }
+}
   
   .btn_white {
     @apply border-white bg-white px-8 py-3 text-green-50;

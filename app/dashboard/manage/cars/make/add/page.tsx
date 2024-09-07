@@ -14,7 +14,10 @@ const Create = () => {
       if (!response.ok) throw new Error("Failed to fetch categories.");
 
       const categories = await response.json();
-      return categories.some((category: { categoryTourName: string }) => category.categoryTourName === categoryName);
+      return categories.some(
+        (category: { categoryTourName: string }) =>
+          category.categoryTourName === categoryName
+      );
     } catch (err) {
       console.error(err);
       setError("Failed to check if category exists.");

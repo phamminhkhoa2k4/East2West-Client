@@ -7,18 +7,19 @@ type ButtonProps = {
   icon?: string;
   variant: string;
   full?: boolean;
+  url?: string
 };
 
 const Button = (props: ButtonProps) => {
-  const { title, icon, variant, full } = props;
+  const { title, icon, variant, full, url = "/auth/signin" } = props;
   return (
     <Link
-      href={"/signin"}
-     
+      href={url}
       className={`flexCenter gap-3 rounded-full border 
-        ${variant} ${full && 'w-full'}`}>
+        ${variant} ${full && "w-full"}`}
+    >
       {icon && <Image alt={title} src={icon} width={24} height={24} />}
-      <label className='bold-16'>{title}</label>
+      <label className="bold-16">{title}</label>
     </Link>
   );
 };

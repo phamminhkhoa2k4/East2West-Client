@@ -7,40 +7,45 @@ import {
   useEffect,
 } from "react";
 
-// Định nghĩa kiểu Homestay
-export type Homestay = {
-  wardId: number | null;
-  structureId: number | null;
-  userId: number | null;
-  longitude: number;
-  latitude: number;
-  type: string;
-  title: string;
-  address: string;
-  geom: string;
-  photos: string[];
-  description: string;
-  exactInfo: string;
-  cleaningFee: number;
+
+ type Homestay = {
+  homestayid: number | null;
+  wardName: string; //
+  districtName: string; //
+  cityProvinceName: string; //
+  longitude: number; //
+  latitude: number; //
+  geom: string | null;
+  structureId: number | null; //
+  userId: number | null; //
+  type: string; //
+  title: string; //
+  address: string; //
+  photos: string[]; //
+  description: string; //
+  extraInfo: string; //
+  cleaningFee: number; //
   isApproved: boolean;
-  maxGuest: number;
-  perkIds: number[];
-  cityProvinceName: string;
-  districtName: string;
-  wardName: string;
-  pricePerNight: number;
+  maxGuest: number; //
+  perkIds: number[]; //
+  pricePerNight: number; //
+  instant: boolean;
+  beds:number;
+  bathroom:number;
+  room: number | null;
+  availability: any ;
 };
 
-// Định nghĩa HostContextType
+
 interface HostContextType {
   state: { data: Homestay } | null;
   setState: (state: { data: Homestay } | null) => void;
 }
 
-// Tạo HostContext
+
 const HostContext = createContext<HostContextType | undefined>(undefined);
 
-// Provider để bao bọc các component con
+
 export function HostProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<{ data: Homestay } | null>(null);
 
@@ -68,7 +73,7 @@ export function HostProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Hook để sử dụng HostContext
+
 export function useHostContext() {
   const context = useContext(HostContext);
   if (!context) {

@@ -82,7 +82,7 @@ const Calendar = ({
     const selectedDate = new Date(year, month - 1, day);
     const today = new Date();
 
-    // Check if the selected date is before today
+
     if (selectedDate.getTime() < today.setHours(0, 0, 0, 0)) {
       return;
     }

@@ -68,6 +68,49 @@ interface PlanDayProps {
   day: ItineraryDay;
 }
 
+// const PlanDay = () => {
+  // Fallback to empty arrays if necessary
+  // const accommodations = Array.isArray(day.accommodations) ? day.accommodations : [];
+  // const meals = Array.isArray(day.meals) ? day.meals : [];
+  // const places = Array.isArray(day.places) ? day.places : [];
+  // const transfers = Array.isArray(day.transfers) ? day.transfers : [];
+
+  // Use memo to avoid unnecessary recalculations
+  // const accordionItems = useMemo<AccordionItemType[]>(() => {
+  //   return [
+  //     ...accommodations.map(item => ({
+  //       id: item.accommodationid,
+  //       type: 'Accommodation',
+  //       title: item.accommodationname,
+  //       details: item.accommodationtype,
+  //       content: `Duration: ${item.durationaccommodation}`
+  //     })),
+  //     ...meals.map(item => ({
+  //       id: item.mealid,
+  //       type: 'Meal',
+  //       title: item.mealname,
+  //       details: item.mealactivity,
+  //       content: `Duration: ${item.mealduration}`,
+  //       thumbnail: item.mealthumbnail
+  //     })),
+  //     ...places.map(item => ({
+  //       id: item.placeid,
+  //       type: 'Place',
+  //       title: item.placename,
+  //       details: item.description,
+  //       content: `Duration: ${item.placeduration}`,
+  //       thumbnail: item.placethumbnail
+  //     })),
+  //     ...transfers.map(item => ({
+  //       id: item.transferid,
+  //       type: 'Transfer',
+  //       title: item.transfername,
+  //       details: item.description,
+  //       content: `Duration: ${item.transferduration}`,
+  //       thumbnail: item.transferthumbnail
+  //     }))
+  //   ];
+  // }, [accommodations, meals, places, transfers]);
 const PlanDay = ({ day }: PlanDayProps) => {
   // Fallback to empty arrays if necessary
   const accommodations = Array.isArray(day.accommodations) ? day.accommodations : [];

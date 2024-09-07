@@ -305,9 +305,13 @@ const Create: React.FC = () => {
 
             <MultiSelect
               label="Category Tour"
+<<<<<<< HEAD
               id=""
               placeholder=""
               selectedOptions={ }
+=======
+            
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
               options={categoryOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("categoryTourId", selectedOptions)
@@ -319,7 +323,11 @@ const Create: React.FC = () => {
               placeholder=""
               selectedOptions={ }
               label="Theme Tour"
+<<<<<<< HEAD
 
+=======
+          
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
               options={themeOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("themeTourId", selectedOptions)
@@ -327,7 +335,11 @@ const Create: React.FC = () => {
             />
             <MultiSelect
               label="Suitable Tour"
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
               options={suitableOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("suitableTourId", selectedOptions)

@@ -1,7 +1,30 @@
+"use client"
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
+import { createData } from "@/utils/axios";
+import { useState } from "react";
+type AmenitiesType = {
+  amenitiesid: number | null;
+  amenitiesname: string;
+};
 const Create = () => {
+  const [amenities, setAmenities] = useState<AmenitiesType>();
+
+
+  const handleSubmit = async () => {
+     if(amenities?.amenitiesname.length! >  0){
+        try {
+            const response = await createData({
+              endpoint: "/homestays/host/amenities",
+              payload: amenities,
+            });
+            
+        } catch (error) {
+            console.log(error);
+            
+        }
+     }
+  }
   return (
     <>
       <DefaultLayout>
@@ -13,23 +36,24 @@ const Create = () => {
                   Create Amenities
                 </h3>
               </div>
-              <form action="#">
+         
                 <div className="p-6.5">
                   <InputGroup
                     label="Amenities Name"
                     type="text"
                     placeholder="Please Enter Amenities Name !"
                     customClasses="w-full mb-4.5"
-                    // onChange={() => {}}
+                    value={amenities?.amenitiesname}
+                    onChange={(e) => setAmenities({amenitiesid:null,amenitiesname : e.target.value})}
                   />
 
                   <div className="mb-6"></div>
 
-                  <button className="flex w-full justify-center rounded-[7px] bg-primary p-[13px] font-medium text-white hover:bg-opacity-90">
-                    Continue
+                  <button onClick={handleSubmit} className="flex w-full justify-center rounded-[7px] bg-primary p-[13px] font-medium text-white hover:bg-opacity-90">
+                    Create
                   </button>
                 </div>
-              </form>
+          
             </div>
           </div>
         </div>

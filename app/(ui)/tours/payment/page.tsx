@@ -69,7 +69,7 @@ const Payment = () => {
   const numberOfDays = countDaysBetweenDates(checkIn, checkOut);
 
   const effectivePricePerNight = todayAvailability?.pricepernight ?? 0;
-  const effectiveCleaningFee = info?.cleaningfee ?? 0;
+  const effectiveCleaningFee = info?.cleaningFee ?? 0;
   const totalPriceAllDay = effectivePricePerNight * numberOfDays;
   const serviceFee = effectivePricePerNight * numberOfDays * 0.03;
   const totalCost =
@@ -102,7 +102,7 @@ const Payment = () => {
       numberofguest: Number(countAdults) + Number(countChildren),
       status: "",
       totalPrice: totalCost,
-      userId: info?.userid,
+      userId: info?.userId,
     } as BookingHomestay);
 
     setAmount(totalCost);

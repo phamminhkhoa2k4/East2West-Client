@@ -1,26 +1,26 @@
-"use client"
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useHostContext } from "@/context/context";
+import { useHostContext } from "@/store/Hostcontext";
 import { useState } from "react";
 
 const Description = () => {
-  const {state, setState} = useHostContext();
-  const [description, setDescription] = useState<string>(state?.data.description ?? ""); 
+  const { state, setState } = useHostContext();
+  const [description, setDescription] = useState<string>(
+    state?.data.description ?? ""
+  );
   const router = useRouter();
   const handleClick = () => {
-
-    if(description.length > 0){
-       setState({
-         data: {
-           ...state?.data!,
-           description: description
-         },
-       });
-       router.push("/homestays/host/finish");
+    if (description.length > 0) {
+      setState({
+        data: {
+          ...state?.data!,
+          description: description,
+        },
+      });
+      router.push("/homestays/host/extraInfo");
     }
-    
   };
 
   const handleBack = () => {
@@ -65,7 +65,9 @@ const Description = () => {
               {description}
             </textarea>
           </div>
-          <span className="text-[#666] font-medium">{description.length}/500</span>
+          <span className="text-[#666] font-medium">
+            {description.length}/500
+          </span>
         </div>
       </div>
       <div className=" bg-white border-t-4 flex fixed left-0 right-0 bottom-0 items-center justify-between">
@@ -77,7 +79,9 @@ const Description = () => {
         </button>
         <button
           onClick={handleClick}
-          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${description.length === 0 ? "opacity-30" : ""}`}
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            description.length === 0 ? "opacity-30" : ""
+          }`}
         >
           Continue
         </button>

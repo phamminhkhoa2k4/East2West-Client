@@ -20,16 +20,26 @@ interface Events {
   [key: string]: Event[];
 }
 
-const 
-Calendar: React.FC = () => {
-  
+type CalendarProps = {
+  setCheckInDate: (value: string | null) => void;
+  setCheckOutDate: (value: string | null) => void;
+  checkInDate: string | null;
+  checkOutDate: string | null;
+};
+
+
+const Calendar = ({
+  setCheckInDate,
+  setCheckOutDate,
+  checkInDate,
+  checkOutDate,
+}: CalendarProps) => {
   const initialEvents: Events = {
     "2024-12-01": [{ name: "Redesign Website", time: "1 Dec - 3 Dec" }],
     "2024-12-25": [{ name: "App Design", time: "25 Dec - 27 Dec" }],
   };
 
   const [events, setEvents] = useState<Events>(initialEvents);
-
   const [currentDate, setCurrentDate] = useState(new Date());
 
   const getDaysInMonth = (year: number, month: number) => {
@@ -39,6 +49,13 @@ Calendar: React.FC = () => {
   const getFirstDayOfMonth = (year: number, month: number) => {
     return new Date(year, month, 1).getDay();
   };
+
+   const formatDate = (date: Date) => {
+     const day = date.getDate().toString().padStart(2, "0");
+     const month = (date.getMonth() + 1).toString().padStart(2, "0");
+     const year = date.getFullYear();
+     return `${day}/${month}/${year}`;
+   };
 
   const goToPreviousMonth = () => {
     setCurrentDate(
@@ -64,6 +81,26 @@ Calendar: React.FC = () => {
     );
   };
 
+    const handleDayClick = (date: string) => {
+      const [day, month, year] = date.split("/").map(Number);
+      const selectedDate = new Date(year, month - 1, day);
+      const today = new Date();
+
+ 
+      if (selectedDate.getTime() < today.setHours(0, 0, 0, 0)) {
+        return;
+      }
+
+      if (!checkInDate) {
+        setCheckInDate(date);
+      } else if (!checkOutDate && date > checkInDate) {
+        setCheckOutDate(date);
+      } else {
+        setCheckInDate(date);
+        setCheckOutDate(null);
+      }
+    };
+
   const renderEvents = (date: string) => {
     if (events[date]) {
       return events[date].map((event, index) => (
@@ -71,9 +108,7 @@ Calendar: React.FC = () => {
           key={index}
           className="event invisible absolute left-2 z-99 mb-1 flex w-[200%] flex-col rounded-r-[5px] border-l-[3px] border-primary bg-gray-2 px-3 py-1 text-left opacity-0 group-hover:visible group-hover:opacity-100  md:visible md:w-[190%] md:opacity-100"
         >
-          <span className="event-name font-medium text-dark">
-            {event.name}
-          </span>
+          <span className="event-name font-medium text-dark">{event.name}</span>
           <span className="time text-sm">{event.time}</span>
         </div>
       ));
@@ -90,16 +125,18 @@ Calendar: React.FC = () => {
 
     const prevMonthDays = getDaysInMonth(year, month - 1);
 
+     const today = new Date();
+     const todayString = formatDate(today);
+     
     for (let i = firstDay - 1; i >= 0; i--) {
-      const dateString = `${year}-${month.toString().padStart(2, "0")}-${(
-        prevMonthDays - i
-      )
-        .toString()
-        .padStart(2, "0")}`;
+      const dateString = formatDate(
+        new Date(year, month - 1, prevMonthDays - i)
+      );
       days.push(
         <td
           key={`prev-${i}`}
           className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200  md:h-25 md:p-6 xl:h-31"
+          onClick={() => handleDayClick(dateString)}
         >
           <span className="font-medium text-gray-500 ">
             {prevMonthDays - i}
@@ -110,15 +147,33 @@ Calendar: React.FC = () => {
     }
 
     for (let day = 1; day <= totalDays; day++) {
-      const dateString = `${year}-${(month + 1)
-        .toString()
-        .padStart(2, "0")}-${day.toString().padStart(2, "0")}`;
+      const dateString = formatDate(new Date(year, month, day));
       days.push(
         <td
           key={day}
-          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 hover:bg-gray-2  md:h-25 md:p-6 xl:h-31"
+          className={`ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 ${
+            (checkInDate && checkInDate === dateString) ||
+            (checkOutDate &&
+              checkInDate &&
+              dateString >= checkInDate &&
+              dateString <= checkOutDate)
+              ? "bg-blue-200"
+              : "hover:bg-gray-2"
+          } md:h-25 md:p-6 xl:h-31`}
+          onClick={() => handleDayClick(dateString)}
         >
-          <span className="font-medium text-dark ">{day}</span>
+          <span
+            className={`font-medium  ${
+              (checkInDate && checkInDate === dateString) ||
+              (checkOutDate && checkOutDate === dateString)
+                ? "text-blue-500 "
+                : dateString === todayString
+                ? "text-white bg-blue-500 p-4 rounded-full"
+                : "text-dark"
+            }`}
+          >
+            {day}
+          </span>
           <div className="group h-16 w-full flex-grow cursor-pointer py-1 md:h-30">
             <span className="group-hover:text-primary md:hidden">More</span>
             {renderEvents(dateString)}
@@ -129,17 +184,14 @@ Calendar: React.FC = () => {
 
     const lastDay = new Date(year, month + 1, 0).getDay();
     for (let i = 1; i < 7 - lastDay; i++) {
-      const dateString = `${year}-${(month + 2).toString().padStart(2, "0")}-${i
-        .toString()
-        .padStart(2, "0")}`;
+      const dateString = formatDate(new Date(year, month + 1, i));
       days.push(
         <td
           key={`next-${i}`}
           className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200  md:h-25 md:p-6 xl:h-31"
+          onClick={() => handleDayClick(dateString)}
         >
-          <span className="font-medium text-gray-500 ">
-            {i}
-          </span>
+          <span className="font-medium text-gray-500 ">{i}</span>
           {renderEvents(dateString)}
         </td>
       );
