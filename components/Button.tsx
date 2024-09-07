@@ -7,11 +7,11 @@ type ButtonProps = {
   icon?: string;
   variant: string;
   full?: boolean;
-  url : string
+  url?: string
 };
 
 const Button = (props: ButtonProps) => {
-  const { title, icon, variant, full ,url } = props;
+  const { title, icon, variant, full, url = "/auth/signin" } = props;
   return (
     <Link
       href={url}
