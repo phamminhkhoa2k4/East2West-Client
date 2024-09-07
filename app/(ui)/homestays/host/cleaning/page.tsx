@@ -67,7 +67,6 @@ const Cleaning = () => {
             className="border-none outline-none font-5xl font-bold w-20 input-number"
           />
         </div>
-        <div className="flex justify-center w-[400px]  mt-5"></div>
         <div className="flex justify-center w-[400px]  mt-5">
           <div className="border rounded-lg p-4">
             <>

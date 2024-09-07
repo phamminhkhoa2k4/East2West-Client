@@ -39,7 +39,7 @@ import {
 
 interface HostContextType {
   state: { data: Homestay } | null;
-  setState: (state: { data: Homestay } | null) => void;
+  setState: (state: { data: Homestay  } | null) => void;
 }
 
 

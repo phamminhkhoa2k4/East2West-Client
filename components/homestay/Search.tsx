@@ -210,7 +210,7 @@ export default function Search({isScroll}: SearchProps) {
             )}
             {place.length == 0 && isOpenPlace && (
               <div ref={PlaceRef} className="w-[400px] absolute top-20 left-0">
-                <Area />
+                <Area setPlace={setPlace} setPosition={setPosition} />
               </div>
             )}
           </div>

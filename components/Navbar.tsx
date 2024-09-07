@@ -247,32 +247,35 @@ const Navbar = () => {
                     <DropdownMenuGroup>
                       <DropdownMenuItem>
                         <IoIosNotificationsOutline className="mr-2 h-4 w-4" />
-                        <Link href="/" >Notification</Link>
+                        <Link href="/">Notification</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <MdCardTravel className="mr-2 h-4 w-4" />
-                        <Link href="" >Trips</Link>
+                        <Link href="">Trips</Link>
                       </DropdownMenuItem>
-                      {user.roles[0] === "ROLE_BUSINESS" && (
-                        <DropdownMenuItem>
-                          <BsHouses className="mr-2 h-4 w-4" />
-                          <Link href="/" >Manage Your Homestay</Link>
-                        </DropdownMenuItem>
-                      )}
+                      {user.roles[0] === "ROLE_BUSINESS" ||
+                        (user.roles[0] === "ROLE_MODERATOR" && (
+                          <DropdownMenuItem>
+                            <BsHouses className="mr-2 h-4 w-4" />
+                            <Link href="/homestays/multicalendar">
+                              Manage Your Homestay
+                            </Link>
+                          </DropdownMenuItem>
+                        ))}
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Tours Package</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <MdModeOfTravel className="mr-2 h-4 w-4" />
-                      <Link href="/" >My Tours</Link>
+                      <Link href="/">My Tours</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Rental Car</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>
                       <MdCarRental className="mr-2 h-4 w-4" />
-                      <Link href="/" >My Rental</Link>
+                      <Link href="/">My Rental</Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout}>
@@ -347,11 +350,12 @@ const Navbar = () => {
               />
             </div>
           </div>
-          {pathname === "/homestays" && (
-            <div className="flex justify-center">
-              <Search isScroll={isScroll} />
-            </div>
-          )}
+          {pathname === "/homestays" ||
+            (pathname === "/homestays/multicalendar" && (
+              <div className="flex justify-center">
+                <Search isScroll={isScroll} />
+              </div>
+            ))}
           {pathname === "/tours" && (
             <div className="flex justify-center">
               <SearchTour isScroll={isScroll} />
