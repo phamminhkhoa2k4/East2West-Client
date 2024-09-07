@@ -6,11 +6,21 @@ const useColorMode = () => {
 
   useEffect(() => {
     const className = "dark";
-    const bodyClass = window.document.documentElement.classList;
+    const classNameNormal = "normal";
+    const htmlClass = window.document.documentElement.classList;
+    const bodyClass = window.document.body.classList;
 
     colorMode === "dark"
-      ? bodyClass.add(className)
-      : bodyClass.remove(className);
+      ? htmlClass.add(className)
+      : htmlClass.remove(className);
+
+     if (colorMode === "normal") {
+       htmlClass.add(classNameNormal);
+       bodyClass.add(classNameNormal);
+     } else {
+       htmlClass.remove(classNameNormal);
+       bodyClass.remove(classNameNormal);
+     }
   }, [colorMode]);
 
   return [colorMode, setColorMode];

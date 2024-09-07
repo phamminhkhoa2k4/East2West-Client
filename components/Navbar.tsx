@@ -3,6 +3,7 @@ import { NAV_LINKS } from "@/constants/constant.index";
 import Image from "next/image";
 import Link from "next/link";
 import Button from "./Button";
+
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
@@ -18,6 +19,44 @@ import Search from "./homestay/Search";
 import SearchTour from "./tour/Search";
 import SearchCar from "./car/SearchCar";
 import { useUser } from "@/store/UserContext";
+import { RxDashboard } from "react-icons/rx";
+import { IoIosNotificationsOutline } from "react-icons/io";
+import { BsHouses } from "react-icons/bs";
+import { MdCardTravel } from "react-icons/md";
+import { MdCarRental } from "react-icons/md";
+import { MdModeOfTravel } from "react-icons/md";
+import useColorMode from "@/hooks/useColorMode";
+import {
+  Cloud,
+  CreditCard,
+  Github,
+  Keyboard,
+  LifeBuoy,
+  LogOut,
+  Mail,
+  MessageSquare,
+  Plus,
+  PlusCircle,
+  Settings,
+  User,
+  UserPlus,
+  Users,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuShortcut,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 interface User {
   userId: number;
   username: string;
@@ -32,6 +71,14 @@ const Navbar = () => {
   const [selectedValue, setSelectedValue] = useState("Vietnamese");
   const [isScroll, setIsScroll] = useState(false);
   const { user, setUser } = useUser();
+
+  const [colorMode, setColorMode] = useColorMode();
+
+  useEffect(() => {
+    if (typeof setColorMode === "function") {
+      setColorMode(colorMode === "dark" ? "normal" : "normal");
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -147,27 +194,100 @@ const Navbar = () => {
 
             <div className="flex items-center gap-4 lg:gap-8">
               {user ? (
-                <div className="flex items-center gap-4">
-                  <span className="text-lg font-medium">{user.username}</span>
-                  <div className="text-blue-600 hover:text-blue-800 font-medium transition-colors duration-300">
-                    <Link href="/mybooking">My Booking</Link>
-                  </div>
-                  <button
-                    onClick={handleLogout}
-                    className="text-red-600 hover:text-red-800 font-medium transition-colors duration-300"
-                  >
-                    Logout
-                  </button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button className=" outline-none flex gap-1 border rounded-full px-4 py-2 items-center justify-between bg-blue-500 ">
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className="size-8 text-white"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5"
+                          />
+                        </svg>
+                      </div>
+                      <div className="relative">
+                        <div className="h-10 w-10 rounded-full text-sx font-semibold text-white bg-black flex items-center justify-center">
+                          W
+                        </div>
+                        <span className="flex justify-center items-center absolute left-7.5 top-0 h-4 w-4 rounded-full border-2 border-white bg-red-500 text-[8px] font-semibold text-white">
+                          2
+                        </span>
+                      </div>
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      {user.roles[0] === "ROLE_MODERATOR" && (
+                        <DropdownMenuItem>
+                          <RxDashboard className="mr-2 h-4 w-4" />
+                          <span>Dashboard</span>
+                        </DropdownMenuItem>
+                      )}
+                      {/* {user.roles[0] === "ROLE_BUSINESS" && ()} */}
+                      {/* {user.roles[0] === "ROLE_MODERATOR" && ()} */}
+
+                      <DropdownMenuItem>
+                        <User className="mr-2 h-4 w-4" />
+                        <Link href="/">Profile</Link>
+                      </DropdownMenuItem>
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Homestays</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem>
+                        <IoIosNotificationsOutline className="mr-2 h-4 w-4" />
+                        <Link href="/" >Notification</Link>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <MdCardTravel className="mr-2 h-4 w-4" />
+                        <Link href="" >Trips</Link>
+                      </DropdownMenuItem>
+                      {user.roles[0] === "ROLE_BUSINESS" && (
+                        <DropdownMenuItem>
+                          <BsHouses className="mr-2 h-4 w-4" />
+                          <Link href="/" >Manage Your Homestay</Link>
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Tours Package</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <MdModeOfTravel className="mr-2 h-4 w-4" />
+                      <Link href="/" >My Tours</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuLabel>Rental Car</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem>
+                      <MdCarRental className="mr-2 h-4 w-4" />
+                      <Link href="/" >My Rental</Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               ) : (
-   
                 <Button
                   title="Sign In"
                   icon="/user.svg"
                   variant="btn_dark_green"
                   url="/auth/signin"
                 />
-     
               )}
               <div className="relative">
                 <Select value={selectedValue} onValueChange={setSelectedValue}>

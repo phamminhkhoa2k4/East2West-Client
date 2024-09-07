@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { HostProvider } from "@/store/Hostcontext";
 import { LoadingProvider } from "@/store/loadingContext";
-import { SearchHomestayProvider } from "@/store/HomestaySearchContext";
 import { HomestaysProvider } from "@/store/HomestaysContext";
 import { UserProvider } from "@/store/UserContext";
 import { MessageProvider } from "@/store/MessageCotext";
@@ -21,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="en" className="!bg-white">
+      <body className={`${inter.className}`}>
         <HostProvider>
           <LoadingProvider>
             <UserProvider>
