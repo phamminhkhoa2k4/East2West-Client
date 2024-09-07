@@ -44,8 +44,8 @@ import React from "react";
 interface InputGroupProps {
   customClasses?: string;
   label: string;
-  type: string;
-  placeholder: string;
+  type?: string;
+  placeholder?: string;
   required?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   value?: string | null | undefined;

@@ -2,29 +2,34 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
+import { DataRow } from "@/types/table";
+import { getData } from "@/utils/axios";
 
 const columns = [
-  { key: "makeId", label: "ID" },
-  { key: "makeName", label: "Structure  Name" },
+  { key: "structureid", label: "ID" },
+  { key: "structurename", label: "Structure  Name" },
+  { key: "action", label: "Action" },
 ];
 
-interface Make {
-  makeId: number;
-  makeName: string;
+interface Structure extends DataRow {
+  structureid: number;
+  structurename: string;
 }
 
-const Makes = () => {
-  const [data, setData] = useState<Make[]>([]);
+const Structure = () => {
+  const [data, setData] = useState<Structure[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars/make");
-        const result: Make[] = await response.json();
+        const response = await getData({
+          endpoint: "/homestays/host/structure",
+        });
+        const result: Structure[] = response;
 
-        const formattedData = result.map((make: Make) => ({
-          makeId: make.makeId,
-          makeName: make.makeName,
+        const formattedData = result.map((structure: Structure) => ({
+          structureid: structure.structureid,
+          structurename: structure.structurename,
         }));
 
         setData(formattedData);
@@ -43,10 +48,13 @@ const Makes = () => {
         data={data}
         title="Structures"
         createUrl="/dashboard/manage/cars/make/add"
+        editUrl=""
+        deleteUrl="homestays/host/structure"
+        
       />
       <div></div>
     </DefaultLayout>
   );
 };
 
-export default Makes;
+export default Structure;

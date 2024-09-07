@@ -14,7 +14,10 @@ const Create = () => {
       if (!response.ok) throw new Error("Failed to fetch categories.");
 
       const categories = await response.json();
-      return categories.some((category: { categoryTourName: string }) => category.categoryTourName === categoryName);
+      return categories.some(
+        (category: { categoryTourName: string }) =>
+          category.categoryTourName === categoryName
+      );
     } catch (err) {
       console.error(err);
       setError("Failed to check if category exists.");
@@ -34,7 +37,7 @@ const Create = () => {
 
     // Proceed with creating a new category
     try {
-      const response = await fetch("http://localhost:8080/api/category", {
+      const response = await fetch("http://localhost:8080/api/cars/make", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -13,6 +13,9 @@ export interface DataRow {
     data: DataRow[] ;
     title: string;
     createUrl: string;
+    editUrl?: string;
+    deleteUrl?: string;
+    detailUrl?: string 
   }
 
 

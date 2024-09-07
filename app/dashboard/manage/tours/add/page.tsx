@@ -217,7 +217,7 @@ const Create: React.FC = () => {
   
             <MultiSelect
               label="Category Tour"
-              name="categoryTourId"
+            
               options={categoryOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("categoryTourId", selectedOptions)
@@ -225,7 +225,7 @@ const Create: React.FC = () => {
             />
             <MultiSelect
               label="Theme Tour"
-              name="themeTourId"
+          
               options={themeOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("themeTourId", selectedOptions)
@@ -233,7 +233,7 @@ const Create: React.FC = () => {
             />
             <MultiSelect
               label="Suitable Tour"
-              name="suitableTourId"
+        
               options={suitableOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("suitableTourId", selectedOptions)

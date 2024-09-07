@@ -1,14 +1,15 @@
-"use client"; 
+"use client";
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
+import { DataRow } from "@/types/table";
 
 const columns = [
   { key: "typeId", label: "ID" },
   { key: "typeName", label: "Type Name" },
 ];
 
-interface Type {
+interface Type extends DataRow {
   typeId: number;
   typeName: string;
 }
@@ -39,12 +40,12 @@ const Types = () => {
 
   return (
     <DefaultLayout>
-      {/* <CustomTable
+      <CustomTable
         columns={columns}
         data={data}
         title="Types"
         createUrl="/dashboard/manage/cars/type/add"
-      /> */}
+      />
       <div></div>
     </DefaultLayout>
   );

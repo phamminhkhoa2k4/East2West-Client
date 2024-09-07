@@ -6,8 +6,8 @@ interface DateTimeOption {
 }
 
 interface DateTimePickerProps {
-  id: string;
-  placeholder: string;
+  id?: string;
+  placeholder?: string;
   label: string;
   selectedDates: DateTimeOption[];
   onChange: (selectedDates: DateTimeOption[]) => void;

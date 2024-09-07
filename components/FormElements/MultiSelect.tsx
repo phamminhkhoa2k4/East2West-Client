@@ -8,11 +8,11 @@ interface Option {
 
 // Interface cho DropdownProps
 interface DropdownProps {
-  id: string;
-  placeholder: string;
-  label: string;
+  id?: string;
+  placeholder?: string;
+  label?: string;
   options: Option[];
-  selectedOptions: Option[];
+  selectedOptions?: Option[];
   onChange: (selectedOptions: Option[]) => void;
 }
 

@@ -80,7 +80,7 @@ const Navbar = () => {
           }`}
         >
           <div className="flexEvenly">
-            <Link href="/" passHref>
+            <Link href="/">
               <Image
                 src="/Logo.png"
                 alt="logo"

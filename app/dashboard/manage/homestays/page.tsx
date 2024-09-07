@@ -7,8 +7,7 @@ const Homestays = () => {
   return (
     <>
       <DefaultLayout>
-        <TableHomestay/>
-        
+        <TableHomestay/>        
       </DefaultLayout>
     </>
   );
