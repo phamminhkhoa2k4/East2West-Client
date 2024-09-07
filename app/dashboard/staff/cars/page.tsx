@@ -81,7 +81,7 @@ const Staff = () => {
   const fetchData = async (query = "") => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/cars${query ? `/search?name=${query}` : ""}`
+        `http://localhost:8080/api/cars${query ? `/search/name?name=${query}` : ""}`
       );
       const result: Car[] = await response.json();
       const formattedData: FormattedCarData[] = result.map((car: Car) => ({

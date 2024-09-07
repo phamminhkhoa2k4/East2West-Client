@@ -119,7 +119,7 @@ const Staff = () => {
   const fetchData = async (query = "") => {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/tours${query ? `/search?title=${query}` : ""}`
+        `http://localhost:8080/api/tours${query ? `/search/name?title=${query}` : ""}`
       );
       const result: TourPackage[] = await response.json();
       const formattedData: FormattedTourData[] = result.map((tour: TourPackage) => ({

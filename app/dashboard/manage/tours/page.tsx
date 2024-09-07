@@ -117,7 +117,7 @@ const TourComponent = () => {
         // Inside your data mapping:
         const formattedData: FormattedTourData[] = result.map(
           (tour: TourPackage) => ({
-            thumbnail: `/images/${tour.thumbnail}`, // Assuming images are in the public/images folder
+            thumbnail: `${tour.thumbnail}`, // Assuming images are in the public/images folder
             title: tour.title,
             price: tour.price,
             priceReduce: tour.pricereduce,
