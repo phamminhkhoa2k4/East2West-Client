@@ -80,7 +80,8 @@ import React from 'react';
 interface SelectGroupOneProps {
   label: string;
   placeholder: string;
-  data: { id: number; name: string }[];
+  
+  options: Option[];
   value: number;
   onChange: (value: number) => void;
 }
@@ -88,7 +89,7 @@ interface SelectGroupOneProps {
 const SelectGroupOne: React.FC<SelectGroupOneProps> = ({
   label,
   placeholder,
-  data,
+  options = [],
   value,
   onChange
 }) => {
@@ -101,10 +102,14 @@ const SelectGroupOne: React.FC<SelectGroupOneProps> = ({
         onChange={(e) => onChange(Number(e.target.value))}
         className="w-full rounded-[7px] border-[1.5px] border-stroke bg-transparent px-5.5 py-3 text-dark outline-none transition placeholder:text-dark-6 focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
       >
-        <option value="" disabled>Select {label}</option>
-        {data.map(option => (
-          <option key={option.id} value={option.id}>{option.name}</option>
-        ))}
+        <option value="" disabled></option>
+        {options.length > 0 ? (
+          options.map(option => (
+            <option key={option.id} value={option.id}>{option.name}</option>
+          ))
+        ) : (
+          <option disabled>No options available</option>
+        )}
       </select>
     </div>
   );

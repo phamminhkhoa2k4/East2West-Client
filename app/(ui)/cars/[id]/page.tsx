@@ -68,12 +68,12 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
   const [rentalDate, setRentalDate] = useState<string>('');
   const [returnDate, setReturnDate] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
-  const [userId, setUserId] = useState<number | null>(null);
+  const [userInfo, setUserInfo] = useState<any>(null);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(Number(storedUserId));
+    const storedUserInfo = localStorage.getItem('userInfo');
+    if (storedUserInfo) {
+      setUserInfo(JSON.parse(storedUserInfo));
     }
 
     const getCarData = async () => {
@@ -97,8 +97,8 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
   const totalAmount = car.pricePerDay * days;
 
   const handleSubmit = async () => {
-    if (!car || userId === null) return;
-
+    if (!car || !userInfo) return;
+    const userId = userInfo.userId;
     console.log('Submitting rental data', { userId, carId: car.carId, rentalDate, returnDate, totalAmount });
 
     const paymentId = 1;
@@ -111,18 +111,28 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
       returnDate,
       totalAmount,
     };
-
     try {
-      const response = await fetch('http://localhost:8080/api/rental', {
+      const response = await fetch(`http://localhost:8080/api/rental/create_payment/${totalAmount}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(rentalData),
       });
-
-      if (!response.ok) throw new Error('Failed to submit rental data');
-      alert('Rental successfully booked!');
+  
+      if (!response.ok) {
+        throw new Error('Failed to submit rental data');
+      }
+  
+      const result = await response.json();
+  
+      if (result.status === 'OK' && result.url) {
+        alert('Rental successfully booked!');
+        // Chuyển hướng người dùng đến URL của cổng thanh toán
+        window.location.href = result.url;
+      } else {
+        throw new Error('Payment URL not available');
+      }
     } catch (error) {
       setError('Failed to book rental');
       console.error('Error:', error);

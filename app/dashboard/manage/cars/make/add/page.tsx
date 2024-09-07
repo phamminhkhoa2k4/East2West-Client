@@ -34,7 +34,7 @@ const Create = () => {
 
     // Proceed with creating a new category
     try {
-      const response = await fetch("http://localhost:8080/api/category", {
+      const response = await fetch("http://localhost:8080/api/cars/make", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

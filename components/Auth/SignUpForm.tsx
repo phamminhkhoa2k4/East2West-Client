@@ -115,16 +115,31 @@ const SignUpForm: React.FC = () => {
         setErrors({});
       } else {
         const fieldErrors: SignupErrors = {};
-    
-        // Check if result contains errors
         if (result.password) {
           fieldErrors.password = result.password;
         }
         if (result.username) {
           fieldErrors.username = result.username;
         }
-    
-        // Update the state with the specific field errors
+        if (result.phone) {
+          fieldErrors.phone = result.phone;
+        }
+        if (result.email) {
+          fieldErrors.email = result.email;
+        }
+        if (result.confirmPassword) {
+          fieldErrors.confirmPassword = result.confirmPassword;
+        }
+        if (result.firstname) {
+          fieldErrors.firstname = result.firstname;
+        }
+        if (result.lastname) {
+          fieldErrors.lastname = result.lastname;
+        }
+        if (result.address) {
+          fieldErrors.address = result.address;
+        }
+      
         setErrors(fieldErrors);
       }
     } catch (error) {

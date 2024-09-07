@@ -119,31 +119,43 @@ const Package = ({ params }: { params: { id: string } }) => {
     const depositAmount = totalPrice * 0.1; // Assuming 10% deposit
 
     const bookingData = {
-      userId,
-      paymentId,
-      packageId,
-      tourDate,
-      numberOfPeople,
-      totalPrice,
-      depositAmount,
+        userId,
+        paymentId,
+        packageId,
+        tourDate,
+        numberOfPeople,
+        totalPrice,
+        depositAmount,
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookingData),
-      });
+        const response = await fetch(`http://localhost:8080/api/bookings/create_payment/${totalPrice.toFixed(2)}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(bookingData),
+        });
 
-      if (!response.ok) throw new Error('Failed to submit booking data');
-      alert('Booking successfully completed!');
+        if (!response.ok) {
+            throw new Error('Failed to submit booking data');
+        }
+
+        const result = await response.json();
+
+        if (result.status === 'OK' && result.url) {
+            alert('Booking Tour successfully booked!');
+            // Redirect to the payment URL
+            window.location.href = result.url;
+        } else {
+            throw new Error('Payment URL not available');
+        }
     } catch (error) {
-      setError('Failed to complete booking');
-      console.error(error);
+        setError('Failed to complete booking');
+        console.error(error);
     }
-  };
+};
+
 
   if (loading) {
     return <div>Loading...</div>;
