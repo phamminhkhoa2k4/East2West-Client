@@ -21,13 +21,11 @@
 //   onChange,
 // }) => {
 //   const [selectedOption, setSelectedOption] = useState<number | "">(value ?? "");
-
 //   useEffect(() => {
 //     if (value !== undefined) {
 //       setSelectedOption(value);
 //     }
 //   }, [value]);
-
 //   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
 //     const newValue = parseInt(e.target.value, 10);
 //     setSelectedOption(newValue);

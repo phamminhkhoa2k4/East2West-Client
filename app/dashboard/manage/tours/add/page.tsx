@@ -241,6 +241,8 @@ const Create: React.FC = () => {
             />
   
             <DateTimePicker
+              id=""
+              placeholder=""
               label="Departure Dates"
               selectedDates={formData.departureDates}
               onChange={handleDateTimeChange}
