@@ -4,6 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
 import { getData } from "@/utils/axios";
+import { useMessage } from "@/store/MessageCotext";
 
 const columns = [
   { key: "structureid", label: "ID" },
@@ -18,6 +19,7 @@ interface Structure extends DataRow {
 
 const Structure = () => {
   const [data, setData] = useState<Structure[]>([]);
+  const {message} = useMessage();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +41,7 @@ const Structure = () => {
     };
 
     fetchData();
-  }, []);
+  }, [message]);
 
   return (
     <DefaultLayout>
@@ -47,10 +49,9 @@ const Structure = () => {
         columns={columns}
         data={data}
         title="Structures"
-        createUrl="/dashboard/manage/cars/make/add"
-        editUrl=""
+        createUrl="/dashboard/manage/homestays/structure/add"
+        editUrl="/dashboard/manage/homestays/structure/edit"
         deleteUrl="homestays/host/structure"
-        
       />
       <div></div>
     </DefaultLayout>

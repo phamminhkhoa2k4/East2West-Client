@@ -202,7 +202,7 @@ const menuGroups = [
           },
           {
             label: "Structure",
-            route: "/dashboard/manage/homestays/structures",
+            route: "/dashboard/manage/homestays/structure",
           },
         ],
       },

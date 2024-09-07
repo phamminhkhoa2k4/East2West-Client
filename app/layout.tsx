@@ -6,7 +6,7 @@ import { LoadingProvider } from "@/store/loadingContext";
 import { SearchHomestayProvider } from "@/store/HomestaySearchContext";
 import { HomestaysProvider } from "@/store/HomestaysContext";
 import { UserProvider } from "@/store/UserContext";
-
+import { MessageProvider } from "@/store/MessageCotext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,14 +20,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <HostProvider>
           <LoadingProvider>
             <UserProvider>
-            <HomestaysProvider>{children}</HomestaysProvider>
+              <MessageProvider>
+                <HomestaysProvider>{children}</HomestaysProvider>
+              </MessageProvider>
             </UserProvider>
           </LoadingProvider>
         </HostProvider>

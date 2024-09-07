@@ -8,6 +8,7 @@ import { getData } from "@/utils/axios";
 const columns = [
   { key: "amenitiesid", label: "ID" },
   { key: "amenitiesname", label: "Structure  Name" },
+  { key: "action", label: "Action" },
 ];
 
 interface Amenities extends DataRow {
@@ -44,6 +45,8 @@ const Amenities = () => {
         data={data}
         title=" "
         createUrl="/dashboard/manage/cars/make/add"
+        deleteUrl="homestays/host/amenities"
+        editUrl="/dashboard/manage/homestays/amenities/edit"
       />
       <div></div>
     </DefaultLayout>

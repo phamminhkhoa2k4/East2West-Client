@@ -45,6 +45,8 @@ const Types = () => {
         data={data}
         title="Types"
         createUrl="/dashboard/manage/cars/type/add"
+        deleteUrl="api database delete"
+        editUrl="link vao trang edit"
       />
       <div></div>
     </DefaultLayout>

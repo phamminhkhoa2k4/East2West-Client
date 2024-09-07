@@ -121,6 +121,8 @@ const Cars = () => {
         data={data}
         title="Cars"
         createUrl="/dashboard/manage/cars/add"
+        deleteUrl="api database delete"
+        editUrl="link vao trang edit"
       />
       <div></div>
     </DefaultLayout>

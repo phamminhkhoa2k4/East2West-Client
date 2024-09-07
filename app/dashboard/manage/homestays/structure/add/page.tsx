@@ -1,7 +1,9 @@
 "use client"
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { useMessage } from "@/store/MessageCotext";
 import { createData } from "@/utils/axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type StructureType = {
@@ -10,7 +12,9 @@ type StructureType = {
 };
 const Create = () => {
   const [structure, setStructure] = useState<StructureType>();
-
+  const { message ,setMessage } = useMessage();
+  const router = useRouter();
+  
   const handleSubmit = async () => {
     if (structure?.structurename.length! > 0) {
       try {
@@ -18,6 +22,8 @@ const Create = () => {
           endpoint: "/homestays/host/structure",
           payload: structure,
         });
+        setMessage({title : "ka" , description: "dflg"});
+        router.push("/dashboard/manage/homestays/structure");
       } catch (error) {
         console.log(error);
       }
