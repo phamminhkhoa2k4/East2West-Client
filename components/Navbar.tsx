@@ -289,7 +289,7 @@ const Navbar = () => {
                   title="Sign In"
                   icon="/user.svg"
                   variant="btn_dark_green"
-                  url="/auth/signin"
+                  url="/signin"
                 />
               )}
               <div className="relative">
@@ -350,12 +350,11 @@ const Navbar = () => {
               />
             </div>
           </div>
-          {pathname === "/homestays" ||
-            (pathname === "/homestays/multicalendar" && (
+          {(pathname === "/homestays" || pathname === "/homestays/multicalendar" ) && (
               <div className="flex justify-center">
                 <Search isScroll={isScroll} />
               </div>
-            ))}
+            )}
           {pathname === "/tours" && (
             <div className="flex justify-center">
               <SearchTour isScroll={isScroll} />

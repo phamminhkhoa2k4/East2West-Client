@@ -11,7 +11,7 @@ type ButtonProps = {
 };
 
 const Button = (props: ButtonProps) => {
-  const { title, icon, variant, full, url = "/auth/signin" } = props;
+  const { title, icon, variant, full, url = "/signin" } = props;
   return (
     <Link
       href={url}
