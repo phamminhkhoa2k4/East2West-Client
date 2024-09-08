@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import InputGroup from "@/components/FormElements/InputGroup";
 import MultiSelect from "@/components/FormElements/MultiSelect";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
@@ -6,7 +6,10 @@ import DateTimePicker from '@/components/FormElements/DatePicker/MultiDatePicker
 import * as React from "react";
 import { useRouter } from 'next/navigation';
 import { useParams } from 'next/navigation';
-
+import UploadFiles from "./UploadFiles"; // Assuming you have this component
+interface FileWithPreview extends File {
+  preview: string;
+}
 interface CategoryTour {
   categoryTourId: number;
   categoryTourName: string;
@@ -42,8 +45,11 @@ const Edit: React.FC = () => {
     themeTourId: [] as number[],
     suitableTourId: [] as number[],
     departureDates: [] as DateTimeOption[],
+    thumbnail: [] as string[],
   });
 
+  const [files, setFiles] = React.useState<FileWithPreview[]>([]);
+  const [imageUrls, setImageUrls] = React.useState<string[]>([]);
   const [categories, setCategories] = React.useState<CategoryTour[]>([]);
   const [themes, setThemes] = React.useState<ThemeTour[]>([]);
   const [suitables, setSuitables] = React.useState<SuitableTour[]>([]);
@@ -89,8 +95,10 @@ const Edit: React.FC = () => {
           departureDates: packageData.departureDates.map((d: any) => ({
             id: d.departuredateid,
             dateTime: d.departuredate
-          }))
+          })),
+          thumbnail: packageData.thumbnail || []  // Assuming the API returns existing image URLs
         });
+        setImageUrls(packageData.thumbnail || []);
       } catch (error) {
         setError("Failed to load data. Please try again later.");
         console.error("Failed to fetch data", error);
@@ -119,6 +127,83 @@ const Edit: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: selectedValues }));
   };
 
+  
+  const handleImageRemove = (index: number) => {
+    const removedImageUrl = imageUrls[index];
+  
+    // Xóa ảnh từ imageUrls
+    setImageUrls(prev => prev.filter((_, idx) => idx !== index));
+  
+    // Xóa ảnh từ thumbnail của formData
+    setFormData(prev => ({
+      ...prev,
+      thumbnail: prev.thumbnail.filter((url) => url !== removedImageUrl)
+    }));
+  
+    // Xóa ảnh từ files
+    setFiles(prev => prev.filter(file => file.preview !== removedImageUrl));
+  };
+  
+  const handleUpload = async (): Promise<string[]> => {
+    if (files.length === 0) {
+      console.error("No files selected");
+      return [];
+    }
+  
+    // Lọc ra các ảnh chưa được tải lên
+    const newFiles = files.filter(file => !imageUrls.includes(file.preview));
+  
+    if (newFiles.length === 0) {
+      console.log("No new files to upload");
+      return [];
+    }
+  
+    const uploadPromises = newFiles.map(async (file) => {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "homestays");
+  
+      try {
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`, // Thay thế bằng cloud name của bạn
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+  
+        const result = await response.json();
+        return result.secure_url;
+      } catch (error) {
+        console.error("Upload failed:", error);
+        return null;
+      }
+    });
+  
+    const uploadedUrls = await Promise.all(uploadPromises);
+    const newImageUrls = uploadedUrls.filter((url) => url !== null) as string[];
+  
+    // Cập nhật mảng imageUrls và formData.thumbnail
+    setImageUrls((prevUrls) => [...prevUrls, ...newImageUrls]);
+  
+    return newImageUrls;
+  };
+  
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFiles = Array.from(e.target.files).map((file) => {
+        const preview = URL.createObjectURL(file);
+        return Object.assign(file, { preview });
+      });
+  
+      setFiles(prevFiles => [
+        ...prevFiles.filter(file => !selectedFiles.some(newFile => newFile.preview === file.preview)),
+        ...selectedFiles
+      ]);
+    }
+  };
+  
+  
   const categoryOptions = categories.map((category) => ({
     value: category.categoryTourId,
     text: category.categoryTourName,
@@ -141,14 +226,17 @@ const Edit: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
-    const formattedDepartureDates = formData.departureDates.map(date => date.dateTime);
+
     try {
+      // First, ensure that images are uploaded
+      await handleUpload();
+
       const response = await fetch(`http://localhost:8080/api/tours/admin/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...formData, departureDates: formattedDepartureDates }),
+        body: JSON.stringify({ ...formData, thumbnail: imageUrls }),
       });
 
       if (!response.ok) {
@@ -156,7 +244,7 @@ const Edit: React.FC = () => {
       }
 
       alert("Tour package updated successfully!");
-      //   router.push('/tour-packages');
+      // router.push('/tour-packages');
     } catch (ex) {
       setError("Failed to update tour package. Please try again.");
     } finally {
@@ -177,57 +265,56 @@ const Edit: React.FC = () => {
           <form onSubmit={handleSubmit} className="p-7">
             <InputGroup
               type="text"
-              placeholder=""
-              label="Title"
               name="title"
+              label="Title"
               value={formData.title}
               onChange={handleChange}
             />
+
             <InputGroup
-              placeholder=""
-              label="Price"
-              name="price"
               type="number"
+              name="price"
+              label="Price"
               value={formData.price}
               onChange={handleChange}
             />
+
             <InputGroup
-              placeholder=""
-              label="Price Reduce"
-              name="pricereduce"
               type="number"
+              name="pricereduce"
+              label="Price Reduce"
               value={formData.pricereduce}
               onChange={handleChange}
             />
+
             <InputGroup
-              placeholder=""
-              label="Group Size"
+              type="text"
               name="groupsize"
-              type="number"
+              label="Group Size"
               value={formData.groupsize}
               onChange={handleChange}
             />
+
             <InputGroup
-              placeholder=""
-              label="Deposit"
+              type="text"
               name="deposit"
-              type="number"
+              label="Deposit"
               value={formData.deposit}
               onChange={handleChange}
             />
+
             <InputGroup
-              placeholder=""
-              label="Booking Hold"
-              name="bookinghold"
               type="text"
+              name="bookinghold"
+              label="Booking Hold"
               value={formData.bookinghold}
               onChange={handleChange}
             />
+
             <InputGroup
-              placeholder=""
-              label="Booking Change"
-              name="bookingchange"
               type="text"
+              name="bookingchange"
+              label="Booking Change"
               value={formData.bookingchange}
               onChange={handleChange}
             />
@@ -266,20 +353,27 @@ const Edit: React.FC = () => {
               selectedDates={formData.departureDates}
               onChange={handleDateTimeChange}
             />
+        
+            <UploadFiles
+              files={files}
+              setFiles={setFiles}
+              handleUpload={handleUpload}
+              imageUrls={imageUrls}
+              setIsOpen={function (value: boolean): void {
+                throw new Error('Function not implemented.');
+              }} />
 
-            {error && (
-              <div className="text-red-500 mb-4">
-                {error}
-              </div>
-            )}
 
-            <button
-              type="submit"
-              className="w-full bg-primary text-white py-2 rounded"
-              disabled={loading}
-            >
-              {loading ? 'Updating...' : 'Update Tour Package'}
-            </button>
+            <div className="flex justify-end gap-4">
+              <button
+                type="submit"
+                className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-5 font-medium text-white transition hover:bg-opacity-90"
+                disabled={loading}
+              >
+                {loading ? "Saving..." : "Save"}
+              </button>
+            </div>
+            {error && <p className="text-red-500 mt-2">{error}</p>}
           </form>
         </div>
       </div>

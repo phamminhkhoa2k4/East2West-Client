@@ -4,6 +4,7 @@ import MultiSelect from "@/components/FormElements/MultiSelect";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import DateTimePicker from '@/components/FormElements/DatePicker/MultiDatePicker';
 import * as React from "react";
+import UploadFiles from "./UploadFiles";
 
 interface FileWithPreview extends File {
   preview: string;
@@ -44,7 +45,6 @@ const Create: React.FC = () => {
     departureDates: [] as DateTimeOption[],
     thumbnail: [] as string[],
   });
-
   const [files, setFiles] = React.useState<FileWithPreview[]>([]);
   const [imageUrls, setImageUrls] = React.useState<string[]>([]);
   const [categories, setCategories] = React.useState<CategoryTour[]>([]);
@@ -52,7 +52,6 @@ const Create: React.FC = () => {
   const [suitables, setSuitables] = React.useState<SuitableTour[]>([]);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
-
   React.useEffect(() => {
     const fetchData = async () => {
       try {
@@ -82,36 +81,34 @@ const Create: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleUpload = async () => {
+  const handleUpload = async (): Promise<string[]> => {
     if (files.length === 0) {
       console.error("No files selected");
-      return;
+      return [];
     }
-
-    setLoading(true);
-
-    // Filter out the files that are already in imageUrls
-    const filesToUpload = files.filter(file => !imageUrls.includes(file.preview));
-
-    if (filesToUpload.length === 0) {
-      setLoading(false);
-      return;
+  
+    // Lọc ra các ảnh chưa được tải lên
+    const newFiles = files.filter(file => !imageUrls.includes(file.preview));
+  
+    if (newFiles.length === 0) {
+      console.log("No new files to upload");
+      return [];
     }
-
-    const uploadPromises = filesToUpload.map(async (file) => {
+  
+    const uploadPromises = newFiles.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "homestays");
-
+  
       try {
         const response = await fetch(
-          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
+          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`, // Thay thế bằng cloud name của bạn
           {
             method: "POST",
             body: formData,
           }
         );
-
+  
         const result = await response.json();
         return result.secure_url;
       } catch (error) {
@@ -119,14 +116,17 @@ const Create: React.FC = () => {
         return null;
       }
     });
-
+  
     const uploadedUrls = await Promise.all(uploadPromises);
     const newImageUrls = uploadedUrls.filter((url) => url !== null) as string[];
-    setImageUrls(prev => [...prev, ...newImageUrls]);
-    setFormData(prev => ({ ...prev, thumbnail: [...prev.thumbnail, ...newImageUrls] }));
-
-    setLoading(false);
+  
+    // Cập nhật mảng imageUrls và formData.thumbnail
+    setImageUrls((prevUrls) => [...prevUrls, ...newImageUrls]);
+    
+    return newImageUrls;
   };
+  
+  
 
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -157,34 +157,20 @@ const Create: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: selectedValues }));
   };
 
-  const handleImageRemove = async (index: number) => {
-    const imageUrlToRemove = imageUrls[index];
+  const handleImageRemove = (index: number) => {
+    const removedImageUrl = imageUrls[index];
 
-    // Nếu cần xóa ảnh trên máy chủ, thực hiện yêu cầu xóa ở đây
-    try {
-      const publicId = imageUrlToRemove.split('/').pop()?.split('.').shift();
-      if (publicId) {
-        await fetch(`https://api.cloudinary.com/v1_1/djddnvjpi/image/destroy`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            public_id: publicId,
-            upload_preset: 'homestays',
-          }),
-        });
-      }
-    } catch (error) {
-      console.error('Failed to delete image from server:', error);
-    }
-
-    // Cập nhật trạng thái ảnh
+    // Xóa ảnh từ imageUrls
     setImageUrls(prev => prev.filter((_, idx) => idx !== index));
+
+    // Xóa ảnh từ thumbnail của carData
     setFormData(prev => ({
       ...prev,
-      thumbnail: prev.thumbnail.filter((_, idx) => idx !== index),
+      thumbnail: prev.thumbnail.filter((url) => url !== removedImageUrl)
     }));
+
+    // Xóa ảnh từ files
+    setFiles(prev => prev.filter(file => file.preview !== removedImageUrl));
   };
 
 
@@ -223,11 +209,15 @@ const Create: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to create tour package");
-      }
+      const result = await response.json();
 
+    if (!response.ok || result.status === "error") {
+      // Nếu có lỗi từ API, hiển thị thông báo lỗi
+      alert(result.message || "Failed to create tour package");
+    } else {
+      // Nếu thành công, hiển thị thông báo thành công
       alert("Tour package created successfully!");
+    }
     } catch (ex) {
       console.error("Failed to create tour package", ex);
     } finally {
@@ -305,13 +295,7 @@ const Create: React.FC = () => {
 
             <MultiSelect
               label="Category Tour"
-<<<<<<< HEAD
-              id=""
-              placeholder=""
-              selectedOptions={ }
-=======
             
->>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
               options={categoryOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("categoryTourId", selectedOptions)
@@ -321,13 +305,9 @@ const Create: React.FC = () => {
               label="Category Tour"
               id=""
               placeholder=""
-              selectedOptions={ }
-              label="Theme Tour"
-<<<<<<< HEAD
-
-=======
+           
+         
           
->>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
               options={themeOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("themeTourId", selectedOptions)
@@ -335,11 +315,7 @@ const Create: React.FC = () => {
             />
             <MultiSelect
               label="Suitable Tour"
-<<<<<<< HEAD
-
-=======
         
->>>>>>> dd8cad0ec3b3111e20d0642dac9c58bbf9a83018
               options={suitableOptions}
               onChange={(selectedOptions) =>
                 handleMultiSelectChange("suitableTourId", selectedOptions)
@@ -354,67 +330,21 @@ const Create: React.FC = () => {
               onChange={handleDateTimeChange}
             />
 
-            <InputGroup
-              label="Thumbnails"
-              name="thumbnails"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-            />
-
-            {imageUrls.length > 0 && (
-              <div className="my-4">
-                <h4 className="text-lg font-semibold">Uploaded Images:</h4>
-                <div className="flex flex-wrap gap-2">
-                  {imageUrls.map((url, idx) => (
-                    <div key={idx} className="relative">
-                      <img
-                        src={url}
-                        alt={`Uploaded Image ${idx}`}
-                        className="w-24 h-24 object-cover rounded-md border"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleImageRemove(idx)}
-                        className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
-                      >
-                        &times;
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {error && (
-              <div className="text-red-500 mb-4">
-                {error}
-              </div>
-            )}
-
-            <div className="mb-4">
-              <label className="block text-sm font-medium">Upload Images</label>
-              <input
-                type="file"
-                multiple
-                onChange={handleImageChange}
-                className="mt-1 block w-full"
-              />
-              <button
-                type="button"
-                onClick={handleUpload}
-                className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-              >
-                Upload Images
-              </button>
-            </div>
+            <UploadFiles
+                files={files}
+                setFiles={setFiles}
+                handleUpload={handleUpload}
+                imageUrls={imageUrls} 
+                setIsOpen={function (value: boolean): void {
+                  throw new Error('Function not implemented.');
+                } }              />
 
             <button
               type="submit"
               className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
               disabled={loading}
             >
+
               {loading ? "Creating..." : "Create Tour Package"}
             </button>
           </form>
