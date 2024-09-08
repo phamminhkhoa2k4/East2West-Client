@@ -5,6 +5,7 @@ import InputGroup from "@/components/FormElements/InputGroup";
 import SelectGroupOne from "@/components/FormElements/SelectGroup/SelectGroupOne";
 import CheckboxTwo from "@/components/FormElements/Checkboxes/CheckboxTwo";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import UploadFiles from './UploadFiles';
 
 type Option = {
   id: number;
@@ -52,6 +53,9 @@ const CreateCar = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (imageUrls.length > 0) {
+      setFiles([]);
+    }
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -89,31 +93,29 @@ const CreateCar = () => {
       console.error("No files selected");
       return;
     }
-
-    setLoading(true);
-
-    // Filter out the files that are already in imageUrls
-    const filesToUpload = files.filter(file => !imageUrls.includes(file.preview));
-
-    if (filesToUpload.length === 0) {
-      setLoading(false);
+  
+    // Lọc ra các ảnh chưa được tải lên
+    const newFiles = files.filter(file => !imageUrls.includes(file.preview));
+  
+    if (newFiles.length === 0) {
+      console.log("No new files to upload");
       return;
     }
-
-    const uploadPromises = filesToUpload.map(async (file) => {
+  
+    const uploadPromises = newFiles.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "homestays");
-
+      formData.append("upload_preset", "homestays"); // Thay thế bằng upload preset của bạn
+  
       try {
         const response = await fetch(
-          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
+          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`, // Thay thế bằng cloud name của bạn
           {
             method: "POST",
             body: formData,
           }
         );
-
+  
         const result = await response.json();
         return result.secure_url;
       } catch (error) {
@@ -121,14 +123,25 @@ const CreateCar = () => {
         return null;
       }
     });
-
+  
     const uploadedUrls = await Promise.all(uploadPromises);
     const newImageUrls = uploadedUrls.filter((url) => url !== null) as string[];
-    setImageUrls(prev => [...prev, ...newImageUrls]);
-    setCarData(prev => ({ ...prev, thumbnail: [...prev.thumbnail, ...newImageUrls] }));
-
-    setLoading(false);
+  
+    setImageUrls((prevUrls) => [...prevUrls, ...newImageUrls]);
+  
+    // Cập nhật carData.thumbnail với các ảnh đã tải lên
+    setCarData((prev) => ({
+      ...prev,
+      thumbnail: [...(prev.thumbnail ?? []), ...newImageUrls],
+    }));
+  
+    // Xóa ảnh đã tải lên khỏi files
+    setFiles((prevFiles) => prevFiles.filter(file => !newImageUrls.includes(file.preview)));
   };
+  
+
+
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type, checked } = e.target;
@@ -180,27 +193,42 @@ const CreateCar = () => {
         return Object.assign(file, { preview });
       });
 
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles]);
+      // Thêm các ảnh mới vào danh sách files nếu chưa tồn tại
+      setFiles(prevFiles => [
+        ...prevFiles.filter(file => !selectedFiles.some(newFile => newFile.preview === file.preview)),
+        ...selectedFiles
+      ]);
     }
   };
 
+
+
   const handleImageRemove = (index: number) => {
+    const removedImageUrl = imageUrls[index];
+
+    // Xóa ảnh từ imageUrls
     setImageUrls(prev => prev.filter((_, idx) => idx !== index));
+
+    // Xóa ảnh từ thumbnail của carData
     setCarData(prev => ({
       ...prev,
-      thumbnail: prev.thumbnail.filter((_, idx) => idx !== index)
+      thumbnail: prev.thumbnail.filter((url) => url !== removedImageUrl)
     }));
+
+    // Xóa ảnh từ files
+    setFiles(prev => prev.filter(file => file.preview !== removedImageUrl));
   };
+
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-
+  
     try {
-      // Ensure that images are uploaded
+      // Đảm bảo rằng các ảnh đã được tải lên
       await handleUpload();
-
-      // Now submit the form data along with the uploaded image URLs
+  
+      // Bây giờ submit dữ liệu form cùng với các URL ảnh đã tải lên
       const response = await fetch('http://localhost:8080/api/cars', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -220,14 +248,14 @@ const CreateCar = () => {
           fueltankcapacity: carData.fueltankcapacity,
           fuel: carData.fuel,
           location: carData.location,
-          thumbnail: carData.thumbnail,
+          thumbnail: carData.thumbnail, // Đảm bảo thumbnail được gửi
         }),
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to create car');
       }
-
+  
       alert('Car created successfully');
     } catch (error) {
       console.error('Error creating car:', error);
@@ -235,7 +263,7 @@ const CreateCar = () => {
       setLoading(false);
     }
   };
-
+  
   return (
     <DefaultLayout>
       <div className="flex flex-col gap-9">
@@ -369,52 +397,17 @@ const CreateCar = () => {
               />
 
 
-              {imageUrls.length > 0 && (
-                <div className="my-4">
-                  <h4 className="text-lg font-semibold">Uploaded Images:</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {imageUrls.map((url, idx) => (
-                      <div key={idx} className="relative">
-                        <img
-                          src={url}
-                          alt={`Uploaded Image ${idx}`}
-                          className="w-24 h-24 object-cover rounded-md border"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleImageRemove(idx)}
-                          className="absolute top-0 right-0 p-1 bg-red-500 text-white rounded-full"
-                        >
-                          &times;
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              <UploadFiles
+                files={files}
+                setFiles={setFiles}
+                handleUpload={handleUpload}
+                imageUrls={imageUrls} 
+                setIsOpen={function (value: boolean): void {
+                  throw new Error('Function not implemented.');
+                } }              />
 
-              {error && (
-                <div className="text-red-500 mb-4">
-                  {error}
-                </div>
-              )}
 
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Upload Images</label>
-                <input
-                  type="file"
-                  multiple
-                  onChange={handleImageChange}
-                  className="mt-1 block w-full"
-                />
-                <button
-                  type="button"
-                  onClick={handleUpload}
-                  className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700"
-                >
-                  Upload Images
-                </button>
-              </div>
+
 
               <button
                 type="submit"
