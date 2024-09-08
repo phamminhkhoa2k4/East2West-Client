@@ -12,9 +12,11 @@ interface Booking {
   tourpackage: TourPackage;
   tourdate: string;
   totalprice: number;
-  status: string;
+  status: string; // This can hold values like 'Confirmed', 'Cancelled', 'Waiting Refund', etc.
   refundAmount?: number;
+  refundStatus?: string; // 'Pending', 'Cancelled', etc.
 }
+
 
 interface Car {
   carName: string;
@@ -56,19 +58,26 @@ const MyBookingPage: React.FC = () => {
   const handleRefundChange = (bookingId: number, value: string) => {
     setRefundReason({ ...refundReason, [bookingId]: value });
   };
-
+  const handleCancelRefund = (bookingId: number) => {
+    axios.post(`http://localhost:8080/api/bookings/cancelRefund/${bookingId}`)
+      .then(response => {
+        setRefundMessages({ ...refundMessages, [bookingId]: response.data });
+        // Optionally refresh bookings here
+      })
+      .catch(error => console.error("Error canceling refund:", error));
+  };
   const handleRefundSubmit = (bookingId: number) => {
     const reason = refundReason[bookingId];
     if (reason) {
       axios.post("http://localhost:8080/api/bookings/cancel", {
         bookingTourId: bookingId,
-        reason: reason
+        reasson: reason
       })
-      .then(response => {
-        setRefundMessages({ ...refundMessages, [bookingId]: response.data });
-        // Optionally, refresh bookings data here
-      })
-      .catch(error => console.error("Error processing refund:", error));
+        .then(response => {
+          setRefundMessages({ ...refundMessages, [bookingId]: response.data });
+          // Optionally, refresh bookings data here
+        })
+        .catch(error => console.error("Error processing refund:", error));
     }
   };
 
@@ -90,7 +99,7 @@ const MyBookingPage: React.FC = () => {
   return (
     <div className="p-6 bg-gray-100 min-h-screen mt-36">
       <h1 className="text-3xl font-bold mb-6 text-center">My Booking</h1>
-
+  
       <div className="flex justify-center mb-8">
         <button
           className={`py-2 px-4 rounded-t ${activeTab === 'tour' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
@@ -105,48 +114,79 @@ const MyBookingPage: React.FC = () => {
           Rental Car Bookings
         </button>
       </div>
-
+  
       {activeTab === 'tour' && (
         <div>
           <h2 className="text-2xl font-semibold mb-4">Tour Bookings</h2>
           {bookings.length > 0 ? (
             bookings.map((booking) => (
-              <div key={booking.bookingtourid} className="bg-white shadow-md rounded-lg p-4 mb-4">
+              <div
+                key={booking.bookingtourid}
+                className={`bg-white shadow-md rounded-lg p-4 mb-4 border-l-4 ${
+                  booking.status === 'Cancelled'
+                    ? 'border-red-500'
+                    : booking.status === 'Waiting Refund'
+                    ? 'border-yellow-500'
+                    : 'border-green-500'
+                }`}
+              >
                 <h3 className="text-xl font-bold">{booking.tourpackage.title}</h3>
                 <p className="text-gray-600">Date: {new Date(booking.tourdate).toLocaleDateString()}</p>
                 <p className="text-gray-600">Total Price: ${booking.totalprice}</p>
-                <p className={`text-${booking.status === 'Cancelled' ? 'red-500' : 'gray-600'}`}>Status: {booking.status}</p>
-
-                {booking.status === "Cancelled" ? (
-                  <p className="text-red-500 mt-2">Booking canceled successfully. Refund amount: {refundMessages[booking.bookingtourid] || booking.refundAmount}</p>
-                ) : (
-                  booking.status === "Confirmed" && (
-                    <div className="mt-4">
-                      <button
-                        className="bg-red-500 text-white py-2 px-4 rounded"
-                        onClick={() => handleRefundClick(booking.bookingtourid)}
-                      >
-                        Request Refund
-                      </button>
-                      {showRefundField[booking.bookingtourid] && (
-                        <div className="mt-4">
-                          <input
-                            type="text"
-                            placeholder="Enter refund reason"
-                            className="border border-gray-300 p-2 w-full rounded mb-2"
-                            value={refundReason[booking.bookingtourid] || ""}
-                            onChange={(e) => handleRefundChange(booking.bookingtourid, e.target.value)}
-                          />
-                          <button
-                            className="bg-green-500 text-white py-2 px-4 rounded"
-                            onClick={() => handleRefundSubmit(booking.bookingtourid)}
-                          >
-                            Submit Refund
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  )
+                <p
+                  className={`text-lg font-semibold ${
+                    booking.status === 'Cancelled'
+                      ? 'text-red-500'
+                      : booking.status === 'Waiting Refund'
+                      ? 'text-yellow-500'
+                      : 'text-green-500'
+                  }`}
+                >
+                  Status: {booking.status}
+                </p>
+  
+                {/* Show relevant buttons or messages based on booking status */}
+                {booking.status === 'Waiting Refund' ? (
+                  <div className="mt-4">
+                    <p className="text-yellow-500 mt-2">Refund request is pending.</p>
+                    <button
+                      className="bg-yellow-500 text-white py-2 px-4 rounded"
+                      onClick={() => handleCancelRefund(booking.bookingtourid)}
+                    >
+                      Cancel Refund
+                    </button>
+                  </div>
+                ) : booking.status === 'Cancelled' ? (
+                  <p className="text-red-500 mt-2">
+                    Booking canceled successfully. Refund amount:{" "}
+                    {refundMessages[booking.bookingtourid] || booking.refundAmount || "N/A"}
+                  </p>
+                ) : booking.status === 'Confirmed' && (
+                  <div className="mt-4">
+                    <button
+                      className="bg-red-500 text-white py-2 px-4 rounded"
+                      onClick={() => handleRefundClick(booking.bookingtourid)}
+                    >
+                      Request Refund
+                    </button>
+                    {showRefundField[booking.bookingtourid] && (
+                      <div className="mt-4">
+                        <input
+                          type="text"
+                          placeholder="Enter refund reason"
+                          className="border border-gray-300 p-2 w-full rounded mb-2"
+                          value={refundReason[booking.bookingtourid] || ""}
+                          onChange={(e) => handleRefundChange(booking.bookingtourid, e.target.value)}
+                        />
+                        <button
+                          className="bg-green-500 text-white py-2 px-4 rounded"
+                          onClick={() => handleRefundSubmit(booking.bookingtourid)}
+                        >
+                          Submit Refund
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 )}
               </div>
             ))
@@ -155,13 +195,13 @@ const MyBookingPage: React.FC = () => {
           )}
         </div>
       )}
-
+  
       {activeTab === 'rental' && (
         <div>
           <h2 className="text-2xl font-semibold mb-4">Rental Car Bookings</h2>
           {rentals.length > 0 ? (
             rentals.map((rental) => (
-              <div key={rental.rentalid} className="bg-white shadow-md rounded-lg p-4 mb-4">
+              <div key={rental.rentalid} className="bg-white shadow-md rounded-lg p-4 mb-4 border-l-4 border-blue-500">
                 <h3 className="text-xl font-bold">{rental.car.carName}</h3>
                 <p className="text-gray-600">Rental Date: {new Date(rental.rentalDate).toLocaleDateString()}</p>
                 <p className="text-gray-600">Return Date: {new Date(rental.returnDate).toLocaleDateString()}</p>
@@ -181,6 +221,8 @@ const MyBookingPage: React.FC = () => {
       )}
     </div>
   );
+  
+  
 };
 
 export default MyBookingPage;

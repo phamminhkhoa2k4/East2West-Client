@@ -233,14 +233,14 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                     <SelectGroupOne
                                         label="Make Name"
                                         placeholder="Please select Make Name"
-                                        data={makeOptions}
+                                        options={makeOptions}
                                         value={carData?.make?.id}
                                         onChange={(value) => handleSelectChange('make', value)}
                                     />
                                     <SelectGroupOne
                                         label="Model Name"
                                         placeholder="Please select Model Name"
-                                        data={modelOptions}
+                                        options={modelOptions}
                                         value={carData?.model?.id}
                                         onChange={(value) => handleSelectChange('model', value)}
                                     />
@@ -249,14 +249,14 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                     <SelectGroupOne
                                         label="Type Name"
                                         placeholder="Please select Type Name"
-                                        data={typeOptions}
+                                        options={typeOptions}
                                         value={carData?.type?.id}
                                         onChange={(value) => handleSelectChange('type', value)}
                                     />
                                     <SelectGroupOne
                                         label="Location Type Name"
                                         placeholder="Please select Location Type Name"
-                                        data={locationTypeOptions}
+                                        options={locationTypeOptions}
                                         value={carData?.locationType?.id}
                                         onChange={(value) => handleSelectChange('locationType', value)}
                                     />
@@ -265,14 +265,14 @@ const EditCar = ({ params }: { params: { id: string } }) => {
                                     <SelectGroupOne
                                         label="Gearbox"
                                         placeholder="Please select Gearbox"
-                                        data={[{ id: 1, name: "Manual" }, { id: 2, name: "Automatic" }]}
+                                        options={[{ id: 1, name: "Manual" }, { id: 2, name: "Automatic" }]}
                                         value={carData?.cargearbox === 'Manual' ? 1 : 2} // Ensure this is properly set
                                         onChange={(value) => handleSelectChange('cargearbox', value)}
                                     />
                                     <SelectGroupOne
                                         label="Fuel"
                                         placeholder="Please select Fuel"
-                                        data={[{ id: 1, name: "Petrol" }, { id: 2, name: "Diesel" }]}
+                                        options={[{ id: 1, name: "Petrol" }, { id: 2, name: "Diesel" }]}
                                         value={carData?.fuel === 'Petrol' ? 1 : 2} // Ensure this is properly set
                                         onChange={(value) => handleSelectChange('fuel', value)}
                                     />
