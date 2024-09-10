@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 
 interface TourRevenueDTO {
-  id: number;
-  name: string;
-  revenue: number;
-  bookingcount: number;
+  tourId: number;
+  tourTitle: string;
+  bookingCount: number;
+  totalRevenue: number;
+  totalRefund: number;
 }
 
 interface CarRevenueDTO {
@@ -57,7 +58,7 @@ const RevenueStatisticsPage: React.FC = () => {
       height: 350,
     },
     xaxis: {
-      categories: tours.map(tour => tour.name),
+      categories: tours.map(tour => tour.tourTitle), // Updated to use 'tourTitle'
     },
     plotOptions: {
       bar: {
@@ -80,11 +81,15 @@ const RevenueStatisticsPage: React.FC = () => {
   const tourChartSeries = [
     {
       name: 'Total Bookings',
-      data: tours.map(tour => tour.bookingcount),
+      data: tours.map(tour => tour.bookingCount), // Updated to use 'bookingCount'
     },
     {
       name: 'Total Revenue',
-      data: tours.map(tour => tour.revenue),
+      data: tours.map(tour => tour.totalRevenue), // Updated to use 'totalRevenue'
+    },
+    {
+      name: 'Total Refund',
+      data: tours.map(tour => tour.totalRefund), // Added 'totalRefund' series
     },
   ];
 
