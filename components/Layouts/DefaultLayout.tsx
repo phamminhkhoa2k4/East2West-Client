@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, ReactNode } from "react";
+import React, { useState, ReactNode, useEffect } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
+import useColorMode from "@/hooks/useColorMode";
 
 export default function DefaultLayout({
   children,
@@ -9,6 +10,15 @@ export default function DefaultLayout({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+ 
+
+   const [colorMode, setColorMode] = useColorMode();
+
+   useEffect(() => {
+     if (typeof setColorMode === "function") {
+       setColorMode(colorMode === "dark" ? "light" : "light");
+     }
+   }, []);
   return (
     <>
       

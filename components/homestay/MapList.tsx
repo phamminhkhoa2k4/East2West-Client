@@ -257,7 +257,6 @@ const MapList: React.FC<OpenLayersMapProps> = ({ homestays, radius ,setRadius}) 
             }
           };
 
-          // Go to a specific slide
           const goToSlide = (index: number): void => {
             currentIndex = index;
             const slidingImage = document.getElementById(

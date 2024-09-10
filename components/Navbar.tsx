@@ -122,7 +122,7 @@ const Navbar = () => {
     <>
       {!pathname.startsWith("/homestays/host") && (
         <nav
-          className={`flex flex-col shadow-md bg-white w-full fixed top-0 right-0 left-0 padding-container z-30 transition-all duration-1000 ease-in-out ${
+          className={`flex flex-col shadow-md bg-white w-full fixed z-30 top-0 right-0 left-0 padding-container  transition-all duration-1000 ease-in-out ${
             isScroll ? "" : "py-5 gap-y-5"
           }`}
         >
@@ -292,7 +292,7 @@ const Navbar = () => {
                   url="/signin"
                 />
               )}
-              <div className="relative">
+              {/* <div className="relative">
                 <Select value={selectedValue} onValueChange={setSelectedValue}>
                   <SelectTrigger className="p-3 w-[50px] outline-none">
                     <SelectValue>
@@ -339,7 +339,7 @@ const Navbar = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
               <Image
                 src="/menu.svg"
                 width={32}

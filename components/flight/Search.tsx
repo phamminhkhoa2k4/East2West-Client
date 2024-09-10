@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { useCallback, useEffect, useState } from "react";
-import { format } from "date-fns"
+import { format } from "date-fns";
 import {
   Select,
   SelectContent,
@@ -17,6 +17,9 @@ import {
 } from "@/components/ui/popover";
 import SelectRecommend from "./SelectRecommend";
 import { Calendar } from "@/components/ui/calendar";
+import CalendarSearch from "./CalendarSearch";
+import { createData } from "@/utils/axios";
+import { useLoading } from "@/store/loadingContext";
 
 type SelectProps = {
   value: string;
@@ -36,7 +39,7 @@ function SelectWay({ value, onValueChange }: SelectProps) {
         <SelectValue>
           <div className="flex items-center gap-4">
             <div>
-              {value === "round-trip" && (
+              {value === "round_trip" && (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -52,7 +55,7 @@ function SelectWay({ value, onValueChange }: SelectProps) {
                   />
                 </svg>
               )}
-              {value === "one-way" && (
+              {value === "one_way" && (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -68,7 +71,7 @@ function SelectWay({ value, onValueChange }: SelectProps) {
                   />
                 </svg>
               )}
-              {value === "multi-stage" && (
+              {value === "multi_stage" && (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -85,16 +88,16 @@ function SelectWay({ value, onValueChange }: SelectProps) {
                 </svg>
               )}
             </div>
-            {value === "round-trip" && <span>Round Trip</span>}
-            {value === "one-way" && <span>One Way</span>}
-            {value === "multi-stage" && <span>Multiple Stage</span>}
+            {value === "round_trip" && <span>Round Trip</span>}
+            {value === "one_way" && <span>One Way</span>}
+            {value === "multi_stage" && <span>Multi City</span>}
           </div>
         </SelectValue>
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
           <SelectLabel>Choose Way</SelectLabel>
-          <SelectItem value="round-trip">
+          <SelectItem value="round_trip">
             <div className="flex items-center gap-4">
               <div>
                 <svg
@@ -115,7 +118,7 @@ function SelectWay({ value, onValueChange }: SelectProps) {
               <span>Round Trip</span>
             </div>
           </SelectItem>
-          <SelectItem value="one-way">
+          <SelectItem value="one_way">
             <div className="flex items-center gap-4">
               <div>
                 <svg
@@ -136,7 +139,7 @@ function SelectWay({ value, onValueChange }: SelectProps) {
               <span>One Way</span>
             </div>
           </SelectItem>
-          <SelectItem value="multi-stage">
+          <SelectItem value="multi_stage">
             <div className="flex items-center gap-4">
               <div>
                 <svg
@@ -154,7 +157,7 @@ function SelectWay({ value, onValueChange }: SelectProps) {
                   />
                 </svg>
               </div>
-              <span>Multiple Stage</span>
+              <span>Multi City</span>
             </div>
           </SelectItem>
         </SelectGroup>
@@ -185,7 +188,7 @@ function SelectClass({ value, onValueChange }: SelectProps) {
           </SelectItem>
           <SelectItem value="special-popular">
             <div className="flex items-center gap-4">
-              <span>Special Popular</span>
+              <span>Premium Class</span>
             </div>
           </SelectItem>
           <SelectItem value="business-class">
@@ -204,7 +207,6 @@ function SelectClass({ value, onValueChange }: SelectProps) {
   );
 }
 
-
 const NumberOfTraveler = ({
   setAdult,
   setChildren,
@@ -213,42 +215,42 @@ const NumberOfTraveler = ({
   const [countAdult, setCountAdult] = useState<number>(1);
   const [countChildren, SetCountChildren] = useState<number>(0);
   const [countInfant, SetCountInfant] = useState<number>(0);
-  const [traveler,setTravelers] = useState<number>(1);
+  const [traveler, setTravelers] = useState<number>(1);
 
-   const memoizedSetAdult = useCallback(
-     (count: number) => {
-       setAdult(count);
-     },
-     [setAdult]
-   );
+  const memoizedSetAdult = useCallback(
+    (count: number) => {
+      setAdult(count);
+    },
+    [setAdult]
+  );
 
-   const memoizedSetChildren = useCallback(
-     (count: number) => {
-       setChildren(count);
-     },
-     [setChildren]
-   );
+  const memoizedSetChildren = useCallback(
+    (count: number) => {
+      setChildren(count);
+    },
+    [setChildren]
+  );
 
-   const memoizedSetInfant = useCallback(
-     (count: number) => {
-       setInfant(count);
-     },
-     [setInfant]
-   );
+  const memoizedSetInfant = useCallback(
+    (count: number) => {
+      setInfant(count);
+    },
+    [setInfant]
+  );
 
-   useEffect(() => {
-     setTravelers(countAdult + countChildren + countInfant);
-     memoizedSetAdult(countAdult);
-     memoizedSetChildren(countChildren);
-     memoizedSetInfant(countInfant);
-   }, [
-     countAdult,
-     countChildren,
-     countInfant,
-     memoizedSetAdult,
-     memoizedSetChildren,
-     memoizedSetInfant,
-   ]);
+  useEffect(() => {
+    setTravelers(countAdult + countChildren + countInfant);
+    memoizedSetAdult(countAdult);
+    memoizedSetChildren(countChildren);
+    memoizedSetInfant(countInfant);
+  }, [
+    countAdult,
+    countChildren,
+    countInfant,
+    memoizedSetAdult,
+    memoizedSetChildren,
+    memoizedSetInfant,
+  ]);
   return (
     <>
       <Popover>
@@ -317,7 +319,9 @@ const NumberOfTraveler = ({
                 <span>{countAdult}</span>
                 <button
                   className="border rounded-full p-2"
-                  onClick={() => setCountAdult((prev) => prev + 1)}
+                  onClick={() =>
+                    setCountAdult((prev) => (traveler <= 8 ? prev + 1 : prev))
+                  }
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -367,7 +371,9 @@ const NumberOfTraveler = ({
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountChildren((prev) => prev + 1);
+                    SetCountChildren((prev) =>
+                      traveler <= 8 ? prev + 1 : prev
+                    );
                   }}
                 >
                   <svg
@@ -418,7 +424,9 @@ const NumberOfTraveler = ({
                 <button
                   className="border rounded-full p-2"
                   onClick={() => {
-                    SetCountInfant((prev) => prev + 1);
+                    SetCountInfant((prev) =>
+                      traveler <= 8 && countAdult * 2 > prev ? prev + 1 : prev
+                    );
                   }}
                 >
                   <svg
@@ -445,19 +453,82 @@ const NumberOfTraveler = ({
   );
 };
 
-export default function Search() {
-    const [way,setWay] = useState<string>("round-trip");
-    const [classes,setClasses] = useState<string>("economy-class");
-    const [countAdult, setCountAdult] = useState<number>(0);
-    const [countChildren, SetCountChildren] = useState<number>(0);
-    const [countInfant, SetCountInfant] = useState<number>(0);
-    const [dateStart, setDateStart] = useState<Date>();
-    const [dateReturn, setDateReturn] = useState<Date>();
-    const [departure, setDeparture] = useState<string | null>(null);
-    const [destination, setDestination] = useState<string | null>(null);
-    
+type SearchType = {
+  setFlights: (value: FlightSearchResponse) => void;
+};
 
-    
+interface Segment {
+  departure_id: string;
+  arrival_id: string;
+  date: string;
+}
+
+interface TripSegments {
+  segments: Segment[];
+}
+
+export default function Search({ setFlights }: SearchType) {
+  const [way, setWay] = useState<string>("round_trip");
+  const [classes, setClasses] = useState<string>("economy-class");
+  const [countAdult, setCountAdult] = useState<number>(0);
+  const [countChildren, SetCountChildren] = useState<number>(0);
+  const [countInfant, SetCountInfant] = useState<number>(0);
+  const [dateStart, setDateStart] = useState<string | null>("");
+  const [dateReturn, setDateReturn] = useState<string | null>("");
+  const [departure, setDeparture] = useState<string | null>(null);
+  const [destination, setDestination] = useState<string | null>(null);
+  const { isLoading, setIsLoading } = useLoading();
+  const [load, setLoad] = useState<boolean>(false);
+  function convertDate(date: string): string {
+    const [day, month, year] = date.split("/");
+
+    return `${year}-${month}-${day}`;
+  }
+
+  const fetchFlights = async () => {
+    if (
+      departure != null &&
+      destination != null &&
+      dateStart != "" &&
+      countAdult + countChildren + countInfant > 0 &&
+      way != "" &&
+      classes != null
+    ) {
+      console.log(dateReturn);
+
+     
+      
+
+        try {
+          const trip: TripSegments = {
+            segments: [
+              {
+                departure_id: departure!,
+                arrival_id: destination!,
+                date: convertDate(dateStart!),
+              },
+            ],
+          };
+          setLoad(true);
+          const response = await createData({
+            endpoint: `/flights/${departure}/${destination}/${convertDate(
+              dateStart!
+            )}/${
+              convertDate(dateReturn ?? "0000-00-00") ?? "0000-00-00"
+            }/${way}/${classes}/${countAdult}/${countChildren}/${countInfant}`,
+            payload: trip,
+          });
+          console.log("response flights", response);
+
+          setFlights(response);
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setLoad(false);
+        }
+      
+    }
+  };
   return (
     <>
       <div className="flex justify-center my-10">
@@ -500,7 +571,7 @@ export default function Search() {
                     </span>
                     <div className="border-2">
                       <input
-                      value={departure || ""}
+                        value={departure || ""}
                         type="text"
                         placeholder="Departure ?"
                         className="p-4 pl-12 outline-none"
@@ -602,25 +673,25 @@ export default function Search() {
                       type="text"
                       placeholder="Start"
                       className={
-                        way === "round-trip"
+                        way === "round_trip"
                           ? "p-4 pl-12 outline-none"
                           : "p-4 w-[560px] pl-12 outline-none"
                       }
-                      value={dateStart ? format(dateStart, "PPP") : ""}
+                      value={dateStart!}
                     />
                   </div>
                 </div>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={dateStart}
-                  onSelect={setDateStart}
-                  initialFocus
+                <CalendarSearch
+                  dateReturn={dateReturn}
+                  dateStart={dateStart}
+                  setDateReturn={setDateReturn}
+                  setDateStart={setDateStart}
                 />
               </PopoverContent>
             </Popover>
-            {way === "round-trip" && (
+            {way === "round_trip" && (
               <Popover>
                 <PopoverTrigger asChild>
                   <div className="relative">
@@ -645,38 +716,47 @@ export default function Search() {
                         type="text"
                         placeholder="Return"
                         className="p-4 pl-12 outline-none"
-                        value={dateReturn ? format(dateReturn, "PPP") : ""}
+                        value={dateReturn!}
                       />
                     </div>
                   </div>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0">
-                  <Calendar
-                    mode="single"
-                    selected={dateReturn}
-                    onSelect={setDateReturn}
-                    initialFocus
+                  <CalendarSearch
+                    dateReturn={dateReturn}
+                    dateStart={dateStart}
+                    setDateReturn={setDateReturn}
+                    setDateStart={setDateStart}
                   />
                 </PopoverContent>
               </Popover>
             )}
           </div>
-          <button className="absolute p-4 flex gap-2 bg-slate-500 rounded-full top-40">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-              />
-            </svg>
-            <span>Discovery</span>
+          <button
+            onClick={fetchFlights}
+            className=" absolute top-42.5 z-29 right-[45%] left-[45%]   bg-blue-500 rounded-2xl border text-white py-2.5 px-5 mr-2 text-sm font-bold  border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 flex justify-center items-center"
+          >
+            {load && (
+              <svg
+                aria-hidden="true"
+                role="status"
+                className="inline mr-2 w-4 h-4 text-gray-200 animate-spin dark:text-gray-600"
+                viewBox="0 0 100 101"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                  fill="currentColor"
+                ></path>
+                <path
+                  d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                  fill="#1C64F2"
+                ></path>
+              </svg>
+            )}
+
+            {load ? "Loading..." : "Search"}
           </button>
         </div>
       </div>
