@@ -15,7 +15,7 @@ import { GoPlus } from "react-icons/go";
 import { TfiViewList } from "react-icons/tfi";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import { TbCircleDotFilled } from "react-icons/tb";
+
 import CalendarManage from "@/components/homestay/CalendarManage";
 import { IoCloseOutline } from "react-icons/io5";
 import { useHomestaysContext } from "@/store/HomestaysContext";
@@ -25,6 +25,8 @@ import { createData, getData, updateData } from "@/utils/axios";
 import { useUser } from "@/store/UserContext";
 import { useLoading } from "@/store/loadingContext";
 import Loading from "@/components/Loading";
+import Grid from "./Grid";
+import List from "./List";
 const MultiCalendar = () => {
   const {user} = useUser();
   const {isLoading , setIsLoading} = useLoading();
@@ -36,7 +38,6 @@ const MultiCalendar = () => {
   const [isOpenPriceCleaning, setIsOpenPriceCleaning] =
     useState<boolean>(false);
     const [priceBaseUpdated, setPriceBaseUpdated] = useState(false);
-
   const [isOpenHomestay, setIsOpenHomestay] = useState<boolean>(false);
   const [price, setPrice] = useState<string>();
   const [priceWeek, setPriceWeek] = useState<string>();
@@ -92,9 +93,9 @@ const MultiCalendar = () => {
 
     return mostFrequentPrice;
   }, [availability]);
-  
 
-  
+
+ 
 
 const WeekendPrice = useMemo(() => {
   const getDayOfWeek = (dateString: string) => new Date(dateString).getUTCDay();
@@ -147,14 +148,9 @@ const WeekendPrice = useMemo(() => {
     const value = event.target.value ? Number(event.target.value) : undefined;
     setCleaning(value);
   };
-  const {setState} = useHostContext();
-  const router = useRouter();
-  const handleRedirectHost = () => {
-    
-      setState(null);
-      router.push('/homestays/host');
-      
-  }
+
+
+
 
   useEffect(() => {
     const fetchHomestay = async () => {
@@ -180,7 +176,7 @@ const WeekendPrice = useMemo(() => {
   }, [user, priceBaseUpdated]);
    useEffect(() => {
      if (Array.isArray(homestays) && homestays.length > 0) {
-       setHomestaySelect(homestays[18].homestayid);
+       setHomestaySelect(homestays[0].homestayid);
      }
      console.log(homestaySelect);
      
@@ -230,6 +226,8 @@ const handleChangeBasePrice = async () => {
     console.error(error);
   }
 };
+
+
 
 const handleDeleteWeekendPrice = async () => {
   const selectedHomestay = homestays.find(
@@ -740,76 +738,15 @@ const handleChangeWeekendPrice = async () => {
                   )}
 
                   <div className="p-3 bg-slate-200 rounded-full">
-                    <GoPlus className="h-5 w-5 " onClick={handleRedirectHost} />
+                    <GoPlus className="h-5 w-5 "  />
                   </div>
                 </div>
               </div>
               {!layout && (
-                <div className="grid grid-cols-3 gap-5">
-                  <div className="text-black font-bold">Item</div>
-                  <div className="text-black font-bold">Location</div>
-                  <div className="text-black font-bold">status</div>
-                  {homestays.map((homestay) => (
-                    <>
-                      <div className="flex items-center gap-5">
-                        <div className="w-20 h-20 overflow-hidden rounded-lg">
-                          <Image
-                            src={homestay.photos[0]}
-                            alt=""
-                            height={400}
-                            width={400}
-                            className="object-cover object-center w-full h-full"
-                          />
-                        </div>
-                        <div className="text-lg font-semibold">
-                          {homestay.title}
-                        </div>
-                      </div>
-                      <div className="text-[#666] font-medium flex items-center">
-                        {homestay.districtName +
-                          ", " +
-                          homestay.cityProvinceName}
-                      </div>
-                      <div className="flex gap-3 items-center">
-                        <TbCircleDotFilled className="text-red-400" />
-                        <span className="text-[#666] font-medium">
-                          {homestay.isApproved
-                            ? "Approved"
-                            : "Pending Approval"}
-                        </span>
-                      </div>
-                    </>
-                  ))}
-                </div>
+                <Grid homestays={homestays} />
               )}
               {layout && (
-                <div className="grid gap-5 grid-cols-3">
-                  {homestays.map((homestay) => (
-                    <div key={homestay.homestayid}>
-                      <div className="w-full h-[400px] overflow-hidden rounded-lg relative">
-                        <Image
-                          src={homestay.photos[0]}
-                          alt=""
-                          height={400}
-                          width={400}
-                          className="object-cover object-center w-full h-full"
-                        />
-                        <div className="text-black font-medium bg-white absolute top-5 left-5 flex gap-2 items-center px-4 py-1 rounded-lg">
-                          <TbCircleDotFilled className="text-red-400" />
-                          <span className="text-[#666] font-medium">
-                            {homestay.isApproved
-                              ? "Approved"
-                              : "Pending approval"}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="text-lg font-semibold">{homestay.title}</div>
-                      <div className="text-[#666] font-medium">
-                        {homestay.districtName + ", " + homestay.cityProvinceName}
-                      </div>
-                    </div>
-                  ))}
-                </div>
+               <List homestays={homestays}  />
               )}
             </div>
           )}
