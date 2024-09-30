@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, ReactNode } from "react";
 interface Message {
   title : string;
   description : string;
+  status : string
 }
 
 interface MessageContextType {
