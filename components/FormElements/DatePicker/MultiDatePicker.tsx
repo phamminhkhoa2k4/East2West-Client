@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { IoMdClose } from "react-icons/io";
 
 interface DateTimeOption {
   id: string;
@@ -20,9 +21,10 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ id, placeholder, label,
   const handleAddDateTime = () => {
     if (dateTime) {
       const newDateTime: DateTimeOption = {
-        id: Date.now().toString(),  // Unique ID for each date-time option
+        id: Date.now().toString(), 
         dateTime,
       };
+      
       const updatedDates = [...selectedDates, newDateTime];
       onChange(updatedDates);
       setDateTime('');
@@ -40,7 +42,12 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ id, placeholder, label,
 
   return (
     <div className="date-time-picker">
-      <label htmlFor={id} className="block mb-2 text-sm font-medium text-gray-700">{label}</label>
+      <label
+        htmlFor={id}
+        className="block mb-2 text-sm font-medium text-gray-700"
+      >
+        {label}
+      </label>
       <div className="relative">
         <div className="flex items-center space-x-2">
           <input
@@ -49,28 +56,41 @@ const DateTimePicker: React.FC<DateTimePickerProps> = ({ id, placeholder, label,
             value={dateTime}
             onChange={(e) => setDateTime(e.target.value)}
             placeholder={placeholder}
-            className="border border-gray-300 p-2 rounded"
+            className="border pl-5 border-gray-300 p-2 rounded w-5/6"
           />
           <button
             type="button"
             onClick={handleAddDateTime}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-blue-500 text-white font-semibold px-4 py-2 rounded w-1/6"
           >
             Add
           </button>
         </div>
-        {selectedDates.length > 0 && (
-          <div className="mt-2">
-            <ul className="list-disc pl-5">
-              {selectedDates.map(date => (
-                <li key={date.id} className="flex justify-between items-center py-1">
-                  <span>{new Date(date.dateTime).toISOString()}</span>
+        {selectedDates?.length > 0 && (
+          <div className="mt-5">
+            <ul className="pl-5">
+              {selectedDates.map((date) => (
+                <li
+                  key={date.id}
+                  className="flex justify-between items-center py-1"
+                >
+                  <span>
+                    {new Date(date.dateTime).toLocaleString("vi-VN", {
+                      hour: "numeric",
+                      minute: "numeric",
+                      hour12: false,
+                      day: "numeric",
+                      month: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
+
                   <button
                     type="button"
                     onClick={() => handleRemoveDateTime(date.id)}
-                    className="text-red-500"
+                    className="text-white font-semibold px-3 py-2 rounded-lg bg-slate-500"
                   >
-                    &times;
+                    <IoMdClose className="h-5 w-5" />
                   </button>
                 </li>
               ))}

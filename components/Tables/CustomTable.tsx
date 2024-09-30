@@ -64,7 +64,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
       console.log(deleteUrl);
       
       const response = await deleteData({ endpoint: deleteUrl ?? "", id });
-      setMessage({description : "delete success 1",title: "Notification"})
+      setMessage({description : "delete success 1",title: "Notification",status:"success"})
 
     }catch(error){
 

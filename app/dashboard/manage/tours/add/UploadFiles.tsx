@@ -70,10 +70,10 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
   }, [imageUrls]);
 
   return (
-    <>
+    <div className="w-full mt-6">
       <div className="flex justify-between items-center">
-        <IoCloseSharp className="h-5 w-5" onClick={() => setIsOpen(false)} />
-        <div className="flex flex-col justify-center items-center pb-5">
+        
+        <div className="flex flex-col justify-center  pb-5">
           <div className="text-base font-medium">Tải ảnh lên</div>
           <div className="text-xs text-[#6a6a6a6a]">
             {files.length === 0
@@ -161,7 +161,7 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

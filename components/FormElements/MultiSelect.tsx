@@ -133,7 +133,7 @@ const MultiSelect: React.FC<DropdownProps> = ({ id, placeholder, label, options:
             }`}
             ref={dropdownRef}
           >
-            {options.map(option => (
+            {options?.map(option => (
               <div
                 key={option.value}
                 className="w-full cursor-pointer rounded-t border-b border-stroke hover:bg-primary/5 dark:border-dark-3"
