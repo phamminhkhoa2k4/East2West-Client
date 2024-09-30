@@ -19,8 +19,8 @@ export function Toaster() {
         return (
           <Toast key={id} {...props}>
             <div className="grid gap-1">
-              {/* {title && <ToastTitle>{title}</ToastTitle>} */}
-              {/* {description && (
+              {/* {title && <ToastTitle>{title}</ToastTitle>}
+              {description && (
                 <ToastDescription>{description}</ToastDescription>
               )} */}
 
@@ -29,7 +29,7 @@ export function Toaster() {
                   {status === "success" && (
                     <div className="flex w-[350px] relative rounded-[10px] items-center border-l-6 border-green bg-green-light-7 px-3 py-4 dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-5">
                       <div className="absolute top-1 right-1">
-                        <ToastClose />
+                        <ToastClose/>
                       </div>
                       <div className="mr-5.5 mt-[5px] flex h-8 w-full max-w-8  items-center justify-center rounded-md bg-green">
                         <svg
@@ -57,7 +57,7 @@ export function Toaster() {
                     </div>
                   )}
                   {status === "warning" && (
-                    <div className="flex w-[350px] rounded-[10px] border-l-6 border-[#FFB800] bg-[#FEF5DE] px-3 py-4 dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-5 items-center ">
+                    <div className="flex  rounded-[10px] border-l-6 border-[#FFB800] bg-[#FEF5DE] px-3 py-4 dark:bg-[#1B1B24] dark:bg-opacity-30 md:p-5 items-center ">
                       <div className="absolute top-1 right-1">
                         <ToastClose />
                       </div>

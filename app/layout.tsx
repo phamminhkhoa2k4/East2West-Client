@@ -6,7 +6,7 @@ import { LoadingProvider } from "@/store/loadingContext";
 import { HomestaysProvider } from "@/store/HomestaysContext";
 import { UserProvider } from "@/store/UserContext";
 import { MessageProvider } from "@/store/MessageCotext";
-
+import { SearchHomestayProvider } from "@/store/HomestaySearchContext";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -23,13 +23,15 @@ export default function RootLayout({
     <html lang="en" className="!bg-white">
       <body className={`${inter.className}`}>
         <HostProvider>
-          <LoadingProvider>
-            <UserProvider>
-              <MessageProvider>
-                <HomestaysProvider>{children}</HomestaysProvider>
-              </MessageProvider>
-            </UserProvider>
-          </LoadingProvider>
+            <LoadingProvider>
+              <UserProvider>
+                <MessageProvider>
+                  <HomestaysProvider>
+                    <SearchHomestayProvider> {children}</SearchHomestayProvider>
+                  </HomestaysProvider>
+                </MessageProvider>
+              </UserProvider>
+            </LoadingProvider>
         </HostProvider>
       </body>
     </html>

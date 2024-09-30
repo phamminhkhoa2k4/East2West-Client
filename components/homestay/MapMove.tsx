@@ -282,9 +282,9 @@ const MapMove: React.FC<MapMoveProps> = ({ position, setPosition }) => {
         ref={mapRef}
         className="overflow-hidden rounded-3xl w-full h-full"
       ></div>
-      <Button className="absolute top-[27rem] right-4 z-10" onClick={toggleMapView}>
+      {/* <Button className="absolute top-[27rem] right-4 z-10" onClick={toggleMapView}>
         {isSatellite ? <MapIcon size={20} /> : <Satellite size={20} />}
-      </Button>
+      </Button> */}
     </div>
   );
 };

@@ -13,6 +13,7 @@ import { getData } from "@/utils/axios";
 import { format } from "date-fns";
 // import { useSearchHomestayContext } from "@/store/HomestaySearchContext";
 import { useHomestaysContext } from "@/store/HomestaysContext";
+import { useSearchHomestayContext } from "@/store/HomestaySearchContext";
 type SearchProps = {
   isScroll:boolean
 }
@@ -70,7 +71,7 @@ type Response = {
 
 
 export default function Search({isScroll}: SearchProps) {
-  // const { searchHomestay, setSearchHomestay } = useSearchHomestayContext();
+  const { searchHomestay, setSearchHomestay } = useSearchHomestayContext();
   const [place, setPlace] = useState<string>("");
   const [isOpenPlace, setIsOpenPlace] = useState<boolean>(false);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -94,16 +95,16 @@ export default function Search({isScroll}: SearchProps) {
     }, 0);
   };
 
-  // useEffect(() => {
-  //   setSearchHomestay({
-  //     checkInDate,
-  //     checkOutDate,
-  //     latitude: position?.lat,
-  //     longitude: position?.lng,
-  //     guests: countAdult + countChildren,
-  //     radius: radius,
-  //   });
-  // }, [checkInDate, checkOutDate, position, countAdult, countChildren, radius]);
+  useEffect(() => {
+    setSearchHomestay({
+      checkInDate,
+      checkOutDate,
+      latitude: position?.lat,
+      longitude: position?.lng,
+      guests: countAdult + countChildren,
+      radius: radius,
+    });
+  }, [checkInDate, checkOutDate, position, countAdult, countChildren, radius]);
 
   const handleSubmitSearch  = async () =>{
       try{

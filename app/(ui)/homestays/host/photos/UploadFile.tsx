@@ -55,12 +55,14 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
   };
   useEffect(() => {
     const timer = setInterval(() => {
-      setProgress((prev) => (prev < 95 ? prev + 1 : 95));
+      setProgress((prev) => (prev < 99 ? prev + 1 : 99));
     }, 100); 
 
     if (imageUrls.length > 0) {
       setProgress(100);
     }
+    console.log("lala");
+    
 
     return () => clearInterval(timer); 
   }, [imageUrls]);

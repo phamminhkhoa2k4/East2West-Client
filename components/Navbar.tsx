@@ -27,20 +27,8 @@ import { MdCarRental } from "react-icons/md";
 import { MdModeOfTravel } from "react-icons/md";
 import useColorMode from "@/hooks/useColorMode";
 import {
-  Cloud,
-  CreditCard,
-  Github,
-  Keyboard,
-  LifeBuoy,
   LogOut,
-  Mail,
-  MessageSquare,
-  Plus,
-  PlusCircle,
-  Settings,
   User,
-  UserPlus,
-  Users,
 } from "lucide-react";
 import {
   DropdownMenu,
@@ -48,12 +36,8 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuPortal,
   DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
+
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -230,7 +214,7 @@ const Navbar = () => {
                       {user.roles[0] === "ROLE_MODERATOR" && (
                         <DropdownMenuItem>
                           <RxDashboard className="mr-2 h-4 w-4" />
-                          <span>Dashboard</span>
+                          <Link href={"/dashboard"}>Dashboard</Link>
                         </DropdownMenuItem>
                       )}
                       {/* {user.roles[0] === "ROLE_BUSINESS" && ()} */}
@@ -292,7 +276,7 @@ const Navbar = () => {
                   url="/signin"
                 />
               )}
-              {/* <div className="relative">
+              <div className="relative">
                 <Select value={selectedValue} onValueChange={setSelectedValue}>
                   <SelectTrigger className="p-3 w-[50px] outline-none">
                     <SelectValue>
@@ -339,7 +323,7 @@ const Navbar = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div> */}
+              </div>
               <Image
                 src="/menu.svg"
                 width={32}
@@ -350,11 +334,12 @@ const Navbar = () => {
               />
             </div>
           </div>
-          {(pathname === "/homestays" || pathname === "/homestays/multicalendar" ) && (
-              <div className="flex justify-center">
-                <Search isScroll={isScroll} />
-              </div>
-            )}
+          {(pathname === "/homestays" ||
+            pathname === "/homestays/multicalendar") && (
+            <div className="flex justify-center">
+              <Search isScroll={isScroll} />
+            </div>
+          )}
           {pathname === "/tours" && (
             <div className="flex justify-center">
               <SearchTour isScroll={isScroll} />

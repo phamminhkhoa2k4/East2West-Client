@@ -71,7 +71,7 @@ const Cleaning = () => {
           <div className="border rounded-lg p-4">
             <>
               <div className="flex items-center justify-between gap-44 py-3">
-                <div className="text-lg text-[#666]">Giá cơ sở</div>{" "}
+                <div className="text-lg text-[#666]">Cleaning fee</div>{" "}
                 <div className="text-lg text-[#666]">
                   ${cleaning?.toFixed(2)}
                 </div>

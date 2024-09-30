@@ -3,6 +3,7 @@ import Banner from "@/components/Banner/Banner";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
+import { IoMdClose } from "react-icons/io";
 import { format } from "date-fns";
 import { getData } from "@/utils/axios";
 import { IoBedOutline } from "react-icons/io5";
@@ -58,11 +59,21 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { CarouselType } from "@/components/HomestayType";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
 import { useLoading } from "@/store/loadingContext";
 import Loading from "@/components/Loading";
 import { useHomestaysContext } from "@/store/HomestaysContext";
+import { useSearchHomestayContext } from "@/store/HomestaySearchContext";
 
 type photoProps = {
   photos: string[];
@@ -108,6 +119,10 @@ type StructureType = {
   structureid: number;
   structurename: string;
 };
+type AmenitiesType = {
+  amenitiesid: number;
+  amenitiesname: string;
+};
 
 const Homestays: React.FC = () => {
   const { isLoading, setIsLoading } = useLoading();
@@ -119,14 +134,95 @@ const Homestays: React.FC = () => {
   const [isHalfMap, setIsHalfMap] = React.useState<boolean>(false);
   const [isCard, setIsCard] = React.useState<boolean>(true);
   const [scrollY, setScrollY] = React.useState<number>(0);
+  const [isTotalPrice,setIsTotalPrice] = React.useState<boolean>(false);
+  const {searchHomestay} = useSearchHomestayContext();
   const { homestaysContext, is } = useHomestaysContext();
+  const [isFilter,setIsFilter] = React.useState<boolean>(false);
+  const [priceFilter, setPriceFilter] = React.useState<number>(500);
+  const [maxFilter, setMaxFilter] = React.useState<number>(1500);
+  const [minFilter, setMinFilter] = React.useState<number>(1);
+  const [stepFilter, setStepFilter] = React.useState<number>(100);
+  const [bedFilter,setBedFilter] = React.useState<number>(0);
+  const [guestFilter, setGuestFilter] = React.useState<number>(0);
+  const [amenities, setAmenities] = React.useState<AmenitiesType[]>();
+    const [selectedAmenities, setSelectedAmenities] = React.useState<number[]>([]);
+    const [selectedType ,setSelectedType] = React.useState<string>("")
+
+
+   const handleRangeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+     setPriceFilter(Number(event.target.value));
+   };
+
+
+   const handleFilter = async () => {
+    try{
+      if (
+        bedFilter != 0 &&
+        guestFilter != 0 &&
+        selectedType != "" &&
+        selectedAmenities.length > 0
+      ) {
+        const amenityIds = selectedAmenities.join(",");
+        const homestay = await getData({
+          endpoint: `/homestays/filter?minBeds=${1}&maxBeds=${bedFilter}&minMaxGuest=1&maxMaxGuest=${10}&type=${selectedType}&amenityIds=${amenityIds}`,
+        });
+        setHomestays(homestay);
+        setIsFilter(false);
+      }
+    }catch(error){
+      console.log(error);
+      
+    }
+   }
+
+
+   const handleClear = () => {
+      setBedFilter(0);
+      setGuestFilter(0);
+      setSelectedAmenities([]);
+      setSelectedType("");
+
+   }
+
+    const toggleAmenity = (id: number) => {
+      setSelectedAmenities((prev) =>
+        prev.includes(id)
+          ? prev.filter((amenityId) => amenityId !== id)
+          : [...prev, id]
+      );
+    };
+    
+
+  const countDaysBetweenDates = (
+    start: string | null,
+    end: string | null
+  ): number => {
+    if (!start || !end) return 0;
+
+    const startDate = new Date(start.split("/").reverse().join("-"));
+    const endDate = new Date(end.split("/").reverse().join("-"));
+
+    const timeDiff = endDate.getTime() - startDate.getTime();
+    const dayDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+
+    return dayDiff;
+  };
+  const numberOfNight = countDaysBetweenDates(searchHomestay?.checkInDate!,searchHomestay?.checkInDate!)
   React.useEffect(() => {
     const getAll = async () => {
       try {
         const homestays = await getData({ endpoint: "/homestays" });
         const structures = await getData({ endpoint: "/homestays/structure" });
+        const amenities = await getData({ endpoint: "/homestays/host/amenities" });
+        const maxPrice  = await getData({endpoint : "/homestays/price/max-today"});
+        const minPrice = await getData({
+          endpoint: "/homestays/price/min-today",
+        });
+        setMaxFilter(maxPrice);
+        setMinFilter(minPrice);
         setHomestays(homestays);
         setStructures(structures);
+        setAmenities(amenities);
       } catch (err) {
         console.log(err);
       } finally {
@@ -216,53 +312,300 @@ const Homestays: React.FC = () => {
           </div>
           {!isMap && (
             <div className="flex mx-20 gap-5 items-center">
-              <div className="flex justify-between items-center p-6 border rounded-lg h-20 w-1/2">
-                <div className="flex gap-5 items-center">
-                  <div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      className="size-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
+              <Dialog open={isFilter} onOpenChange={setIsFilter}>
+                <DialogTrigger asChild>
+                  <div className="flex justify-between items-center p-6 border rounded-lg h-20 w-1/2">
+                    <div className="flex gap-5 items-center">
+                      <div>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke-width="1.5"
+                          stroke="currentColor"
+                          className="size-6"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z"
+                          />
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-normal text-lg">Filters</h3>
+                        <p className="underline underline-offset-2 text-xs">
+                          Type of accommodation,Rooms and bedrooms,Amenities
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="min-w-[650px]">
+                  <div className="rounded-xl border">
+                    <div className="flex items-center justify-between border-b p-4">
+                      <IoMdClose
+                        className="h-5 w-5 hover:scale-110"
+                        onClick={() => setIsFilter(false)}
                       />
-                    </svg>
+                      <div className="text-lg font-medium text-black">
+                        Filter
+                      </div>
+                      <div></div>
+                    </div>
+                    <div className="overflow-y-scroll h-100 p-6">
+                      {/* <div>
+                        <div className="text-xl font-medium">Price</div>
+                        <div className="text-base">Total price for 5 night</div>
+                      </div> */}
+                      {/* <div className="border-b pb-6">
+                        <div className="relative mb-6">
+                          <label
+                            htmlFor="labels-range-input"
+                            className="sr-only"
+                          >
+                            Labels range
+                          </label>
+                          <input
+                            id="labels-range-input"
+                            type="range"
+                            value={priceFilter}
+                            min={minFilter}
+                            max={maxFilter}
+                            step={stepFilter}
+                            onChange={handleRangeChange}
+                            className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 dark:bg-gray-700"
+                          />
+                          <span className="absolute -bottom-6 start-0 text-sm text-gray-500 dark:text-gray-400">
+                            Min (${minFilter})
+                          </span>
+                          <span className="absolute -bottom-6 start-1/3 -translate-x-1/2 text-sm text-gray-500 rtl:translate-x-1/2 dark:text-gray-400">
+                            ${Math.floor((minFilter + maxFilter) / 3)}
+                          </span>
+                          <span className="absolute -bottom-6 start-2/3 -translate-x-1/2 text-sm text-gray-500 rtl:translate-x-1/2 dark:text-gray-400">
+                            ${Math.floor((2 * (minFilter + maxFilter)) / 3)}
+                          </span>
+                          <span className="absolute -bottom-6 end-0 text-sm text-gray-500 dark:text-gray-400">
+                            Max (${maxFilter})
+                          </span>
+                          <div className="mt-2 text-center text-sm text-gray-700 dark:text-gray-300">
+                            Selected Value: ${priceFilter}
+                          </div>
+                        </div>
+                      </div> */}
+                      <div className="flex flex-col gap-4">
+                        <div className="text-xl font-medium  my-5">
+                          Bed and guests
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div>Bed</div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              className="border rounded-full p-2"
+                              onClick={() =>
+                                setBedFilter((prev) =>
+                                  prev > 0 ? prev - 1 : prev
+                                )
+                              }
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                className="size-4"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M5 12h14"
+                                />
+                              </svg>
+                            </button>
+                            <span className="w-5 text-center">{bedFilter}</span>
+                            <button
+                              className="border rounded-full p-2"
+                              onClick={() =>
+                                setBedFilter((prev) =>
+                                  prev < 10 ? prev + 1 : prev
+                                )
+                              }
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                className="size-4"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M12 4.5v15m7.5-7.5h-15"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between border-b pb-5">
+                          <div className="font-medium">Guests</div>
+                          <div className="flex items-center gap-3">
+                            <button
+                              className="border rounded-full p-2"
+                              onClick={() =>
+                                setGuestFilter((prev) =>
+                                  prev > 0 ? prev - 1 : prev
+                                )
+                              }
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                className="size-4"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M5 12h14"
+                                />
+                              </svg>
+                            </button>
+                            <span className="w-5  text-center">
+                              {guestFilter}
+                            </span>
+                            <button
+                              className="border rounded-full p-2"
+                              onClick={() =>
+                                setGuestFilter((prev) =>
+                                  prev < 20 ? prev + 1 : prev
+                                )
+                              }
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke-width="1.5"
+                                stroke="currentColor"
+                                className="size-4"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M12 4.5v15m7.5-7.5h-15"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                        <div className="border-b pb-5">
+                          <div className="text-xl font-medium">Amenities</div>
+                          <div className=" gap-5 flex flex-wrap mt-5">
+                            {amenities?.map((amenity) => (
+                              <div
+                                key={amenity.amenitiesid}
+                                className={`${
+                                  selectedAmenities.includes(
+                                    amenity.amenitiesid
+                                  )
+                                    ? "border-blue-500 border"
+                                    : ""
+                                }flex items-center gap-1 border rounded-full px-4 py-2`}
+                                onClick={() =>
+                                  toggleAmenity(amenity.amenitiesid)
+                                }
+                              >
+                                {amenity.amenitiesname}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                        <div>
+                          <div className={`text-lg font-medium mb-5`}>Type</div>
+                          <div className="flex items-center  gap-5">
+                            <div
+                              className={`border rounded-full px-5 py-3 ${
+                                selectedType === "entire-house"
+                                  ? "border-blue-500"
+                                  : ""
+                              }`}
+                              onClick={() => setSelectedType("entire-house")}
+                            >
+                              Entire House
+                            </div>
+                            <div
+                              className={`border rounded-full px-5 py-3 ${
+                                selectedType === "single-room"
+                                  ? "border-blue-500"
+                                  : ""
+                              }`}
+                              onClick={() => setSelectedType("single-room")}
+                            >
+                              Single Room
+                            </div>
+                            <div
+                              className={`border rounded-full px-5 py-3 ${
+                                selectedType === "common-room"
+                                  ? "border-blue-500"
+                                  : ""
+                              }`}
+                              onClick={() => setSelectedType("common-room")}
+                            >
+                              Common Room
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="border-t flex items-center justify-between px-6 py-3">
+                      <button
+                        onClick={handleClear}
+                        className="text-lg font-bold hover:bg-slate-400 px-5 py-3 rounded-lg"
+                      >
+                        Clear
+                      </button>
+                      <button
+                        onClick={handleFilter}
+                        className={`px-5 py-3 rounded-lg text-white font-bold opacity-80 hover:opacity-100 bg-black ${
+                          bedFilter != 0 &&
+                          guestFilter != 0 &&
+                          selectedType != "" &&
+                          selectedAmenities.length > 0
+                        ? "" : "opacity-30"}`}
+                      >
+                        Apply
+                      </button>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="font-normal text-lg">Filters</h3>
-                    <p className="underline underline-offset-2 text-xs">
-                      Type of accommodation,Rooms and bedrooms,Amenities
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    className="size-6"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                    />
-                  </svg>
-                </div>
-              </div>
+                </DialogContent>
+              </Dialog>
+
               <div className="flex justify-between items-center p-6 border rounded-lg h-20 w-1/2">
                 <div className="flex gap-5 items-center">
                   <div>
@@ -300,13 +643,19 @@ const Homestays: React.FC = () => {
                           />
                         </svg>
                       </div>
-                      <p className="text-xs">Includes All Fees, Before Taxes</p>
+                      <p className="text-xs">Includes All Fees</p>
                     </div>
                   </div>
                 </div>
                 <div>
                   <label className="inline-flex items-center  cursor-pointer">
-                    <input type="checkbox" value="" className="sr-only peer" />
+                    <input
+                      type="checkbox"
+                      value=""
+                      className="sr-only peer"
+                      checked={isTotalPrice}
+                      onChange={() => setIsTotalPrice((prev) => !prev)}
+                    />
                     <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600"></div>
                   </label>
                 </div>
@@ -346,15 +695,34 @@ const Homestays: React.FC = () => {
                           <CiLocationOn className="h-5 w-5" />
                           {homestay.address}
                         </h3>
-                        <div className="flex mt-1 font-satoshi">
-                          <span className=" flex items-center gap-1 font-bold text-[#222] text-lg leading-5">
-                            <RiMoneyDollarCircleLine className="h-5 w-5" />
-                            {todayAvailability
-                              ? todayAvailability.pricepernight
-                              : "N/A"}
-                          </span>{" "}
-                          / night
-                        </div>
+                        {isTotalPrice && (
+                          <div className="flex mt-1 font-satoshi">
+                            <span className=" flex items-center gap-1 font-bold text-[#222] text-lg leading-5">
+                              <RiMoneyDollarCircleLine className="h-5 w-5" />
+                              {todayAvailability
+                                ? todayAvailability.pricepernight *
+                                    (numberOfNight == 0 ? 1 : numberOfNight) +
+                                  homestay.cleaningFee +
+                                  Math.floor(
+                                    todayAvailability.pricepernight * 0.03
+                                  )
+                                : "N/A"}
+                            </span>{" "}
+                            / night
+                          </div>
+                        )}
+                        {!isTotalPrice && (
+                          <div className="flex mt-1 font-satoshi">
+                            <span className=" flex items-center gap-1 font-bold text-[#222] text-lg leading-5">
+                              <RiMoneyDollarCircleLine className="h-5 w-5" />
+                              {todayAvailability
+                                ? todayAvailability.pricepernight
+                                : "N/A"}
+                            </span>{" "}
+                            / night
+                          </div>
+                        )}
+
                         <div className="flex gap-2 justify-around mt-1">
                           <div className="flex gap-2 bg-[#f8f9fd] items-center rounded-sm p-2">
                             <IoBedOutline className="h-6 w-6" />

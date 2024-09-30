@@ -6,8 +6,9 @@ import Preview from "./preview";
 import { useEffect, useState } from "react";
 import { useHostContext } from "@/store/Hostcontext";
 import { useRouter } from "next/navigation";
-import { createData, getData } from "@/utils/axios";
+import { api, createData, getData } from "@/utils/axios";
 import axios from "axios";
+import { useUser } from "@/store/UserContext";
 type Role = {
   roleId: number;
   roleName: string;
@@ -58,10 +59,11 @@ const Receipt = () => {
   const router = useRouter();
   const { state, setState } = useHostContext();
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [user, setUser] = useState<User>();
+  const [users, setUsers] = useState<User>();
   const [amenities, setAmenities] = useState<AmenitiesType[]>([]);
   const [homestays,setHomestays] = useState<Homestay>();
   const [structure, setStructure] = useState<StructureType>();
+  const {user} = useUser();
   console.log(structure);
   
   const handleClick = async () => {
@@ -69,10 +71,10 @@ const Receipt = () => {
       data: {
         ...state?.data!,
         isApproved: false,
-        userId: 1,
-        geom: null,
-        homestayid : null,
-        availability : [],
+        userId: user?.userId!,
+        geom: "",
+        homestayid: 0,
+        availability: [],
       },
     });
     if (
@@ -118,8 +120,8 @@ const Receipt = () => {
         
         const responseStructure = await getData({ endpoint: `/homestays/host/structure/${state?.data.structureId}`});
 
-        const responseAmenities  = await axios.get(
-          "http://localhost:8080/api/homestays/host/amenitiess",
+        const responseAmenities  = await api.get(
+          "/homestays/host/amenitiess",
           {
             params: { ids: state?.data.perkIds },
             paramsSerializer: (params) => {
@@ -133,7 +135,7 @@ const Receipt = () => {
           endpoint: `/auth/${state?.data.userId}`,
         });
         setStructure(responseStructure);
-        setUser(responseUser);
+        setUsers(responseUser);
         setAmenities(responseAmenities.data);
       } catch (err) {
         console.error(err);
@@ -209,7 +211,7 @@ const Receipt = () => {
               <Preview
                 onClose={setIsOpen}
                 host={state}
-                user={user}
+                user={users}
                 amenities={amenities}
                 structure={structure}
               />

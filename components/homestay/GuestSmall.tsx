@@ -54,7 +54,7 @@ export default function Guest({
             <button
               className="border rounded-full p-2"
               onClick={() =>
-                setCountAdult(guest <= (maxGuest ?? 0) ? countAdult + 1 : countAdult)
+                setCountAdult(guest < (maxGuest ?? 0) ? countAdult + 1 : countAdult)
               }
             >
               <svg
@@ -108,7 +108,7 @@ export default function Guest({
             <button
               className="border rounded-full p-2"
               onClick={() => {
-                setCountChildren(guest <= (maxGuest ?? 0) ? countChildren + 1 : countChildren);
+                setCountChildren(guest < (maxGuest ?? 0) ? countChildren + 1 : countChildren);
               }}
             >
               <svg

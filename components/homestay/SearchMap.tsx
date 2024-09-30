@@ -161,7 +161,7 @@ const Search: React.FC<{
 
       try {
         const response: Response = await getData({
-          endpoint: `https://geocode.search.hereapi.com/v1/geocode?q=${query}&apiKey=${APIKEY}`,
+          endpoint: `https://geocode.search.hereapi.com/v1/geocode?q=${query}&in=countryCode:VNM&apiKey=${APIKEY}`,
         });
        
         const items = response.items || [];
@@ -212,11 +212,8 @@ const Search: React.FC<{
   };
 
   return (
-    <>
-      <div
-        className={`absolute left-10 top-5 w-[566px]`}
-        onClick={() => setIsOpenSearch(true)}
-      >
+    <div className="absolute left-0 right-0 top-5 flex items-center justify-center">
+      <div className={` w-[566px]`} onClick={() => setIsOpenSearch(true)}>
         <div className="relative">
           <div
             className={`w-full h-full relative ${
@@ -269,7 +266,7 @@ const Search: React.FC<{
           )}
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

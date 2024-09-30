@@ -90,7 +90,7 @@ const [loading, setLoading] = useState(true);
          />
          <WhatsIncluded />
          <hr className="my-4 border-t border-gray-300" />
-         <ThingsToKnow />
+         {/* <ThingsToKnow /> */}
        </div>
      </>
    );
