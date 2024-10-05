@@ -2,20 +2,53 @@ import { FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { FaRegStar } from "react-icons/fa";
 import { GiForkKnifeSpoon } from "react-icons/gi";
+interface Accommodation {
+  accommodationid: number;
+  accommodationname: string;
+  durationaccommodation: string;
+  accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
+}
+type AccommodationInfoType = {
+  accommodation: Accommodation;
+};
 
-const AccommodationInfo = () => {
+const AccommodationInfo = ({ accommodation }: AccommodationInfoType) => {
+  const convertToTimeUnit = (value: number): string => {
+    const minutesInHour = 60;
+    const minutesInDay = 60 * 24;
+
+    if (value >= minutesInDay) {
+      const days = Math.floor(value / minutesInDay);
+      const remainingMinutes = value % minutesInDay;
+      const hours = Math.floor(remainingMinutes / minutesInHour);
+      return `${days} Nights ${hours > 0 ? hours + " Hours" : ""}`;
+    } else if (value >= minutesInHour) {
+      const hours = Math.floor(value / minutesInHour);
+      const minutes = value % minutesInHour;
+      return `${hours} Hours ${minutes > 0 ? minutes + " Minutes" : ""}`;
+    } else {
+      return `${value} Minutes`;
+    }
+  };
   return (
     <>
-      <div className="">
+      <div className="w-2/3">
         <div className="flex flex-col gap-2 border-b-2 pb-3 border-dashed">
-          <div className="font-bold text-lg">
-            Spectacular Krabi and Phuket Getaway
+          <div className="flex items-center gap-3">
+            <div className="font-bold text-lg">
+              {accommodation.accommodationtype} -{" "}
+              {accommodation.accommodationname}
+            </div>
+            <div className="flex gap-1 items-center ">
+              <FaStar />
+              <FaStarHalfAlt />
+              <FaRegStar />
+            </div>
           </div>
-          <div className="flex gap-1 items-center ">
-            <FaStar />
-            <FaStarHalfAlt />
-            <FaRegStar />
-          </div>
+
           <div className="flex gap-1 items-center ">
             <span>
               <svg
@@ -33,7 +66,9 @@ const AccommodationInfo = () => {
                 />
               </svg>
             </span>
-            <p>2 Nights</p>
+            <p>
+              {convertToTimeUnit(Number(accommodation.durationaccommodation))}
+            </p>
           </div>
           <div className="flex gap-1 items-center ">
             <span>
@@ -56,14 +91,15 @@ const AccommodationInfo = () => {
           </div>
         </div>
         <div className=" flex flex-col gap-1 mt-1">
-          <div className="text-base font-bold">Deluxe</div>
-          <div className="flex gap-1 items-center">
-            <GiForkKnifeSpoon />
-            <span className="text-xs font-bold text-[#797979]">
-              Breakfast is included
-            </span>
-          </div>
-          <div className="text-sm font-bold text-blue-600">See More</div>
+          <div className="text-base font-bold">{accommodation.roomtype}</div>
+          {accommodation.isbreadkfast && (
+            <div className="flex gap-1 items-center">
+              <GiForkKnifeSpoon />
+              <span className="text-xs font-bold text-[#797979]">
+                Breakfast is included
+              </span>
+            </div>
+          )}
         </div>
       </div>
     </>
