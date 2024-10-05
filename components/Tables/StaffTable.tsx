@@ -30,7 +30,7 @@ import { StaffTableProps } from "@/types/table";
 import Link from "next/link";
 import SearchForm from "../Header/SearchForm";
 
-const StaffTable: React.FC<StaffTableProps> = ({ columns, data, title }) => {
+const StaffTable: React.FC<StaffTableProps> = ({ columns, data, title ,handleSearch  }) => {
   const [visibleColumns, setVisibleColumns] = useState<string[]>(
     columns.map((col) => col.key)
   );
@@ -45,6 +45,7 @@ const StaffTable: React.FC<StaffTableProps> = ({ columns, data, title }) => {
     <div className="">
       <div className="flex my-5 items-center justify-between max-w-[1135px]">
         {/* <SearchForm /> */}
+        <SearchForm onSearch={handleSearch} />
         <div>
           <Pagination>
             <PaginationContent>

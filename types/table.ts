@@ -24,5 +24,5 @@ export interface DataRow {
     columns: Column[];
     data: DataRow[];
     title: string;
-  
+    handleSearch?:(value: string) => void;
   }

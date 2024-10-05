@@ -111,6 +111,7 @@ const PlanDay = ({ itineraries }: PlanDayProps) => {
             type="multiple"
             defaultValue={["item-1"]}
             className="w-full "
+            key={index}
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>
@@ -141,6 +142,7 @@ const PlanDay = ({ itineraries }: PlanDayProps) => {
             type="multiple"
             defaultValue={["item-1"]}
             className="w-full "
+            key={index}
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>
@@ -171,6 +173,7 @@ const PlanDay = ({ itineraries }: PlanDayProps) => {
             type="multiple"
             defaultValue={["item-1"]}
             className="w-full "
+            key={index}
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>
@@ -204,6 +207,7 @@ const PlanDay = ({ itineraries }: PlanDayProps) => {
             type="multiple"
             defaultValue={["item-1"]}
             className="w-full "
+            key={index}
           >
             <AccordionItem value="item-1">
               <AccordionTrigger>

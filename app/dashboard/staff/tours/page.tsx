@@ -14,7 +14,6 @@ const columns = [
   { key: "thumbnail", label: "Thumbnail" },
   { key: "title", label: "Title" },
   { key: "price", label: "Price", isNumeric: true },
-  { key: "priceReduce", label: "Price Reduce", isNumeric: true },
   { key: "groupSize", label: "Group Size" },
   { key: "deposit", label: "Deposit" },
   { key: "bookingHold", label: "Booking Hold" },
@@ -40,6 +39,9 @@ interface Accommodation {
   accommodationname: string;
   durationaccommodation: string;
   accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
 }
 
 interface Meal {
@@ -83,7 +85,6 @@ interface TourPackage {
   title: string;
   thumbnail: string;
   price: number;
-  pricereduce: number;
   groupsize: string;
   deposit: string;
   bookinghold: string;
@@ -95,11 +96,10 @@ interface TourPackage {
   departureDate: DepartureDate[];
 }
 
-interface FormattedTourData {
+interface FormattedTourData extends DataRow  {
   thumbnail: string;
   title: string;
   price: number;
-  priceReduce: number;
   groupSize: string;
   deposit: string;
   bookingHold: string;
@@ -109,7 +109,7 @@ interface FormattedTourData {
   category: string;
   departure: string;
   itinerary: string;
-  action?: JSX.Element; // Use optional property if not always needed
+  action: string // Use optional property if not always needed
 }
 const Staff = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -121,12 +121,11 @@ const Staff = () => {
       const response = await fetch(
         `http://localhost:8080/api/tours${query ? `/search/name?title=${query}` : ""}`
       );
-      const result: TourPackage[] = await response.json();
-      const formattedData: FormattedTourData[] = result.map((tour: TourPackage) => ({
-        thumbnail: `/images/${tour.thumbnail}`,
+      const result = await response.json();
+      const formattedData = result.map((tour: TourPackage) => ({
+        thumbnail: tour.thumbnail[0],
         title: tour.title,
         price: tour.price,
-        priceReduce: tour.pricereduce,
         groupSize: tour.groupsize,
         deposit: tour.deposit,
         bookingHold: tour.bookinghold,
@@ -166,16 +165,20 @@ const Staff = () => {
   };
 
   useEffect(() => {
-    fetchData(); // Fetch all data when the page loads
-  }, []);
+    fetchData(searchQuery); // Fetch all data when the page loads
+  }, [searchQuery]);
 
   return (
     <>
       <DefaultLayout>
-        <div className="mx-auto w-full max-w-[1080px]">
+        <div className="mx-auto w-full ">
           <Breadcrumb pageName="Staff" />
-          <SearchForm onSearch={handleSearch} />
-          <StaffTable columns={columns} data={data} title="Tours" />
+          <StaffTable
+            columns={columns}
+            data={data}
+            handleSearch={handleSearch}
+            title="Tours"
+          />
         </div>
       </DefaultLayout>
     </>

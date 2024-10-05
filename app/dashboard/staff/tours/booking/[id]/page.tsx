@@ -6,6 +6,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CiUser } from "react-icons/ci";
+import { createData } from "@/utils/axios";
 
 interface Tour {
   id: number;
@@ -14,8 +15,44 @@ interface Tour {
   price: number;
   pricereduce: number;
   groupsize: number;
+  disposit: string;
   departureDates: { departuredateid: number; departuredate: string }[] | null;
+  itineraries: Itinerary[];
 }
+
+interface Itinerary {
+  itineraryId: number;
+  accommodations: Accommodation[];
+  meals: Meal[];
+  places: Place[];
+  day: string;
+}
+interface Accommodation {
+  accommodationid: number;
+  accommodationname: string;
+  durationaccommodation: string;
+  accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
+}
+
+interface Meal {
+  mealid: number;
+  mealname: string;
+  mealthumbnail: string;
+  mealduration: string;
+  mealactivity: string;
+}
+
+interface Place {
+  placeid: number;
+  placename: string;
+  placethumbnail: string;
+  description: string;
+  placeduration: string;
+}
+
 
 const BookingStaff = ({ params }: { params: { id: string } }) => {
   const { id } = params;
@@ -43,12 +80,12 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
     if (!tour || !selectedDate) return;
 
     const userId = Number(localStorage.getItem('userId')) || 1;
-    const paymentId = 1;
+    const paymentId = 2;
     const packageId = id;
     const tourDate = new Date(selectedDate).toISOString();
     const numberOfPeople = guestCount;
-    const totalPrice = tour.pricereduce * guestCount;
-    const depositAmount = totalPrice * 0.1; // Assuming 10% deposit
+    const totalPrice = (tour.price * guestCount);
+    
 
     const bookingData = {
       userId,
@@ -57,19 +94,14 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
       tourDate,
       numberOfPeople,
       totalPrice,
-      depositAmount,
+      depositAmount: tour.disposit,
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(bookingData),
-      });
+     const response = await createData({endpoint:"/bookings",payload: bookingData}
+      );
 
-      if (!response.ok) throw new Error('Failed to submit booking data');
+      if (!response.ok) throw new Error("Failed to submit booking data");
       alert('Booking successfully completed!');
     } catch (error) {
       setError('Failed to complete booking');
@@ -95,7 +127,7 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
               <div className="flex items-center gap-10 p-4 border border-gray-300 rounded-2xl overflow-hidden w-3/5">
                 <div className="h-35 rounded-lg overflow-hidden">
                   <Image
-                    src={`/images/${tour.thumbnail}`}
+                    src={tour.thumbnail[0]}
                     alt={tour.title}
                     height={300}
                     width={300}
@@ -104,19 +136,17 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="border rounded-md border-blue-600 text-blue-600 px-[5px] py-[3px] text-xs w-12">
-                    {tour.groupsize}
+                    {tour?.itineraries.length - 1}N/{tour.itineraries.length}D
                   </span>
                   <div className="text-base font-extrabold">
                     {tour.title}
                   </div>
                   <div className="flex items-baseline space-x-2">
-                    <span className="text-base line-through text-gray-500">
-                      ${tour.price}
-                    </span>
-                    <span className="text-base">$ {tour.pricereduce}</span>
+                 
+                    <span className="text-base">$ {tour.price}</span>
                     <span className="text-gray-500">/ Person</span>
                   </div>
-                  <div className="flex items-center gap-1 mt-1 mb-2">
+                  {/* <div className="flex items-center gap-1 mt-1 mb-2">
                     <span className="text-sm">2N Hanoi</span>
                     <span>
                       <svg
@@ -140,7 +170,7 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
                       </svg>
                     </span>
                     <span className="text-sm">2N HoChiMinh</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3 p-[19px] border border-gray-300 rounded-lg w-2/5">
@@ -203,13 +233,13 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
             <div className="border border-gray-300 rounded-2xl mx-5 mt-5 p-4 px-6">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between">
-                  <span>${tour.pricereduce} x {guestCount}</span>
-                  <span>${tour.pricereduce * guestCount}</span>
+                  <span>${tour.price} x {guestCount}</span>
+                  <span>${tour.price * guestCount}</span>
                 </div>
                 <hr />
                 <div className="flex justify-between font-bold">
                   <span>Total</span>
-                  <span>${tour.pricereduce * guestCount}</span>
+                  <span>${tour.price * guestCount}</span>
                 </div>
               </div>
             </div>

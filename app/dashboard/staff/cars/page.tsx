@@ -76,7 +76,7 @@ interface CarTableData extends DataRow {
 }
 const Staff = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [data, setData] = useState<FormattedCarData[]>([]);
+  const [data, setData] = useState<CarTableData[]>([]);
 
   const fetchData = async (query = "") => {
     try {
@@ -84,7 +84,7 @@ const Staff = () => {
         `http://localhost:8080/api/cars${query ? `/search/name?name=${query}` : ""}`
       );
       const result: Car[] = await response.json();
-      const formattedData: FormattedCarData[] = result.map((car: Car) => ({
+      const formattedData = result.map((car: Car) => ({
         thumbnail: car.imageUrl || "/car_thumbnail.png",
         carName: car.carName,
         make: car.make?.makeName || "Unknown",
@@ -121,11 +121,11 @@ const Staff = () => {
       <DefaultLayout>
         <div className="mx-auto w-full max-w-[1080px]">
           <Breadcrumb pageName="Staff" />
-          <SearchForm onSearch={handleSearch} />
           <StaffTable
             columns={columns}
             data={data}
             title="Cars"
+            handleSearch={handleSearch}
           />
           <div></div>
         </div>
