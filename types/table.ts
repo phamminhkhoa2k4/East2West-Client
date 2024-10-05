@@ -5,7 +5,7 @@ export interface Column {
 }
 
 export interface DataRow {
-  [key: string]: string | number;
+  [key: string]: string | number | boolean ;
 }
 
   export interface CustomTableProps {
