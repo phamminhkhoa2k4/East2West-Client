@@ -1,20 +1,45 @@
 "use client";
 import { useState } from "react";
 
-const MealInfo = () => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+interface Meal {
+  mealid: number;
+  mealname: string;
+  mealthumbnail: string;
+  mealduration: string;
+  mealactivity: string;
+}
+type MealInfoType = {
+  meal : Meal;
+}
 
+const MealInfo = ({meal}: MealInfoType) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+   const convertToTimeUnit = (value: number): string => {
+    const minutesInHour = 60;
+    const minutesInDay = 60 * 24;
+
+    if (value >= minutesInDay) {
+      const days = Math.floor(value / minutesInDay);
+      const remainingMinutes = value % minutesInDay;
+      const hours = Math.floor(remainingMinutes / minutesInHour);
+      return `${days} Nights ${hours > 0 ? hours + " Hours" : ""}`;
+    } else if (value >= minutesInHour) {
+      const hours = Math.floor(value / minutesInHour);
+      const minutes = value % minutesInHour;
+      return `${hours} Hours ${minutes > 0 ? minutes + " Minutes" : ""}`;
+    } else {
+      return `${value} Minutes`;
+    }
+  };
   const toggleExpansion = () => {
     setIsExpanded(!isExpanded);
   };
   return (
     <div>
       <div className="flex flex-col">
-        <div className="font-bold text-lg">
-          7 Islands Sunset Tour with Picnic Dinner - Shared Transfers
-        </div>
+        <div className="font-bold text-lg">{meal.mealname}</div>
         <div className="w-125">
-          <p
+          {/* <p
             className={`overflow-hidden text-ellipsis ${
               isExpanded ? "whitespace-normal" : "line-clamp-4"
             }`}
@@ -26,13 +51,13 @@ const MealInfo = () => {
             for it to catch a pick up early in the morning The tour pick up is
             later in the noon so you get peaceful wake up and breakfast at your
             hotel.
-          </p>
-          <button
+          </p> */}
+          {/* <button
             onClick={toggleExpansion}
             className="text-blue-500 mt-2 focus:outline-none"
           >
             {isExpanded ? "See less" : "See more"}
-          </button>
+          </button> */}
         </div>
         <div className="flex gap-1 items-center ">
           <span>
@@ -51,7 +76,7 @@ const MealInfo = () => {
               />
             </svg>
           </span>
-          <p>22 September - 25 September</p>
+          <p>Duration : {convertToTimeUnit(Number(meal.mealduration))}</p>
         </div>
       </div>
     </div>

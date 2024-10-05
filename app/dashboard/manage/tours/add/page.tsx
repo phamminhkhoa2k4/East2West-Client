@@ -7,8 +7,7 @@ import DateTimePicker from "@/components/FormElements/DatePicker/MultiDatePicker
 import UploadFiles from "./UploadFiles";
 import Itinerary from "./Itinerary";
 import { createData, getData } from "@/utils/axios";
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import { format } from "date-fns";
+import { ChangeEvent, useEffect, useState } from "react";
 
 interface FileWithPreview extends File {
   preview: string;
@@ -39,7 +38,6 @@ type ToursInfoType = {
   price: number;
   groupsize: string;
   deposit: string;
-  pricereduce : number;
   bookinghold: string;
   bookingchange: string;
   categoryTourId: number[];
@@ -47,12 +45,16 @@ type ToursInfoType = {
   suitableTourId: number[];
   departureDates: DateTimeOption[];
   thumbnail: string[];
+  itineraries: ItinerarType[];
 };
 interface Accommodation {
   accommodationid: number;
   accommodationname: string;
   durationaccommodation: string;
   accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
 }
 
 interface Meal {
@@ -79,12 +81,21 @@ interface Transfer {
   transferduration: string;
 }
 
+interface ItinerarType {
+  itineraryId?: number;
+  tourPackageId?: number;
+  accommodationIds?: number[];
+  mealIds?: number[];
+  placeIds?: number[];
+  transferIds?: number[];
+  day: number;
+}
+
 const Create = () => {
   const [toursInfo, setToursInfo] = useState<ToursInfoType>({
     title: "",
     price: 0,
     groupsize: "",
-    pricereduce:0,
     deposit: "",
     bookinghold: "",
     bookingchange: "",
@@ -93,7 +104,9 @@ const Create = () => {
     suitableTourId: [],
     departureDates: [],
     thumbnail: [],
+    itineraries: [],
   });
+
   const [files, setFiles] = useState<FileWithPreview[]>([]);
   const [categories, setCategories] = useState<CategoryTour[]>([]);
   const [themes, setThemes] = useState<ThemeTour[]>([]);
@@ -102,17 +115,12 @@ const Create = () => {
   const [error, setError] = useState<string | null>(null);
   const [isItinerary, setItinerary] = useState<boolean>(false);
 
-
   const [days, setDays] = useState<number[]>([1]);
-  const [isOpenTransfers, setIsOpenTransfer] = useState<boolean>(false);
-  const [isOpenPlaces, setIsOpenPlaces] = useState<boolean>(false);
-  const [isOpenAccommodation, setIsOpenAccommodation] =
-    useState<boolean>(false);
-  const [isOpenMeals, setIsOpenMeals] = useState<boolean>(false);
-  const [transfers, setTransfers] = useState<Transfer>();
-  const [places, setPlaces] = useState<Place>();
-  const [accommodation, setAccommodation] = useState<Accommodation>();
-  const [meals, setMeals] = useState<Meal>();
+
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
+  const [places, setPlaces] = useState<Place[]>();
+  const [accommodation, setAccommodation] = useState<Accommodation[]>([]);
+  const [meals, setMeals] = useState<Meal[]>();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -129,10 +137,10 @@ const Create = () => {
           getData({ endpoint: "/tours/category" }),
           getData({ endpoint: "/tours/theme" }),
           getData({ endpoint: "/tours/suitable" }),
-          getData({ endpoint: "/tours/suitable" }),
-          getData({ endpoint: "/tours/suitable" }),
-          getData({ endpoint: "/tours/suitable" }),
-          getData({ endpoint: "/tours/suitable" }),
+          getData({ endpoint: "/itineraries/transfers" }),
+          getData({ endpoint: "/itineraries/meals" }),
+          getData({ endpoint: "/itineraries/places" }),
+          getData({ endpoint: "/itineraries/accommodations" }),
         ]);
         setCategories(categories);
         setThemes(themes);
@@ -152,15 +160,11 @@ const Create = () => {
     fetchData();
   }, []);
 
-
-
   const handleUpload = async (): Promise<string[]> => {
     if (files.length === 0) {
       console.error("No files selected");
       return [];
-
     }
-
 
     const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
@@ -169,7 +173,7 @@ const Create = () => {
 
       try {
         const response = await fetch(
-          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`, // Thay thế bằng cloud name của bạn
+          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`, 
           {
             method: "POST",
             body: formData,
@@ -196,8 +200,6 @@ const Create = () => {
     setToursInfo((prev) => ({ ...prev!, [name]: value }));
   };
 
-  
-
   const handleDateTimeChange = (
     selectedDates: { id: string; dateTime: string }[]
   ) => {
@@ -206,7 +208,6 @@ const Create = () => {
       departureDates: selectedDates,
     }));
   };
-
 
   const handleMultiSelectChange = (name: string, selectedOptions: any[]) => {
     const selectedValues = selectedOptions.map((option) => option.value);
@@ -241,9 +242,8 @@ const Create = () => {
           }).catch((error) => {
             console.log(error);
           });
-        }else{
+        } else {
           console.log("upload fail !!");
-          
         }
       })
       .catch((error) => {
@@ -303,7 +303,7 @@ const Create = () => {
                 placeholder=""
                 label="Booking Hold"
                 name="bookinghold"
-                type="text"
+                type="number"
                 value={toursInfo?.bookinghold}
                 onChange={handleChange}
               />
@@ -385,14 +385,6 @@ const Create = () => {
           handleCreate={handleCreate}
           days={days}
           setDays={setDays}
-          isOpenTransfers={isOpenTransfers}
-          isOpenPlaces={isOpenPlaces}
-          isOpenAccommodation={isOpenAccommodation}
-          isOpenMeals={isOpenMeals}
-          setIsOpenTransfer={setIsOpenTransfer}
-          setIsOpenPlaces={setIsOpenPlaces}
-          setIsOpenAccommodation={setIsOpenAccommodation}
-          setIsOpenMeals={setIsOpenMeals}
           transfers={transfers!}
           places={places!}
           accommodation={accommodation!}
@@ -401,6 +393,8 @@ const Create = () => {
           setPlaces={setPlaces}
           setAccommodation={setAccommodation}
           setMeals={setMeals}
+          toursInfo={toursInfo}
+          setToursInfo={setToursInfo}
         />
       )}
     </DefaultLayout>

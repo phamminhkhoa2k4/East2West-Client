@@ -7,6 +7,9 @@ interface Accommodation {
   accommodationname: string;
   durationaccommodation: string;
   accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
 }
 
 const AccommodationManagement: React.FC = () => {

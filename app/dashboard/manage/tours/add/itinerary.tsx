@@ -2,7 +2,7 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { IoIosClose } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Day from "./Day";
 
 interface Accommodation {
@@ -10,6 +10,9 @@ interface Accommodation {
   accommodationname: string;
   durationaccommodation: string;
   accommodationtype: string;
+  isbreadkfast:boolean;
+  accommodationthumbnail:string[];
+  roomtype: string;
 }
 
 interface Meal {
@@ -36,52 +39,76 @@ interface Transfer {
   transferduration: string;
 }
 
+type ToursInfoType = {
+  title: string;
+  price: number;
+  groupsize: string;
+  deposit: string;
+   bookinghold: string;
+  bookingchange: string;
+  categoryTourId: number[];
+  themeTourId: number[];
+  suitableTourId: number[];
+  departureDates: DateTimeOption[];
+  thumbnail: string[];
+  itineraries: Itinerary[];
+};
+
+
+interface DateTimeOption {
+  id: string;
+  dateTime: string;
+}
+
+interface Itinerary {
+  itineraryId?: number;
+  tourPackageId?: number;
+  accommodationIds?: number[];
+  mealIds?: number[];
+  placeIds?: number[];
+  transferIds?: number[];
+  day: number;
+}
+
 type ItineraryType = {
   handleCreate: (value: void) => void;
-  setMeals: (value: Meal) => void;
-  setAccommodation: (value: Accommodation) => void;
-  setPlaces: (value: Place) => void;
-  setTransfers: (value: Transfer) => void;
-  meals: Meal;
-  accommodation: Accommodation;
-  places: Place;
-  transfers: Transfer;
-  setIsOpenMeals: (value: boolean) => void;
-  setIsOpenAccommodation: (value: boolean) => void;
-  setIsOpenPlaces: (value: boolean) => void;
-  setIsOpenTransfer: (value: boolean) => void;
-  isOpenMeals: boolean;
-  isOpenAccommodation: boolean;
-  isOpenPlaces: boolean;
-  isOpenTransfers: boolean;
+  setMeals: (value: Meal[]) => void;
+  setAccommodation: (value: Accommodation[]) => void;
+  setPlaces: (value: Place[]) => void;
+  setTransfers: (value: Transfer[]) => void;
+  meals: Meal[];
+  accommodation: Accommodation[];
+  places: Place[];
+  transfers: Transfer[];
   days: number[];
   setDays: (value: number[]) => void;
+  toursInfo: ToursInfoType;
+  setToursInfo: (value: ToursInfoType) => void;
 };
 
 const Itinerary = ({
   handleCreate,
   days,
   setDays,
-  isOpenAccommodation,
-  isOpenMeals,
-  isOpenPlaces,
-  isOpenTransfers,
   accommodation,
   meals,
   places,
   setAccommodation,
-  setIsOpenAccommodation,
-  setIsOpenMeals,
-  setIsOpenPlaces,
-  setIsOpenTransfer,
   setMeals,
   setPlaces,
   setTransfers,
   transfers,
+  setToursInfo,
+  toursInfo,
 }: ItineraryType) => {
   const addDay = () => {
     setDays(days.length < 18 ? [...days, days.length + 1] : [...days]);
   };
+
+  useEffect(() => {
+      console.log("ki", toursInfo.itineraries);
+      
+  },[toursInfo])
   return (
     <div className="">
       <div className="flex flex-col gap-9">
@@ -124,7 +151,7 @@ const Itinerary = ({
                   </li>
                 )}
                 {days.length > 1 &&
-                  days.map((day, index) => (
+                  days?.map((day, index) => (
                     <>
                       {index != days.length - 1 && (
                         <li className="group relative flex  items-center text-blue-600 dark:text-blue-500 after:content-[''] after:w-3 after:h-1 after:border-b after:border-blue-100 after:border-4 after:inline-block dark:after:border-blue-800">
@@ -152,18 +179,10 @@ const Itinerary = ({
               </ol>
             </div>
             <div className="flex flex-col gap-10">
-              {days.map((day) => (
+              {days?.map((day) => (
                 <Day
                   key={day}
                   day={day}
-                  isOpenTransfers={isOpenTransfers}
-                  isOpenPlaces={isOpenPlaces}
-                  isOpenAccommodation={isOpenAccommodation}
-                  isOpenMeals={isOpenMeals}
-                  setIsOpenTransfer={setIsOpenTransfer}
-                  setIsOpenPlaces={setIsOpenPlaces}
-                  setIsOpenAccommodation={setIsOpenAccommodation}
-                  setIsOpenMeals={setIsOpenMeals}
                   transfers={transfers!}
                   places={places!}
                   accommodation={accommodation!}
@@ -172,6 +191,8 @@ const Itinerary = ({
                   setPlaces={setPlaces}
                   setAccommodation={setAccommodation}
                   setMeals={setMeals}
+                  setToursInfo={setToursInfo}
+                  toursInfo={toursInfo}
                 />
               ))}
             </div>

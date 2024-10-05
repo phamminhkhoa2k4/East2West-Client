@@ -12,41 +12,20 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import CardItinerary from "@/components/tour/CardItinerary";
-import { useState } from "react";
-import { Check } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import TransferInfo from "@/components/tour/TransferInfo";
 import { FaRegStar, FaStar } from "react-icons/fa6";
 import { FaStarHalfAlt } from "react-icons/fa";
 import { GiForkKnifeSpoon } from "react-icons/gi";
-const frameworks = [
-  {
-    value: "next.js",
-    label: "Next.js",
-  },
-  // {
-  //   value: "sveltekit",
-  //   label: "SvelteKit",
-  // },
-  // {
-  //   value: "nuxt.js",
-  //   label: "Nuxt.js",
-  // },
-  // {
-  //   value: "remix",
-  //   label: "Remix",
-  // },
-  // {
-  //   value: "astro",
-  //   label: "Astro",
-  // },
-];
 interface Accommodation {
   accommodationid: number;
   accommodationname: string;
   durationaccommodation: string;
   accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
 }
 
 interface Meal {
@@ -74,24 +53,66 @@ interface Transfer {
 }
 
 type DayType = {
-  setMeals: (value: Meal) => void;
-  setAccommodation: (value: Accommodation) => void;
-  setPlaces: (value: Place) => void;
-  setTransfers: (value: Transfer) => void;
-  meals: Meal;
-  accommodation: Accommodation;
-  places: Place;
-  transfers: Transfer;
-  setIsOpenMeals: (value: boolean) => void;
-  setIsOpenAccommodation: (value: boolean) => void;
-  setIsOpenPlaces: (value: boolean) => void;
-  setIsOpenTransfer: (value: boolean) => void;
-  isOpenMeals: boolean;
-  isOpenAccommodation: boolean;
-  isOpenPlaces: boolean;
-  isOpenTransfers: boolean;
+  setMeals: (value: Meal[]) => void;
+  setAccommodation: (value: Accommodation[]) => void;
+  setPlaces: (value: Place[]) => void;
+  setTransfers: (value: Transfer[]) => void;
+  meals: Meal[];
+  accommodation: Accommodation[];
+  places: Place[];
+  transfers: Transfer[];
   day: number;
+  toursInfo: ToursInfoType;
+  setToursInfo: (value: ToursInfoType) => void;
 };
+
+type ToursInfoType = {
+  title: string;
+  price: number;
+  groupsize: string;
+  deposit: string;
+  bookinghold: string;
+  bookingchange: string;
+  categoryTourId: number[];
+  themeTourId: number[];
+  suitableTourId: number[];
+  departureDates: DateTimeOption[];
+  thumbnail: string[];
+  itineraries: Itinerary[];
+};
+
+interface DateTimeOption {
+  id: string;
+  dateTime: string;
+}
+
+interface Itinerary {
+  itineraryId?: number;
+  tourPackageId?: number;
+  accommodationIds?: number[];
+  mealIds?: number[];
+  placeIds?: number[];
+  transferIds?: number[];
+  day: number;
+}
+
+
+interface ItineraryData {
+  accommodationData: Accommodation[];
+  mealData: Meal[];
+  placeData: Place[];
+  transferData: Transfer[];
+  day: number;
+}
+
+interface ItineraryDatas  {
+  accommodations: Accommodation[];
+  meals: Meal[];
+  places: Place[];
+  transfers: Transfer[];
+  day: number;
+}
+
 const Day = ({
   accommodation,
   meals,
@@ -101,20 +122,135 @@ const Day = ({
   setMeals,
   setPlaces,
   setTransfers,
-  isOpenAccommodation,
-  isOpenMeals,
-  isOpenPlaces,
-  isOpenTransfers,
-  setIsOpenAccommodation,
-  setIsOpenMeals,
-  setIsOpenPlaces,
-  setIsOpenTransfer,
-  day}: DayType) => {
-    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  setToursInfo,
+  toursInfo,
+  day,
+}: DayType) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+   const [isOpenTransfers, setIsOpenTransfer] = useState<boolean>(false);
+   const [isOpenPlaces, setIsOpenPlaces] = useState<boolean>(false);
+   const [isOpenAccommodation, setIsOpenAccommodation] =
+     useState<boolean>(false);
+   const [isOpenMeals, setIsOpenMeals] = useState<boolean>(false);
+   const [itinerary, setItinerary] = useState<ItineraryData>();
+  const toggleExpansion = () => {
+    setIsExpanded(!isExpanded);
+  };
 
-    const toggleExpansion = () => {
-      setIsExpanded(!isExpanded);
+  const convertToTimeUnit = (value: number): string => {
+    const minutesInHour = 60;
+    const minutesInDay = 60 * 24;
+
+    if (value >= minutesInDay) {
+      const days = Math.floor(value / minutesInDay);
+      const remainingMinutes = value % minutesInDay;
+      const hours = Math.floor(remainingMinutes / minutesInHour);
+      return `${days} Nights ${hours > 0 ? hours + " Hours" : ""}`;
+    } else if (value >= minutesInHour) {
+      const hours = Math.floor(value / minutesInHour);
+      const minutes = value % minutesInHour;
+      return `${hours} Hours ${minutes > 0 ? minutes + " Minutes" : ""}`;
+    } else {
+      return `${value} Minutes`;
+    }
+  };
+
+  
+  const isItinerary = (
+    itinerary: Itinerary | ItineraryData
+  ): itinerary is Itinerary => {
+    return Array.isArray((itinerary as Itinerary)?.accommodationIds);
+  };
+
+const getItineraryData = (
+  itinerary: Itinerary | ItineraryDatas,
+  accommodations: Accommodation[],
+  meals: Meal[],
+  places: Place[],
+  transfers: Transfer[]
+): ItineraryData => {
+  console.log("kkk", itinerary);
+  console.log("kkk1", accommodations);
+  console.log("kkk2", meals);
+  console.log("kkk3", places);
+  console.log("kkk4", transfers);
+
+  if (isItinerary(itinerary)) {
+    // If itinerary is of type Itinerary
+    return {
+      accommodationData:
+        itinerary?.accommodationIds
+          ?.map((id) =>
+            accommodations?.find((accom) => accom.accommodationid === id)
+          )
+          .filter((accom): accom is Accommodation => !!accom) || [],
+
+      mealData:
+        itinerary?.mealIds
+          ?.map((id) => meals?.find((meal) => meal.mealid === id))
+          .filter((meal): meal is Meal => !!meal) || [],
+
+      placeData:
+        itinerary?.placeIds
+          ?.map((id) => places?.find((place) => place.placeid === id))
+          .filter((place): place is Place => !!place) || [],
+
+      transferData:
+        itinerary?.transferIds
+          ?.map((id) =>
+            transfers?.find((transfer) => transfer.transferid === id)
+          )
+          .filter((transfer): transfer is Transfer => !!transfer) || [],
+
+      day: itinerary?.day, // Directly accessing the day property
     };
+  } else {
+    console.log("sasa", itinerary);
+
+    return {
+      accommodationData: itinerary?.accommodations || [],
+      mealData: itinerary?.meals || [],
+      placeData: itinerary?.places || [],
+      transferData: itinerary?.transfers || [],
+      day: itinerary?.day, // Directly accessing the day property
+    };
+  }
+};
+
+
+
+
+  useEffect(() => {
+    const itineraryData = getItineraryData(
+      toursInfo.itineraries[day - 1],
+      accommodation,
+      meals,
+      places,
+      transfers
+    );
+    console.log("kokko", itineraryData);
+
+    setItinerary(itineraryData);
+  }, [
+    toursInfo,
+    accommodation,
+    day,
+    meals,
+    places,
+    transfers,
+    
+  ]);
+
+
+
+   useEffect(() => {
+     console.log("la", toursInfo?.itineraries);
+     console.log("in", itinerary);
+   }, [toursInfo, itinerary]);
+
+    
+ 
+
   return (
     <div className="flex flex-col p-6 border rounded-xl mt-5">
       <div className="mb-5">Day {day}</div>
@@ -145,18 +281,37 @@ const Day = ({
             <Command>
               <CommandInput placeholder="Search framework..." />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No transfer found.</CommandEmpty>
                 <CommandGroup>
-                  {frameworks.map((framework) => (
-                    <CommandItem
-                      key={framework.value}
-                   
-                    >
-               
-                      <div className="h-30 p-4 border rounded-lg flex items-center gap-5">
+                  {transfers?.map((transfer) => (
+                    <CommandItem key={transfer.transferid}>
+                      <div
+                        className="h-30 p-4 border rounded-lg flex items-center gap-5"
+                        onClick={() => {
+                          const currentItinerary = toursInfo.itineraries[
+                            day - 1
+                          ] || { transferIds: [] };
+
+                          setToursInfo({
+                            ...toursInfo,
+                            itineraries: [
+                              ...toursInfo.itineraries.slice(0, day - 1),
+                              {
+                                ...currentItinerary,
+                                day,
+                                transferIds: [
+                                  ...(currentItinerary.transferIds || []),
+                                  transfer.transferid,
+                                ],
+                              },
+                              ...toursInfo.itineraries.slice(day),
+                            ],
+                          });
+                        }}
+                      >
                         <div className="w-50 h-25 overflow-hidden rounded-lg">
                           <Image
-                            src={"/boat.png"}
+                            src={transfer.transferthumbnail}
                             alt=""
                             height={400}
                             width={400}
@@ -166,7 +321,7 @@ const Day = ({
                         <div>
                           <div className="flex flex-col gap-2">
                             <div className="font-bold text-base">
-                              Private Transfer
+                              {transfer.transfername}
                             </div>
                             <div className="w-125">
                               <p
@@ -176,12 +331,7 @@ const Day = ({
                                     : "line-clamp-2"
                                 }`}
                               >
-                                Travel comfortably in a private vehicle from
-                                Dabolim airport to North Goa hotel. Note: The
-                                pick-up timing is subject to your flight/train
-                                arrival and shall be communicated to you by the
-                                local vendor. There will be non stop-overs
-                                allowed during this transfer.
+                                {transfer.description}
                               </p>
                             </div>
                             <div className="flex gap-1 items-center ">
@@ -244,17 +394,37 @@ const Day = ({
             <Command>
               <CommandInput placeholder="Search framework..." />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No place found.</CommandEmpty>
                 <CommandGroup>
-                  {frameworks.map((framework) => (
-                    <CommandItem
-                      key={framework.value}
-                    >
+                  {places?.map((place) => (
+                    <CommandItem key={place.placeid}>
+                      <div
+                        className="h-30 p-4 border rounded-lg flex items-center gap-5"
+                        onClick={() => {
+                          const currentItinerary = toursInfo.itineraries[
+                            day - 1
+                          ] || { placeIds: [] };
 
-                      <div className="h-30 p-4 border rounded-lg flex items-center gap-5">
+                          setToursInfo({
+                            ...toursInfo,
+                            itineraries: [
+                              ...toursInfo.itineraries.slice(0, day - 1),
+                              {
+                                ...currentItinerary,
+                                day,
+                                placeIds: [
+                                  ...(currentItinerary.placeIds || []),
+                                  place.placeid,
+                                ],
+                              },
+                              ...toursInfo.itineraries.slice(day),
+                            ],
+                          });
+                        }}
+                      >
                         <div className="w-50 h-25 overflow-hidden rounded-lg">
                           <Image
-                            src={"/boat.png"}
+                            src={place.placethumbnail}
                             alt=""
                             height={400}
                             width={400}
@@ -264,8 +434,7 @@ const Day = ({
                         <div>
                           <div className="flex flex-col">
                             <div className="font-bold text-base">
-                              7 Islands Sunset Tour with Picnic Dinner - Shared
-                              Transfers
+                              {place.placename}
                             </div>
                             <div className="w-125">
                               <p
@@ -275,15 +444,7 @@ const Day = ({
                                     : "line-clamp-2"
                                 }`}
                               >
-                                Timings - 1230 hrs - 1930 hrs. Aptly crafted for
-                                couples on honeymoon, or family who wish to have
-                                leisure holiday, but don&apos;t want to rush for
-                                early morning tours. This is perfect tour to
-                                start your vacation, enjoy your breakfast, no
-                                need to rush for it to catch a pick up early in
-                                the morning The tour pick up is later in the
-                                noon so you get peaceful wake up and breakfast
-                                at your hotel.
+                                {place.description}
                               </p>
                             </div>
                             <div className="flex gap-1 items-center ">
@@ -303,7 +464,10 @@ const Day = ({
                                   />
                                 </svg>
                               </span>
-                              <p>Duration : 10h</p>
+                              <p>
+                                Duration :{" "}
+                                {convertToTimeUnit(Number(place.placeduration))}
+                              </p>
                             </div>
                             <div className="flex gap-1 items-center ">
                               <span>
@@ -368,18 +532,37 @@ const Day = ({
             <Command>
               <CommandInput placeholder="Search framework..." />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No accommodation found.</CommandEmpty>
                 <CommandGroup>
-                  {frameworks.map((framework) => (
-                    <CommandItem
-                      key={framework.value}
-                     
-                    >
+                  {accommodation?.map((item) => (
+                    <CommandItem key={item.accommodationid}>
+                      <div
+                        className="h-40 p-4 border rounded-lg flex items-center gap-5"
+                        onClick={() => {
+                          const currentItinerary = toursInfo.itineraries[
+                            day - 1
+                          ] || { accommodationIds: [] };
 
-                      <div className="h-40 p-4 border rounded-lg flex items-center gap-5">
+                          setToursInfo({
+                            ...toursInfo,
+                            itineraries: [
+                              ...toursInfo.itineraries.slice(0, day - 1),
+                              {
+                                ...currentItinerary,
+                                day,
+                                accommodationIds: [
+                                  ...(currentItinerary.accommodationIds || []),
+                                  item.accommodationid,
+                                ],
+                              },
+                              ...toursInfo.itineraries.slice(day),
+                            ],
+                          });
+                        }}
+                      >
                         <div className="w-60 h-35 overflow-hidden rounded-lg">
                           <Image
-                            src={"/boat.png"}
+                            src={item.accommodationthumbnail[0]}
                             alt=""
                             height={400}
                             width={400}
@@ -389,7 +572,7 @@ const Day = ({
                         <div className="">
                           <div className="flex flex-col gap-1 border-b-2 pb-3 border-dashed">
                             <div className="font-bold text-base">
-                              Spectacular Krabi and Phuket Getaway
+                              {item.accommodationname}
                             </div>
                             <div className="flex gap-1 items-center ">
                               <FaStar className="h-3 w-3" />
@@ -413,7 +596,11 @@ const Day = ({
                                   />
                                 </svg>
                               </span>
-                              <p className="text-[10px]">2 Nights</p>
+                              <p className="text-[10px]">
+                                {convertToTimeUnit(
+                                  Number(item.durationaccommodation)
+                                )}
+                              </p>
                             </div>
                             <div className="flex gap-1 items-center ">
                               <span>
@@ -438,13 +625,17 @@ const Day = ({
                             </div>
                           </div>
                           <div className=" flex flex-col gap-1 mt-0.5">
-                            <div className="text-sm font-bold">Deluxe</div>
-                            <div className="flex gap-1 items-center">
-                              <GiForkKnifeSpoon className="h-3 w-3" />
-                              <span className="text-[10px] font-bold text-[#797979]">
-                                Breakfast is included
-                              </span>
+                            <div className="text-sm font-bold">
+                              {item.roomtype}
                             </div>
+                            {item?.isbreadkfast && (
+                              <div className="flex gap-1 items-center">
+                                <GiForkKnifeSpoon className="h-3 w-3" />
+                                <span className="text-[10px] font-bold text-[#797979]">
+                                  Breakfast is included
+                                </span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -481,74 +672,41 @@ const Day = ({
             <Command>
               <CommandInput placeholder="Search framework..." />
               <CommandList>
-                <CommandEmpty>No framework found.</CommandEmpty>
+                <CommandEmpty>No meal found.</CommandEmpty>
                 <CommandGroup>
-                  <CommandItem>
-                    <div className="w-full  border rounded-xl px-5 py-3 bg-blue-100">
-                      <p className="text-sm font-medium text-[#797979]">
-                        at Evoke Lifestyle Candolim
-                      </p>
-                      <div className="flex items-center gap-1">
-                        <span>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke-width="1.5"
-                            stroke="currentColor"
-                            className="size-3"
+                  {meals?.map((meal) => (
+                    <>
+                      {meal.mealactivity != "" && (
+                        <CommandItem>
+                          {" "}
+                          <div
+                            className="w-full  border rounded-xl px-5 py-3 bg-blue-100"
+                            onClick={() => {
+                              const currentItinerary = toursInfo.itineraries[
+                                day - 1
+                              ] || { mealIds: [] };
+
+                              setToursInfo({
+                                ...toursInfo,
+                                itineraries: [
+                                  ...toursInfo.itineraries.slice(0, day - 1),
+                                  {
+                                    ...currentItinerary,
+                                    day,
+                                    mealIds: [
+                                      ...(currentItinerary.mealIds || []),
+                                      meal.mealid,
+                                    ],
+                                  },
+                                  ...toursInfo.itineraries.slice(day),
+                                ],
+                              });
+                            }}
                           >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              d="m4.5 12.75 6 6 9-13.5"
-                            />
-                          </svg>
-                        </span>
-                        <p className="text-xs text-blue-light-2">
-                          Included with Hotel
-                        </p>
-                      </div>
-                    </div>
-                  </CommandItem>
-                  {frameworks.map((framework) => (
-                    <CommandItem key={framework.value}>
-                      <div className="p-4 border rounded-lg flex items-center gap-5">
-                        <div className="w-50 h-25 overflow-hidden rounded-lg">
-                          <Image
-                            src={"/boat.png"}
-                            alt=""
-                            height={400}
-                            width={400}
-                            className="object-center object-position w-full h-full"
-                          />
-                        </div>
-                        <div>
-                          <div className="flex flex-col">
-                            <div className="font-bold text-lg">
-                              7 Islands Sunset Tour with Picnic Dinner - Shared
-                              Transfers
-                            </div>
-                            <div className="w-125">
-                              <p
-                                className={`overflow-hidden text-ellipsis ${
-                                  isExpanded
-                                    ? "whitespace-normal"
-                                    : "line-clamp-2"
-                                }`}
-                              >
-                                Timings - 1230 hrs - 1930 hrs. Aptly crafted for
-                                couples on honeymoon, or family who wish to have
-                                leisure holiday, but don&apos;t want to rush for
-                                early morning tours. This is perfect tour to
-                                start your vacation, enjoy your breakfast, no
-                                need to rush for it to catch a pick up early in
-                                the morning The tour pick up is later in the
-                                noon so you get peaceful wake up and breakfast
-                                at your hotel.
-                              </p>
-                            </div>
-                            <div className="flex gap-1 items-center ">
+                            <p className="text-sm font-medium text-[#797979]">
+                              {meal.mealactivity}
+                            </p>
+                            <div className="flex items-center gap-1">
                               <span>
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
@@ -556,21 +714,93 @@ const Day = ({
                                   viewBox="0 0 24 24"
                                   stroke-width="1.5"
                                   stroke="currentColor"
-                                  className="size-4"
+                                  className="size-3"
                                 >
                                   <path
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
-                                    d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                    d="m4.5 12.75 6 6 9-13.5"
                                   />
                                 </svg>
                               </span>
-                              <p>Duration : 40 min</p>
+                              <p className="text-xs text-blue-light-2">
+                                Included with Hotel
+                              </p>
                             </div>
                           </div>
-                        </div>
-                      </div>
-                    </CommandItem>
+                        </CommandItem>
+                      )}
+                      {meal.mealactivity == "" && (
+                        <CommandItem>
+                          <div
+                            className="p-4 border rounded-lg flex items-center gap-5"
+                            onClick={() => {
+                              const currentItinerary = toursInfo.itineraries[
+                                day - 1
+                              ] || { mealIds: [] };
+
+                              setToursInfo({
+                                ...toursInfo,
+                                itineraries: [
+                                  ...toursInfo.itineraries.slice(0, day - 1),
+                                  {
+                                    ...currentItinerary,
+                                    day,
+                                    mealIds: [
+                                      ...(currentItinerary.mealIds || []),
+                                      meal.mealid,
+                                    ],
+                                  },
+                                  ...toursInfo.itineraries.slice(day),
+                                ],
+                              });
+                            }}
+                          >
+                            <div className="w-50 h-25 overflow-hidden rounded-lg">
+                              <Image
+                                src={meal.mealthumbnail}
+                                alt=""
+                                height={400}
+                                width={400}
+                                className="object-center object-position w-full h-full"
+                              />
+                            </div>
+                            <div>
+                              <div className="flex flex-col">
+                                <div className="font-bold text-lg">
+                                  {meal.mealname}
+                                </div>
+
+                                <div className="flex gap-1 my-5 items-center ">
+                                  <span>
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke-width="1.5"
+                                      stroke="currentColor"
+                                      className="size-4"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                                      />
+                                    </svg>
+                                  </span>
+                                  <p>
+                                    Duration :{" "}
+                                    {convertToTimeUnit(
+                                      Number(meal.mealduration)
+                                    )}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </CommandItem>
+                      )}
+                    </>
                   ))}
                 </CommandGroup>
               </CommandList>
@@ -579,18 +809,26 @@ const Day = ({
         </Popover>
       </div>
       <div className="flex flex-col gap-5 my-5  ">
-        <div className="border rounded-lg py-5">
-          <CardItinerary />
-        </div>
-        <div className="border rounded-lg py-5">
-          <CardItinerary />
-        </div>
-        <div className="border rounded-lg py-5">
-          <CardItinerary />
-        </div>
-        <div className="border rounded-lg py-5">
-          <CardItinerary />
-        </div>
+        {itinerary?.accommodationData.map((item, index) => (
+          <div key={index} className="border rounded-lg py-5">
+            <CardItinerary data={item}  />
+          </div>
+        ))}
+        {itinerary?.transferData.map((item, index) => (
+          <div key={index} className="border rounded-lg py-5">
+            <CardItinerary data={item} />
+          </div>
+        ))}
+        {itinerary?.mealData.map((item, index) => (
+          <div key={index} className="border rounded-lg py-5">
+            <CardItinerary data={item} />
+          </div>
+        ))}
+        {itinerary?.placeData.map((item, index) => (
+          <div key={index} className="border rounded-lg py-5">
+            <CardItinerary data={item} />
+          </div>
+        ))}
       </div>
     </div>
   );

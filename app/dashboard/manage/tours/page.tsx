@@ -3,12 +3,13 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
+import { getData } from "@/utils/axios";
 
 const columns = [
+  { key: "packageid", label: "id" },
   { key: "thumbnail", label: "Thumbnail" },
   { key: "title", label: "Title" },
   { key: "price", label: "Price", isNumeric: true },
-  { key: "priceReduce", label: "Price Reduce", isNumeric: true },
   { key: "groupSize", label: "Group Size" },
   { key: "deposit", label: "Deposit" },
   { key: "bookingHold", label: "Booking Hold" },
@@ -17,7 +18,8 @@ const columns = [
   { key: "suitable", label: "Suitable" },
   { key: "category", label: "Category" },
   { key: "departure", label: "Departure Date" },
-  { key: "itinerary", label: "Itinerary" },
+  { key: "itineraries", label: "Itinerary" },
+  { key: "action", label: "Action" },
 ];
 interface Itinerary {
   itineraryId: number;
@@ -31,6 +33,9 @@ interface Accommodation {
   accommodationname: string;
   durationaccommodation: string;
   accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
 }
 
 interface Meal {
@@ -74,7 +79,6 @@ interface TourPackage {
   title: string;
   thumbnail: string;
   price: number;
-  pricereduce: number;
   groupsize: string;
   deposit: string;
   bookinghold: string;
@@ -90,7 +94,6 @@ interface FormattedTourData extends DataRow {
   thumbnail: string;
   title: string;
   price: number;
-  priceReduce: number;
   groupSize: string;
   deposit: string;
   bookingHold: string;
@@ -99,15 +102,16 @@ interface FormattedTourData extends DataRow {
   suitable: string;
   category: string;
   departure: string;
-  itinerary: string;
+  itineraries: string;
 }
-const TourComponent = () => {
+const Tour = () => {
   const [data, setData] = useState<FormattedTourData[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/tours");
-        const result: TourPackage[] = await response.json();
+        const response = await getData({ endpoint: "/tours" });
+        console.log(response);
+
         const formatDepartureDates = (dates: { departuredate: string }[]) => {
           return dates
             .map((date) => new Date(date.departuredate).toLocaleDateString())
@@ -115,12 +119,12 @@ const TourComponent = () => {
         };
 
         // Inside your data mapping:
-        const formattedData: FormattedTourData[] = result.map(
+        const formattedData: FormattedTourData[] = response.map(
           (tour: TourPackage) => ({
-            thumbnail: `${tour.thumbnail}`, // Assuming images are in the public/images folder
+            packageid: tour.packageid,
+            thumbnail: tour.thumbnail[0],
             title: tour.title,
             price: tour.price,
-            priceReduce: tour.pricereduce,
             groupSize: tour.groupsize,
             deposit: tour.deposit,
             bookingHold: tour.bookinghold,
@@ -137,16 +141,7 @@ const TourComponent = () => {
             departure: tour.departureDate
               .map((date) => new Date(date.departuredate).toLocaleDateString())
               .join(", "),
-            itinerary: tour.itineraries
-              .map(
-                (itinerary) =>
-                  `Day: ${new Date(
-                    itinerary.day
-                  ).toLocaleDateString()} - ${itinerary.places
-                    .map((place) => place.placename)
-                    .join(", ")}`
-              )
-              .join(" | "),
+            itineraries: tour.itineraries,
           })
         );
 
@@ -166,10 +161,12 @@ const TourComponent = () => {
         data={data}
         title="Tours"
         createUrl="/dashboard/manage/tours/add"
+        editUrl="/dashboard/manage/tours/edit"
+        deleteUrl="tours/admin"
       />
       <div></div>
     </DefaultLayout>
   );
 };
 
-export default TourComponent;
+export default Tour;

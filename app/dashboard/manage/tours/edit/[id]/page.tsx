@@ -1,15 +1,19 @@
-"use client"
+"use client";
 import InputGroup from "@/components/FormElements/InputGroup";
 import MultiSelect from "@/components/FormElements/MultiSelect";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import DateTimePicker from '@/components/FormElements/DatePicker/MultiDatePicker';
-import * as React from "react";
-import { useRouter } from 'next/navigation';
-import { useParams } from 'next/navigation';
-import UploadFiles from "./UploadFiles"; // Assuming you have this component
+import DateTimePicker from "@/components/FormElements/DatePicker/MultiDatePicker";
+
+import UploadFiles from "./UploadFiles";
+import { createData, getData, updateData } from "@/utils/axios";
+import { ChangeEvent, useEffect, useState } from "react";
+import Itinerary from "../../add/Itinerary";
+import { useParams, useRouter } from "next/navigation";
+
 interface FileWithPreview extends File {
   preview: string;
 }
+
 interface CategoryTour {
   categoryTourId: number;
   categoryTourName: string;
@@ -30,75 +34,220 @@ interface DateTimeOption {
   dateTime: string;
 }
 
-const Edit: React.FC = () => {
-  const router = useRouter();
+type ToursInfoType = {
+  title: string;
+  price: number;
+  groupsize: string;
+  deposit: string;
+  bookinghold: string;
+  bookingchange: string;
+  categoryTourId: number[];
+  themeTourId: number[];
+  suitableTourId: number[];
+  departureDates: DateTimeOption[];
+  thumbnail: string[];
+  itineraries: ItinerarType[];
+};
+interface Accommodation {
+  accommodationid: number;
+  accommodationname: string;
+  durationaccommodation: string;
+  accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string[];
+  roomtype: string;
+}
+
+interface Meal {
+  mealid: number;
+  mealname: string;
+  mealthumbnail: string;
+  mealduration: string;
+  mealactivity: string;
+}
+
+interface Place {
+  placeid: number;
+  placename: string;
+  placethumbnail: string;
+  description: string;
+  placeduration: string;
+}
+
+interface Transfer {
+  transferid: number;
+  transfername: string;
+  transferthumbnail: string;
+  description: string;
+  transferduration: string;
+}
+
+interface ItinerarType {
+  itineraryId?: number;
+  tourPackageId?: number;
+  accommodationIds?: number[];
+  mealIds?: number[];
+  placeIds?: number[];
+  transferIds?: number[];
+  day: number;
+}
+
+// Interface cho departure date
+interface DepartureDate {
+  departuredateid: string;
+  departuredate: string;
+}
+
+// Interface cho accommodation
+interface Accommodation {
+  accommodationid: number;
+  accommodationname: string;
+}
+
+// Interface cho itinerary
+interface ItineraryDataType {
+  day: number;
+  accommodations: Accommodation[];
+  meals:Meal[];
+  transfers:Transfer[];
+  places:Place[]
+}
+
+interface PackageTourInfo {
+  packageid: number;
+  title: string;
+  bookingchange: string;
+  bookinghold: string;
+  categoryTours: CategoryTour[];
+  departureDates: DepartureDate[];
+  deposit: string;
+  groupsize: string;
+  itineraries: ItineraryDataType[];
+  price: number;
+  suitableTours: SuitableTour[];
+  themeTours: ThemeTour[];
+  thumbnail: string[];
+}
+
+const Update = () => {
   const { id } = useParams();
-  const [formData, setFormData] = React.useState({
-    title: '',
-    price: '',
-    pricereduce: '',
-    groupsize: '',
-    deposit: '',
-    bookinghold: '',
-    bookingchange: '',
-    categoryTourId: [] as number[],
-    themeTourId: [] as number[],
-    suitableTourId: [] as number[],
-    departureDates: [] as DateTimeOption[],
-    thumbnail: [] as string[],
+  const router = useRouter();
+  const [toursInfo, setToursInfo] = useState<ToursInfoType>({
+    title: "",
+    price: 0,
+    groupsize: "",
+    deposit: "",
+    bookinghold: "",
+    bookingchange: "",
+    categoryTourId: [],
+    themeTourId: [],
+    suitableTourId: [],
+    departureDates: [],
+    thumbnail: [],
+    itineraries: [],
   });
 
-  const [files, setFiles] = React.useState<FileWithPreview[]>([]);
-  const [imageUrls, setImageUrls] = React.useState<string[]>([]);
-  const [categories, setCategories] = React.useState<CategoryTour[]>([]);
-  const [themes, setThemes] = React.useState<ThemeTour[]>([]);
-  const [suitables, setSuitables] = React.useState<SuitableTour[]>([]);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState<string | null>(null);
 
-  React.useEffect(() => {
+  const [files, setFiles] = useState<FileWithPreview[]>([]);
+  const [categories, setCategories] = useState<CategoryTour[]>([]);
+  const [themes, setThemes] = useState<ThemeTour[]>([]);
+  const [suitable, setSuitable] = useState<SuitableTour[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isItinerary, setItinerary] = useState<boolean>(true);
+  const [packageId,setPackageId] = useState<number>(0)
+  const [thumbnailUrl,setThumbnailUrl] = useState<string[]>([])
+  const [days, setDays] = useState<number[]>([1]);
+
+  const [transfers, setTransfers] = useState<Transfer[]>([]);
+  const [places, setPlaces] = useState<Place[]>();
+  const [accommodation, setAccommodation] = useState<Accommodation[]>([]);
+  const [meals, setMeals] = useState<Meal[]>();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const tours: PackageTourInfo = await getData({
+          endpoint: `/tours/${id}`,
+        });
+        setToursInfo((prev) => ({
+          ...prev,
+          bookingchange: tours.bookingchange,
+          bookinghold: tours.bookinghold,
+          departureDates: tours.departureDates.map((dd) => ({
+            id: dd.departuredateid,
+            dateTime: dd.departuredate,
+          })),
+          deposit: tours.deposit,
+          groupsize: tours.groupsize,
+          price: tours.price,
+          title: tours.title,
+          thumbnail: tours.thumbnail,
+          itineraries: [
+            ...tours.itineraries.map((itin) => ({
+              transferIds: itin?.transfers?.map((transfer) => transfer.transferid),
+              placeIds:itin?.places?.map((place) => place.placeid),
+              accommodationIds: itin?.accommodations?.map((acc) => acc.accommodationid ),
+              mealIds:itin?.meals?.map((meal) => meal.mealid),
+              day: itin?.day!
+            })),
+          ],
+          categoryTourId: [
+            ...tours.categoryTours.map((ca) => ca.categoryTourId),
+          ],
+          suitableTourId: [
+            ...tours.suitableTours.map((su) => su.suitableTourId),
+          ],
+          themeTourId: [...tours.themeTours.map((th) => th.themeTourId)],
+        }));
+        setSuitable(tours.suitableTours);
+        setCategories(tours.categoryTours);
+        setThemes(tours.themeTours);
+        setDays([...tours.itineraries.map((itin) => itin.day)]);
+        setPackageId(tours.packageid);   
+        setThumbnailUrl(tours.thumbnail)     
+
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  useEffect(() => {
+    console.log("kaka", toursInfo);
+  }, [toursInfo]);
+
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-
-        const [categoriesRes, themesRes, suitablesRes, packageRes] = await Promise.all([
-          fetch("http://localhost:8080/api/tours/category"),
-          fetch("http://localhost:8080/api/tours/theme"),
-          fetch("http://localhost:8080/api/tours/suitable"),
-          fetch(`http://localhost:8080/api/tours/${id}`)
+        const [
+          categories,
+          themes,
+          suitable,
+          transfers,
+          meals,
+          places,
+          accommodations,
+        ] = await Promise.all([
+          getData({ endpoint: "/tours/category" }),
+          getData({ endpoint: "/tours/theme" }),
+          getData({ endpoint: "/tours/suitable" }),
+          getData({ endpoint: "/itineraries/transfers" }),
+          getData({ endpoint: "/itineraries/meals" }),
+          getData({ endpoint: "/itineraries/places" }),
+          getData({ endpoint: "/itineraries/accommodations" }),
         ]);
-
-        if (!categoriesRes.ok || !themesRes.ok || !suitablesRes.ok || !packageRes.ok) {
-          throw new Error("Failed to fetch data");
-        }
-
-        const categoriesData: CategoryTour[] = await categoriesRes.json();
-        const themesData: ThemeTour[] = await themesRes.json();
-        const suitablesData: SuitableTour[] = await suitablesRes.json();
-        const packageData = await packageRes.json();
-
-        setCategories(categoriesData);
-        setThemes(themesData);
-        setSuitables(suitablesData);
-
-        setFormData({
-          title: packageData.title,
-          price: packageData.price,
-          pricereduce: packageData.pricereduce,
-          groupsize: packageData.groupsize,
-          deposit: packageData.deposit,
-          bookinghold: packageData.bookinghold,
-          bookingchange: packageData.bookingchange,
-          categoryTourId: packageData.categoryTours.map((c: CategoryTour) => c.categoryTourId),
-          themeTourId: packageData.themeTours.map((t: ThemeTour) => t.themeTourId),
-          suitableTourId: packageData.suitableTours.map((s: SuitableTour) => s.suitableTourId),
-          departureDates: packageData.departureDates.map((d: any) => ({
-            id: d.departuredateid,
-            dateTime: d.departuredate
-          })),
-          thumbnail: packageData.thumbnail || []  // Assuming the API returns existing image URLs
-        });
-        setImageUrls(packageData.thumbnail || []);
+        setCategories(categories);
+        setThemes(themes);
+        setSuitable(suitable);
+        setTransfers(transfers);
+        setMeals(meals);
+        setPlaces(places);
+        setAccommodation(accommodations);
       } catch (error) {
         setError("Failed to load data. Please try again later.");
         console.error("Failed to fetch data", error);
@@ -108,70 +257,28 @@ const Edit: React.FC = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleDateTimeChange = (selectedDates: { id: string; dateTime: string }[]) => {
-    setFormData(prev => ({
-      ...prev,
-      departureDates: selectedDates
-    }));
-  };
-
-  const handleMultiSelectChange = (name: string, selectedOptions: any[]) => {
-    const selectedValues = selectedOptions.map(option => option.value);
-    setFormData(prev => ({ ...prev, [name]: selectedValues }));
-  };
-
-  
-  const handleImageRemove = (index: number) => {
-    const removedImageUrl = imageUrls[index];
-  
-    // Xóa ảnh từ imageUrls
-    setImageUrls(prev => prev.filter((_, idx) => idx !== index));
-  
-    // Xóa ảnh từ thumbnail của formData
-    setFormData(prev => ({
-      ...prev,
-      thumbnail: prev.thumbnail.filter((url) => url !== removedImageUrl)
-    }));
-  
-    // Xóa ảnh từ files
-    setFiles(prev => prev.filter(file => file.preview !== removedImageUrl));
-  };
-  
   const handleUpload = async (): Promise<string[]> => {
     if (files.length === 0) {
       console.error("No files selected");
       return [];
     }
-  
-    // Lọc ra các ảnh chưa được tải lên
-    const newFiles = files.filter(file => !imageUrls.includes(file.preview));
-  
-    if (newFiles.length === 0) {
-      console.log("No new files to upload");
-      return [];
-    }
-  
-    const uploadPromises = newFiles.map(async (file) => {
+
+    const uploadPromises = files.map(async (file) => {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "homestays");
-  
+
       try {
         const response = await fetch(
-          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`, // Thay thế bằng cloud name của bạn
+          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
           {
             method: "POST",
             body: formData,
           }
         );
-  
+
         const result = await response.json();
         return result.secure_url;
       } catch (error) {
@@ -179,206 +286,246 @@ const Edit: React.FC = () => {
         return null;
       }
     });
-  
+
     const uploadedUrls = await Promise.all(uploadPromises);
     const newImageUrls = uploadedUrls.filter((url) => url !== null) as string[];
-  
-    // Cập nhật mảng imageUrls và formData.thumbnail
-    setImageUrls((prevUrls) => [...prevUrls, ...newImageUrls]);
-  
     return newImageUrls;
   };
-  
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      const selectedFiles = Array.from(e.target.files).map((file) => {
-        const preview = URL.createObjectURL(file);
-        return Object.assign(file, { preview });
-      });
-  
-      setFiles(prevFiles => [
-        ...prevFiles.filter(file => !selectedFiles.some(newFile => newFile.preview === file.preview)),
-        ...selectedFiles
-      ]);
-    }
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setToursInfo((prev) => ({ ...prev!, [name]: value }));
   };
-  
-  
-  const categoryOptions = categories.map((category) => ({
+
+  const handleDateTimeChange = (
+    selectedDates: { id: string; dateTime: string }[]
+  ) => {
+    setToursInfo((prev) => ({
+      ...prev!,
+      departureDates: selectedDates,
+    }));
+  };
+
+  const handleMultiSelectChange = (name: string, selectedOptions: any[]) => {
+    const selectedValues = selectedOptions.map((option) => option.value);
+    setToursInfo((prev) => ({ ...prev!, [name]: selectedValues }));
+  };
+
+  const categoryOptions = categories?.map((category) => ({
     value: category.categoryTourId,
     text: category.categoryTourName,
-    selected: formData.categoryTourId.includes(category.categoryTourId),
+    selected: false,
   }));
 
-  const themeOptions = themes.map((theme) => ({
+  const themeOptions = themes?.map((theme) => ({
     value: theme.themeTourId,
     text: theme.themeTourName,
-    selected: formData.themeTourId.includes(theme.themeTourId),
+    selected: false,
   }));
 
-  const suitableOptions = suitables.map((suitable) => ({
+  const suitableOptions = suitable?.map((suitable) => ({
     value: suitable.suitableTourId,
     text: suitable.suitableName,
-    selected: formData.suitableTourId.includes(suitable.suitableTourId),
+    selected: false,
   }));
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+  const handleCreate = async () => {
+    await handleUpload()
+      .then(async (data) => {
+        if (data) {
+          await updateData({
+            id: packageId,
+            endpoint: "tours/admin",
+            payload: {
+              ...toursInfo,
+              thumbnail: thumbnailUrl.length > 0 ? thumbnailUrl : data,
+            },
+          }).then((data) => {
+            router.push("/dashboard/manage/tours");
+          }).catch((error) => {
+            console.log(error);
+          });
 
-    try {
-      // First, ensure that images are uploaded
-      await handleUpload();
-
-      const response = await fetch(`http://localhost:8080/api/tours/admin/${id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...formData, thumbnail: imageUrls }),
+          
+        } else {
+          console.log("upload fail !!");
+        }
+      })
+      .catch((error) => {
+        console.log(error);
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update tour package");
-      }
-
-      alert("Tour package updated successfully!");
-      // router.push('/tour-packages');
-    } catch (ex) {
-      setError("Failed to update tour package. Please try again.");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
     <DefaultLayout>
-      <div className="flex flex-col gap-9">
+      <div className="flex flex-col gap-9 mb-5">
         <div className="rounded-[10px] border border-stroke bg-white shadow-1 dark:border-dark-3 dark:bg-gray-dark dark:shadow-card">
           <div className="border-b border-stroke py-4 px-7 dark:border-dark-3">
             <h3 className="font-medium text-black dark:text-white">
-              Edit Tour Package
+              Create Tour Package
             </h3>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-7">
-            <InputGroup
-              type="text"
-              name="title"
-              label="Title"
-              value={formData.title}
-              onChange={handleChange}
-            />
-
-            <InputGroup
-              type="number"
-              name="price"
-              label="Price"
-              value={formData.price}
-              onChange={handleChange}
-            />
-
-            <InputGroup
-              type="number"
-              name="pricereduce"
-              label="Price Reduce"
-              value={formData.pricereduce}
-              onChange={handleChange}
-            />
-
-            <InputGroup
-              type="text"
-              name="groupsize"
-              label="Group Size"
-              value={formData.groupsize}
-              onChange={handleChange}
-            />
-
-            <InputGroup
-              type="text"
-              name="deposit"
-              label="Deposit"
-              value={formData.deposit}
-              onChange={handleChange}
-            />
-
-            <InputGroup
-              type="text"
-              name="bookinghold"
-              label="Booking Hold"
-              value={formData.bookinghold}
-              onChange={handleChange}
-            />
-
-            <InputGroup
-              type="text"
-              name="bookingchange"
-              label="Booking Change"
-              value={formData.bookingchange}
-              onChange={handleChange}
-            />
-
-            <MultiSelect
-              id="categoryTours"
-              label="Category Tours"
-              placeholder="Select categories"
-              options={categoryOptions}
-              selectedOptions={formData.categoryTourId.map(id => ({ value: id, text: categories.find(c => c.categoryTourId === id)?.categoryTourName || "" }))}
-              onChange={(selectedOptions) => handleMultiSelectChange("categoryTourId", selectedOptions)}
-            />
-
-            <MultiSelect
-              id="themeTours"
-              label="Theme Tours"
-              placeholder="Select themes"
-              options={themeOptions}
-              selectedOptions={formData.themeTourId.map(id => ({ value: id, text: themes.find(t => t.themeTourId === id)?.themeTourName || "" }))}
-              onChange={(selectedOptions) => handleMultiSelectChange("themeTourId", selectedOptions)}
-            />
-
-            <MultiSelect
-              id="suitableTours"
-              label="Suitable Tours"
-              placeholder="Select suitable tours"
-              options={suitableOptions}
-              selectedOptions={formData.suitableTourId.map(id => ({ value: id, text: suitables.find(s => s.suitableTourId === id)?.suitableName || "" }))}
-              onChange={(selectedOptions) => handleMultiSelectChange("suitableTourId", selectedOptions)}
-            />
-
-            <DateTimePicker
-              id=""
-              placeholder=""
-              label="Departure Dates"
-              selectedDates={formData.departureDates}
-              onChange={handleDateTimeChange}
-            />
-        
-            <UploadFiles
-              files={files}
-              setFiles={setFiles}
-              handleUpload={handleUpload}
-              imageUrls={imageUrls}
-              setIsOpen={function (value: boolean): void {
-                throw new Error('Function not implemented.');
-              }} />
-
-
-            <div className="flex justify-end gap-4">
-              <button
-                type="submit"
-                className="inline-flex h-10 items-center justify-center rounded-lg bg-primary px-5 font-medium text-white transition hover:bg-opacity-90"
-                disabled={loading}
-              >
-                {loading ? "Saving..." : "Save"}
-              </button>
+          <div className="p-7">
+            <div className="flex items-center gap-5 mb-5">
+              <InputGroup
+                type="text"
+                placeholder=""
+                customClasses="w-2/3"
+                label="Title"
+                name="title"
+                value={toursInfo?.title}
+                onChange={handleChange}
+              />
+              <InputGroup
+                placeholder="number"
+                label="Price"
+                name="price"
+                customClasses="w-1/3"
+                type="number"
+                value={String(toursInfo?.price!)}
+                onChange={handleChange}
+              />
             </div>
-            {error && <p className="text-red-500 mt-2">{error}</p>}
-          </form>
+            <div className="flex items-center gap-5 mb-5">
+              <InputGroup
+                placeholder=""
+                label="Group Size"
+                name="groupsize"
+                type="number"
+                value={toursInfo?.groupsize}
+                onChange={handleChange}
+              />
+              <InputGroup
+                placeholder=""
+                label="Deposit"
+                name="deposit"
+                type="number"
+                value={toursInfo?.deposit}
+                onChange={handleChange}
+              />
+              <InputGroup
+                placeholder=""
+                label="Booking Hold"
+                name="bookinghold"
+                type="text"
+                value={toursInfo?.bookinghold}
+                onChange={handleChange}
+              />
+              <InputGroup
+                placeholder=""
+                label="Booking Change"
+                name="bookingchange"
+                type="text"
+                value={toursInfo?.bookingchange}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="flex items-center gap-5 mb-5">
+              <MultiSelect
+                label="Category Tour"
+                options={categoryOptions}
+                selectedOptions={toursInfo.categoryTourId.map((id) => ({
+                  value: id,
+                  text:
+                    categories.find(
+                      (category) => category.categoryTourId === id
+                    )?.categoryTourName || "",
+                }))}
+                onChange={(selectedOptions) =>
+                  handleMultiSelectChange("categoryTourId", selectedOptions)
+                }
+              />
+
+              <MultiSelect
+                label="Theme Tour"
+                id=""
+                placeholder=""
+                selectedOptions={toursInfo.themeTourId.map((id) => ({
+                  value: id,
+                  text:
+                    themes.find((theme) => theme.themeTourId === id)
+                      ?.themeTourName || "",
+                }))}
+                options={themeOptions}
+                onChange={(selectedOptions) =>
+                  handleMultiSelectChange("themeTourId", selectedOptions)
+                }
+              />
+              <MultiSelect
+                label="Suitable Tour"
+                selectedOptions={toursInfo.suitableTourId.map((id) => ({
+                  value: id,
+                  text:
+                    suitable.find((sui) => sui.suitableTourId === id)
+                      ?.suitableName || "",
+                }))}
+                options={suitableOptions}
+                onChange={(selectedOptions) =>
+                  handleMultiSelectChange("suitableTourId", selectedOptions)
+                }
+              />
+            </div>
+            <div className="flex gap-10 ">
+              <div className="w-1/2">
+                <DateTimePicker
+                  id=""
+                  placeholder=""
+                  label="Departure Dates"
+                  selectedDates={toursInfo?.departureDates || []}
+                  onChange={handleDateTimeChange}
+                />
+              </div>
+              <div className="w-1/2">
+                <UploadFiles
+                  files={files}
+                  setFiles={setFiles}
+                  handleUpload={handleUpload}
+                  imageUrls={[]}
+                  // imageUrls={imageUrls}
+                  setIsOpen={function (value: boolean): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
+              </div>
+            </div>
+
+            <button
+              className="flex w-full justify-center rounded-[7px] bg-primary p-[13px] font-medium text-white hover:bg-opacity-90"
+              onClick={() => {
+                // if (!toursInfo) {
+                setItinerary(true);
+                // }
+              }}
+            >
+              Continue
+            </button>
+          </div>
         </div>
       </div>
+
+      {isItinerary && (
+        <Itinerary
+          handleCreate={handleCreate}
+          days={days}
+          setDays={setDays}
+          transfers={transfers!}
+          places={places!}
+          accommodation={accommodation!}
+          meals={meals!}
+          setTransfers={setTransfers}
+          setPlaces={setPlaces}
+          setAccommodation={setAccommodation}
+          setMeals={setMeals}
+          toursInfo={toursInfo}
+          setToursInfo={setToursInfo}
+        />
+      )}
     </DefaultLayout>
   );
 };
 
-export default Edit;
+export default Update;
