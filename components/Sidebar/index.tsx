@@ -168,9 +168,12 @@ const menuGroups = [
         children: [
           { label: "Tours", route: "/dashboard/manage/tours" },
           { label: "Suitable", route: "/dashboard/manage/tours/suitable" },
-          { label: "Category", route: "/dashboard/manage/tours/category" },
+          { label: "Categories", route: "/dashboard/manage/tours/category" },
           { label: "Theme", route: "/dashboard/manage/tours/theme" },
-          { label: "Departure", route: "/dashboard/manage/tours/departure" },
+          { label: "Transfers", route: "/dashboard/manage/tours/transfers" },
+          { label: "Places", route: "/dashboard/manage/tours/places" },
+          { label: "Accommodation", route: "/dashboard/manage/tours/accommodation" },
+          { label: "Meals", route: "/dashboard/manage/tours/meals" },
         ],
       },
       {

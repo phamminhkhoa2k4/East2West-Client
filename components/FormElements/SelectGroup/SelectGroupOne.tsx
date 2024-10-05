@@ -79,33 +79,40 @@ import React from 'react';
 
 interface SelectGroupOneProps {
   label: string;
+  options: string[];
+  value: string;
+  name: string;
+  onChange: (value: React.ChangeEvent<HTMLSelectElement>) => void;
   placeholder: string;
-  
-  options: Option[];
-  value: number;
-  onChange: (value: number) => void;
 }
 
 const SelectGroupOne: React.FC<SelectGroupOneProps> = ({
   label,
-  placeholder,
   options = [],
   value,
-  onChange
+  onChange,
+  name,
+  placeholder
 }) => {
   return (
     <div className="w-full mb-4.5">
-      <label className="mb-3 block text-body-sm font-medium text-dark dark:text-white">{label}</label>
+      <label className="mb-3 block text-body-sm font-medium text-dark dark:text-white">
+        {label}
+      </label>
       <select
-        placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
+        name={name}
+        onChange={onChange}
         className="w-full rounded-[7px] border-[1.5px] border-stroke bg-transparent px-5.5 py-3 text-dark outline-none transition placeholder:text-dark-6 focus:border-primary dark:border-dark-3 dark:bg-dark-2 dark:text-white dark:focus:border-primary"
       >
-        <option value="" disabled></option>
+        <option value="" disabled className="text-[#9da3ae]">
+          {placeholder}
+        </option>
         {options.length > 0 ? (
-          options.map(option => (
-            <option key={option.id} value={option.id}>{option.name}</option>
+          options.map((option, index) => (
+            <option className="capitalize" key={index} value={option}>
+              {option}
+            </option>
           ))
         ) : (
           <option disabled>No options available</option>

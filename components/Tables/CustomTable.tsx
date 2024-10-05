@@ -1,5 +1,6 @@
 "use client"
 import Image from "next/image";
+import { IoMdCheckmark, IoMdClose } from "react-icons/io";
 import { Check } from "lucide-react";
 import {
   Popover,
@@ -49,15 +50,14 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
     const { toast } = useToast();
 
   useEffect(() => {
-    if (message){
-        toast({
-          title: message?.title,
-          description: message?.description,
-        });
-        setMessage(null);
+    if (message) {
+      toast({
+        title: message?.title,
+        description: message?.description,
+      });
+      setMessage(null);
     }
-      
-    },[message]);
+  }, [message]);
 
   const handleDelete = async (id : number) =>  {
     try{
@@ -79,7 +79,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
         >
           Create New
         </Link>
-        <div>
+        {/* <div>
           <Pagination>
             <PaginationContent>
               <PaginationItem>
@@ -104,7 +104,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
               </PaginationItem>
             </PaginationContent>
           </Pagination>
-        </div>
+        </div> */}
         <Popover>
           <PopoverTrigger asChild>
             <div className="px-5 py-2  rounded-lg flex items-center border-blue-500 border-2 bg-blue-500 text-white font-bold ">
@@ -171,28 +171,54 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
                     .filter((col) => visibleColumns.includes(col.key))
                     .map((col) => (
                       <td key={col.key} className="px-4 py-4">
-                        {col.key === "photo" ||
-                          (col.key === "thumbnail" && (
-                            <div className="h-20 w-25 rounded-md overflow-hidden">
-                              <Image
-                                src={String(row[col.key])}
-                                width={240}
-                                height={200}
-                                alt="Product"
-                                className="object-cover object-center w-full h-full"
-                              />
-                            </div>
-                          ))}
+                        {(col.key === "photo" ||
+                          col.key === "thumbnail" ||
+                          col.key === "transferthumbnail" ||
+                          col.key === "placethumbnail" ||
+                          (col.key === "mealthumbnail" &&
+                            row["mealactivity"] === "") ||
+                          col.key === "accommodationthumbnail") && (
+                          <div className="h-20 w-25 rounded-md overflow-hidden">
+                            <Image
+                              src={String(row[col.key])}
+                              width={240}
+                              height={200}
+                              alt="Product"
+                              className="object-cover object-center w-full h-full"
+                            />
+                          </div>
+                        )}
                         {col.key !== "approve" &&
                           col.key !== "photo" &&
-                          col.key !== "thumbnail" && (
-                            <div className="text-sm font-medium dark:text-dark-6 text-gray-900 w-[200px] line-clamp-2">
-                              {row[col.key] ?? ""}
+                          col.key !== "thumbnail" &&
+                          col.key !== "transferthumbnail" &&
+                          col.key !== "mealthumbnail" &&
+                          col.key !== "placethumbnail" &&
+                          col.key !== "accommodationthumbnail" &&
+                          col.key !== "itineraries" && (
+                            <div className="text-sm font-medium dark:text-dark-6 text-gray-900  line-clamp-2">
+                              {row[col.key]}
                             </div>
                           )}
                         {col.key === "approve" && (
                           <button className="px-4 py-2  rounded-xl font-bold dark:text-white border bg-blue-500">
                             {row[col.key] === "false" ? "Approve" : "Approved"}
+                          </button>
+                        )}
+
+                        {col.key === "isbreadkfast" && (
+                          <button className="px-4 py-2  rounded-full font-bold dark:text-white border bg-blue-500">
+                            {row[col.key] === false ? (
+                              <IoMdCheckmark className="h-5 w-5 text-white font-bold" />
+                            ) : (
+                              <IoMdClose className="h-5 w-5 text-white font-bold" />
+                            )}
+                          </button>
+                        )}
+
+                        {col.key === "itineraries" && (
+                          <button className="px-6 py-2  rounded-lg text-white font-bold dark:text-white border bg-blue-500">
+                           {row[col.key].length }<span className="pl-1">Day</span>
                           </button>
                         )}
                         {col.key === "action" && (
@@ -224,7 +250,11 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
                               </svg>
                             </Link> */}
                             <Link
-                              href={`${editUrl}/${row[columns[0].key]}`  ?? ""}
+                              href={
+                                editUrl && row[columns[0].key]
+                                  ? `${editUrl}/${row[columns[0].key]}`
+                                  : ""
+                              }
                               className="hover:text-primary"
                             >
                               <svg

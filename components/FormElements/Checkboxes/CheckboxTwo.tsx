@@ -4,9 +4,10 @@ interface CheckboxTwoProps {
   label: string; // Add label prop here
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  name?:string
 }
 
-const CheckboxTwo: React.FC<CheckboxTwoProps> = ({ label, checked, onChange }) => {
+const CheckboxTwo: React.FC<CheckboxTwoProps> = ({ label, checked, onChange ,name }) => {
   return (
     <div>
       <label
@@ -19,6 +20,7 @@ const CheckboxTwo: React.FC<CheckboxTwoProps> = ({ label, checked, onChange }) =
             id="checkboxLabelTwo"
             className="sr-only"
             checked={checked}
+            name={name}
             onChange={onChange}
           />
           <div
