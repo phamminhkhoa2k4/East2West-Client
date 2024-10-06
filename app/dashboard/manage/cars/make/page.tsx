@@ -46,6 +46,11 @@ const Makes = () => {
         data={data}
         title="Makes"
         createUrl="/dashboard/manage/cars/make/add"
+<<<<<<< HEAD
+=======
+        deleteUrl="/cars/makes/{id}"
+       
+>>>>>>> 7ec56dd (add delete fetch)
       />
       <div></div>
     </DefaultLayout>

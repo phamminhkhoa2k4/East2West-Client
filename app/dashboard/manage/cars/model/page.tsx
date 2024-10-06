@@ -48,6 +48,10 @@ const Models = () => {
         data={data}
         title="Models"
         createUrl="/dashboard/manage/cars/model/add"
+<<<<<<< HEAD
+=======
+        deleteUrl="cars/models/{id}"
+>>>>>>> 7ec56dd (add delete fetch)
       />
     </DefaultLayout>
   );

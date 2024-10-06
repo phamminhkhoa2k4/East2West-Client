@@ -24,7 +24,11 @@ interface RentalCarListProps {
 
 const RentalCarList: React.FC<RentalCarListProps> = ({ rentals }) => {
   const confirmRental = (rentalId: number) => {
+<<<<<<< HEAD
     fetch(`/api/confirmations/rental/${rentalId}/confirm`, {
+=======
+    fetch(`http://localhost:8080/api/confirmations/rental/${rentalId}/confirm`, {
+>>>>>>> 7ec56dd (add delete fetch)
       method: 'PUT',
     })
       .then((response) => response.json())

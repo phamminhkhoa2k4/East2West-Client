@@ -32,6 +32,10 @@ const Category = () => {
         data={data}
         title="Category"
         createUrl="/dashboard/manage/tours/category/add"
+<<<<<<< HEAD
+=======
+        deleteUrl="/tours/admin/category/{id}"
+>>>>>>> 7ec56dd (add delete fetch)
       />
     </DefaultLayout>
   );

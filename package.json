@@ -39,7 +39,11 @@
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.412.0",
     "multer": "^1.4.5-lts.1",
+<<<<<<< HEAD
     "next": "^14.2.5",
+=======
+    "next": "^14.2.14",
+>>>>>>> 7ec56dd (add delete fetch)
     "ol": "^10.0.0",
     "react": "^18",
     "react-apexcharts": "^1.4.1",

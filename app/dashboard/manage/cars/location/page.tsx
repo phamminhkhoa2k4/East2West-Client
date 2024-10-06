@@ -6,8 +6,13 @@ import { getData } from "@/utils/axios";
 import { Column  } from "@/types/table";
 
 const columns: Column[] = [
+<<<<<<< HEAD
   { key: "locationTypeId", label: "ID" },
   { key: "locationTypeName", label: "Location Type Name" },
+=======
+  { key: "locationtypeid", label: "ID" },
+  { key: "locationtypename", label: "Location Type Name" },
+>>>>>>> 7ec56dd (add delete fetch)
 ];
 
 interface LocationType {
@@ -48,6 +53,10 @@ const LocationTypes = () => {
         data={data}
         title="Location Types"
         createUrl="/dashboard/manage/cars/location/add"
+<<<<<<< HEAD
+=======
+        deleteUrl="/cars/locationtypes/{id}"
+>>>>>>> 7ec56dd (add delete fetch)
       />
     </DefaultLayout>
   );
