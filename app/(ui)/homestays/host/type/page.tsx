@@ -48,7 +48,8 @@ const Type = () => {
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="text-4xl font-semibold w-[630px]">
-          Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn?
+          {/* Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn? */}
+          Which of the following best describes your accommodation?
         </div>
         <div className="w-[630px] flex flex-col gap-5 my-5">
           <div
@@ -56,13 +57,17 @@ const Type = () => {
               setType("entire-house");
             }}
             className={`flex items-center justify-between ${
-              type === "entire-house" ? "border-2 border-[#666]" : "border"
+              type === "entire-house" ? "border-2 border-blue-500" : "border"
             }  rounded-lg p-6`}
           >
             <div className="flex flex-col gap-2">
-              <div className="text-lg font-medium">Toàn Bộ Nhà</div>
+              <div className="text-lg font-medium">
+                {/* Toàn Bộ Nhà */}
+                Whole House
+              </div>
               <div className="text-sm text-[#6a6a6a]">
-                Khách Được sử dụng riêng toàn bộ ở chổ này
+                {/* Khách Được sử dụng riêng toàn bộ ở chổ này */}
+                Customers can use the entire suite here.
               </div>
             </div>
             <IoHomeOutline className="w-11 h-11" />
@@ -72,14 +77,18 @@ const Type = () => {
               setType("single-room");
             }}
             className={`flex items-center justify-between ${
-              type === "single-room" ? "border-2 border-[#666]" : "border"
+              type === "single-room" ? "border-2 border-blue-500" : "border"
             }  rounded-lg p-6`}
           >
             <div className="flex flex-col gap-2">
-              <div className="text-lg font-medium">Một căn phòng</div>
+              <div className="text-lg font-medium">
+                {/* Một căn phòng */} A single room
+              </div>
               <div className="text-sm text-[#6a6a6a]">
-                Khách sẽ có phòng riêng trong một ngôi nhà và được sử dụng những
-                khu vực chung.
+                {/* Khách sẽ có phòng riêng trong một ngôi nhà và được sử dụng những
+                khu vực chung. */}
+                Guests will have their own room in a house and have access to
+                common areas.
               </div>
             </div>
             <LuDoorOpen className="w-11 h-11" />
@@ -89,14 +98,19 @@ const Type = () => {
               setType("common-room");
             }}
             className={`flex items-center justify-between ${
-              type === "common-room" ? "border-2 border-[#666]" : "border"
+              type === "common-room" ? "border-2 border-blue-500" : "border"
             }  rounded-lg p-6`}
           >
             <div className="flex flex-col gap-2">
-              <div className="text-lg font-medium">Phòng chung</div>
+              <div className="text-lg font-medium">
+                {/* Phòng chung */}
+                Shared room
+              </div>
               <div className="text-sm text-[#6a6a6a]">
-                Khách ngủ trong một phòng hoặc khu vực chung – nơi bạn hoặc
-                người khác có thể cùng sử dụng.
+                {/* Khách ngủ trong một phòng hoặc khu vực chung – nơi bạn hoặc
+                người khác có thể cùng sử dụng. */}
+                Guests sleep in a common room or area – which you or others can
+                share.
               </div>
             </div>
             <MdOutlineBedroomParent className="w-11 h-11" />
@@ -112,7 +126,10 @@ const Type = () => {
         </button>
         <button
           onClick={handleClick}
-          className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500"
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            type ? "" : "opacity-30 cursor-not-allowed"
+          }`}
+          disabled={!type}
         >
           Continue
         </button>

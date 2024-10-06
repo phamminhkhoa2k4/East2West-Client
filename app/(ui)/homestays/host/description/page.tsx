@@ -48,9 +48,10 @@ const Description = () => {
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="w-[640px]">
-          <div className="text-3xl font-medium py-5">Tạo phần mô tả</div>
+          <div className="text-3xl font-medium py-5">Create a description</div>
           <div className="text-lg font-medium text-[#666]">
-            Chia sẻ những điều tạo nên nét đặc biệt cho chỗ ở của bạn.
+            {/* Chia sẻ những điều tạo nên nét đặc biệt cho chỗ ở của bạn. */}
+            Create a description Share what makes your place special.
           </div>
         </div>
         <div className="w-[640px]  mt-5">
@@ -80,7 +81,7 @@ const Description = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            description.length === 0 ? "opacity-30" : ""
+            description.length === 0 ? "opacity-30 cursor-not-allowed" : ""
           }`}
         >
           Continue

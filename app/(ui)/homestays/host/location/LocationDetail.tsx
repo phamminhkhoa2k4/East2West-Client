@@ -40,22 +40,24 @@ const LocationDetail = ({
   return (
     <>
       <div className="text-[32px] font-medium w-[640px]">
-        Chỗ ở của bạn nằm ở đâu?
+        {/* Chỗ ở của bạn nằm ở đâu? */}
+        Where is your accommodation located?
       </div>
       <div className="text-lg text-[#6a6a6a] tracking-tight  w-[640px]">
-        Địa chỉ của bạn chỉ được chia sẻ với khách sau khi họ đặt phòng thành
-        công.
+        {/* Địa chỉ của bạn chỉ được chia sẻ với khách sau khi họ đặt phòng thành
+        công. */}
+        Your address is only shared with guests after they have successfully
+        booked.
       </div>
       <div className="w-[640px] relative h-[500px] mt-5">
-
         {position && <MapMove position={position} setPosition={setPosition} />}
         <div className={`absolute left-10 top-5 w-[566px]`}>
           <div className="relative">
-            <div className={`w-full h-full relative flex items-center bg-white rounded-3xl `}>
+            <div
+              className={`w-full h-full relative flex items-center bg-white rounded-3xl `}
+            >
               <IoLocationOutline className="ml-4 w-8 h-8" />
-              <div
-                className={`w-full h-full  p-4  `}
-              >{location}</div>
+              <div className={`w-full h-full  p-4  `}>{location}</div>
             </div>
           </div>
         </div>

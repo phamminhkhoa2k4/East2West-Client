@@ -78,6 +78,8 @@ const Location = () => {
     lat: number | undefined;
     lng: number | undefined;
   } | null>({ lat: state?.data.latitude, lng: state?.data.longitude });
+  console.log("positiion", position);
+
   const [positionConfirm, setPositionConfirm] = useState<{
     lat: number;
     lng: number;
@@ -119,6 +121,8 @@ const Location = () => {
   useEffect(() => {
     setPosition(positionConfirm ?? null);
   }, [positionConfirm]);
+
+  console.log("positiion1", position);
   useEffect(() => {
     if (error) {
       toast({
@@ -243,7 +247,7 @@ const Location = () => {
         </div>
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
-        {!position && (
+        {!position &&  (
           <LocationSearch
             position={position}
             setPosition={setPosition}
@@ -266,7 +270,7 @@ const Location = () => {
           />
         )}
       </div>
-      <div className=" bg-white border-t-4 flex fixed left-0 right-0 bottom-0 items-center justify-between">
+      <div className=" bg-white border-t-4 flex fixed z-99999 left-0 right-0 bottom-0 items-center justify-between">
         <button
           onClick={handleBack}
           className="px-5 py-3 my-5 ml-5 rounded-xl text-lg font-bold text-white bg-slate-400"
@@ -282,7 +286,7 @@ const Location = () => {
               location?.district != "" &&
               location?.street != ""
                 ? "opacity-100"
-                : "opacity-30"
+                : "opacity-30 cursor-not-allowed"
             }`}
           >
             Continue
@@ -297,7 +301,7 @@ const Location = () => {
               location?.district != "" &&
               location?.street != ""
                 ? "opacity-100"
-                : "opacity-30"
+                : "opacity-30 cursor-not-allowed"
             }`}
           >
             Continue

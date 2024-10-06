@@ -154,11 +154,8 @@ const Gallery = ({
           const [movedItem] = newOrder.splice(oldIndex, 1);
           newOrder.splice(newIndex, 0, movedItem);
 
-          // Update the imageUrls state with the new order
-          // Ensure to handle state update properly
-          // Example: setImageUrls(newOrder);
+ 
         },
-        // Disable sorting for placeholder elements to prevent layout shifts
         disabled: false,
         sort: true,
         // Keep placeholder visible
@@ -173,8 +170,14 @@ const Gallery = ({
       <div>
         <div className="flex items-center justify-between my-5">
           <div className="flex flex-col">
-            <div className="text-2xl font-medium">Chọn ít nhất 5 bức ảnh</div>
-            <div className="text-base text-[#6a6a6a]">Kéo để sắp xếp lại</div>
+            <div className="text-2xl font-medium">
+              {/* Chọn ít nhất 5 bức ảnh */}
+              Select at least 5 photos
+            </div>
+            <div className="text-base text-[#6a6a6a]">
+              {/* Kéo để sắp xếp lại */}
+              Drag to rearrange
+            </div>
           </div>
           <div>
             <Dialog open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
@@ -238,7 +241,10 @@ const Gallery = ({
           >
             <div className="flex flex-col gap-3 justify-center items-center">
               <GoPlus className="h-10 w-10 text-[#6a6a6a]" />
-              <span className="text-[#6a6a6a]">Thêm ảnh</span>
+              <span className="text-[#6a6a6a]">
+                {/* Thêm ảnh */}
+                Add Photos
+                </span>
             </div>
           </div>
         </div>

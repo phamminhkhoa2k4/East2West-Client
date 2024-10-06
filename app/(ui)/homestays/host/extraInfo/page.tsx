@@ -49,10 +49,12 @@ const ExtraInfo = () => {
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="w-[640px]">
           <div className="text-3xl font-medium py-5">
-            Tạo phần thông tin bổ sung
+            {/* Tạo phần thông tin bổ sung */}
+            Create additional information section
           </div>
           <div className="text-lg font-medium text-[#666]">
-            Ghi chú các phần thông tin bổ sung của bạn
+            {/* Ghi chú các phần thông tin bổ sung của bạn */}
+            Make notes of your additional information
           </div>
         </div>
         <div className="w-[640px]  mt-5">
@@ -82,7 +84,7 @@ const ExtraInfo = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            extraInfo.length === 0 ? "opacity-30" : ""
+            extraInfo.length === 0 ? "opacity-30 cursor-not-allowed" : ""
           }`}
         >
           Continue

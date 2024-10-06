@@ -67,7 +67,7 @@ console.log(structure);
       <div className="p-[-1rem] overflow-hidden  rounded-2xl border">
         <div className="mx-5 flex items-center justify-between py-5">
           <IoMdClose className="h-5 w-5" onClick={() => onClose(false)} />
-          <div className="font-bold text-[#222]">Bản Xem Trước Đầy Đủ</div>
+          <div className="font-bold text-[#222]">Full Preview</div>
           <div></div>
         </div>
         <div className="border-t pt-10">
@@ -88,7 +88,7 @@ console.log(structure);
               <div className="mt-5 flex items-center justify-between">
                 <div>
                   <div className="text-[22px] font-medium text-[#222]">
-                    {host?.data.type} trong {structure?.structurename}
+                    {host?.data.type} in {structure?.structurename}
                   </div>
                   <div className="text-[22px] font-medium text-[#222]">
                     chu nha {user?.username}
@@ -105,18 +105,19 @@ console.log(structure);
                 </div>
               </div>
               <div className="mt-5 flex items-center">
-                <span className="text-[#666]">{host?.data.maxGuest} Khach</span>
-                , <span className="text-[#666]">1 Giuong</span> ,{" "}
-                <span className="text-[#666]">1 Phong Tam</span> ,
+                <span className="text-[#666]">{host?.data.maxGuest} Guest</span>,
+                <span className="text-[#666]">1 Room</span> , {" "}
+                <span className="text-[#666]">1 Bed</span> ,{" "}
+                <span className="text-[#666]">1 Bathroom</span>
               </div>
               <hr className="my-10" />
-              <div className="font-medium">Mo ta</div>
+              <div className="font-medium">Description</div>
               <div className="text-[#666] pt-5">{host?.data.description}</div>
               <hr className="my-10" />
-              <div className="font-medium">Thong tin bo sung</div>
+              <div className="font-medium">Extra Information</div>
               <div className="text-[#666] pt-5">{host?.data.extraInfo}</div>
               <hr className="my-10" />
-              <div className="font-medium">Tien Nghi</div>
+              <div className="font-medium">Amenities</div>
               {amenities.map((amenity) => (
                 <div
                   key={amenity.amenitiesid}
@@ -143,7 +144,7 @@ console.log(structure);
               ))}
 
               <hr className="my-10" />
-              <div className="font-medium">Vi Tri</div>
+              <div className="font-medium">Location</div>
               <div className="flex items-center gap-2 pt-5">
                 <FaLocationDot className="text-[#6a6a6a] h-4 w-4" />
                 <div className="text-[#6a6a6a]">

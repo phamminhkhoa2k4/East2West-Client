@@ -1,6 +1,7 @@
 "use client"
 import SearchMap from "@/components/homestay/SearchMap";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 const Map = dynamic(() => import("@/components/homestay/Map"), {
   ssr: false,
 });
@@ -35,15 +36,26 @@ const LocationSearch = ({ position, setPosition , setLocation }: LocationSearchP
   return (
     <>
       <div className="text-[32px] font-medium w-[640px]">
-        Chỗ ở của bạn nằm ở đâu?
+        {/* Chỗ ở của bạn nằm ở đâu? */}
+        Where is your accommodation located?
       </div>
       <div className="text-lg text-[#6a6a6a] tracking-tight  w-[640px]">
-        Địa chỉ của bạn chỉ được chia sẻ với khách sau khi họ đặt phòng thành
-        công.
+        {/* Địa chỉ của bạn chỉ được chia sẻ với khách sau khi họ đặt phòng thành
+        công. */}
+        Your address is only shared with guests after they have successfully
+        booked.
       </div>
       <div className="w-[640px] relative h-[500px] mt-5">
         {!position && (
-          <div className="rounded-3xl bg-[url('/boat.png')] w-full h-full"></div>
+          <div className="rounded-3xl overflow-hidden w-full h-full">
+            <Image
+              src={"/host/vietnam.png"}
+              alt=""
+              height={400}
+              width={400}
+              className="w-full h-full object-center object-cover"
+            />
+          </div>
         )}
         {position && <Map lat={position.lat} lng={position.lng} />}
         <SearchMap onSelect={handleSelect} setLocation={setLocation} />

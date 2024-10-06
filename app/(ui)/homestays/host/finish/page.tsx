@@ -35,21 +35,29 @@ const Finish = () => {
 
           <div className="flex gap-5 items-center justify-center pb-11">
             <div className="flex flex-col w-[585px] gap-1">
-              <div className="text-lg font-medium">Bước 3</div>
-              <div className="text-5xl font-medium">Hoàn thiện và đăng</div>
+              <div className="text-lg font-medium">Step 3</div>
+              <div className="text-5xl font-medium">Complete and post</div>
               <div className="text-lg font-normal text-[#222]">
-                Cuối cùng, bạn sẽ chọn cài đặt đặt phòng, thiết lập giá và đăng
-                mục cho thuê.
+                {/* Cuối cùng, bạn sẽ chọn cài đặt đặt phòng, thiết lập giá và đăng
+                mục cho thuê. */}
+                Finally, you'll choose your booking settings, set your prices,
+                and post your listing.
               </div>
             </div>
-            <div className="w-[568px] h-[498px]">
-              <Image
+            <div className="w-[568px] h-[498px] relative">
+              {/* <Image
                 src={"/boat.png"}
                 alt=""
                 height={500}
                 width={500}
                 className="object-center object-cover w-full h-full"
-              />
+              /> */}
+              <video className="w-full h-full absolute" autoPlay muted>
+                <source
+                  src="https://stream.media.muscache.com/KeNKUpa01dRaT5g00SSBV95FqXYkqf01DJdzn01F1aT00vCI.mp4?v_q=high"
+                  type="video/mp4"
+                />
+              </video>
             </div>
           </div>
         </div>

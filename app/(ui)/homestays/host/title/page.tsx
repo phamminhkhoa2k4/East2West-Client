@@ -47,11 +47,14 @@ const Title = () => {
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="w-[640px]">
           <div className="text-3xl font-medium py-5">
-            Bây giờ, hãy đặt tiêu đề cho chỗ ở thuộc danh mục nhà của bạn
+            {/* Bây giờ, hãy đặt tiêu đề cho chỗ ở thuộc danh mục nhà của bạn */}
+            Now, give your home category property a title.
           </div>
           <div className="text-lg font-medium text-[#666]">
-            Tiêu đề ngắn cho hiệu quả tốt nhất. Đừng lo lắng, bạn luôn có thể
-            thay đổi tiêu đề sau.
+            {/* Tiêu đề ngắn cho hiệu quả tốt nhất. Đừng lo lắng, bạn luôn có thể
+            thay đổi tiêu đề sau. */}
+            Short titles work best. Don't worry, you can always change the title
+            later.
           </div>
         </div>
         <div className="w-[640px]  mt-5">
@@ -79,7 +82,7 @@ const Title = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            title.length === 0 ? "opacity-30" : ""
+            title.length === 0 ? "opacity-30 cursor-not-allowed" : ""
           }`}
         >
           Continue

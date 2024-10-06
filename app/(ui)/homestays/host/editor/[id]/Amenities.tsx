@@ -15,7 +15,7 @@ type AmenitiesParams = {
 
 const Amenities = ({ homestay , setReload }: AmenitiesParams) => {
   const [amenities, setAmenities] = useState<AmenitiesType[] | null>();
-  const [checkAmenities, setCheckAmenities] = useState<number[]>([...homestay?.perkIds]);
+  const [checkAmenities, setCheckAmenities] = useState<number[]>(homestay?.perkIds);
 
   const toggleAmenity = (id: number) => {
     setCheckAmenities((prev) =>

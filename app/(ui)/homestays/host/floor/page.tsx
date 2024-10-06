@@ -8,11 +8,11 @@ import Image from "next/image";
 const Floor = () => {
   const { state, setState } = useHostContext();
   const [countMaxGuest, setCountMaxGuest] = useState<number | undefined>(
-    state?.data.maxGuest ?? 0
+    state?.data.maxGuest ?? 1
   );
-  const [countRoom, SetCountRoom] = useState<number | undefined>(state?.data.room ?? 0);
-  const [countBed, SetCountBed] = useState<number | undefined>(state?.data.beds ?? 0);
-  const [countBathroom, SetCountBathroom] = useState<number | undefined>(state?.data.bathroom ?? 0);
+  const [countRoom, SetCountRoom] = useState<number | undefined>(state?.data.room ?? 1);
+  const [countBed, SetCountBed] = useState<number | undefined>(state?.data.beds ?? 1);
+  const [countBathroom, SetCountBathroom] = useState<number | undefined>(state?.data.bathroom ?? 1);
   const router = useRouter();
   const handleClick = () => {
     if (countMaxGuest! > 0 && countBed! > 0 ) {
@@ -55,16 +55,18 @@ const Floor = () => {
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="text-4xl font-semibold w-[630px]">
-          Hãy bắt đầu từ những điều cơ bản
+          {/* Hãy bắt đầu từ những điều cơ bản */}
+          Let's start with the basics
         </div>
         <div className="w-[630px]  text-lg font-semibold">
-          Bao nhiêu người có thể ở tại đây?
+          {/* Bao nhiêu người có thể ở tại đây? */}
+          How many people can stay here?
         </div>
         <div className="w-[630px]  mt-5 ">
           <div className="bg-white w-full py-4 px-10 border rounded-2xl shadow-md">
             <div className="flex items-center w-full justify-between py-6 border-b-2">
               <div>
-                <h3 className="font-medium text-lg">Khách</h3>
+                <h3 className="font-medium text-lg">Guest</h3>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -113,7 +115,7 @@ const Floor = () => {
             {state?.data.type === "entire-house" && (
               <div className="flex items-center w-full justify-between py-6 border-b-2">
                 <div>
-                  <h3 className="font-medium text-lg">Phòng Ngủ</h3>
+                  <h3 className="font-medium text-lg">Bedroom</h3>
                 </div>
                 <div className="flex items-center gap-3">
                   <button
@@ -165,7 +167,7 @@ const Floor = () => {
 
             <div className="flex items-center w-full justify-between py-6 border-b-2">
               <div>
-                <h3 className="font-medium text-lg">Phòng Tắm</h3>
+                <h3 className="font-medium text-lg">Bathroom</h3>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -215,7 +217,7 @@ const Floor = () => {
             </div>
             <div className="flex items-center w-full justify-between py-6 ">
               <div>
-                <h3 className="font-medium text-lg">Giường</h3>
+                <h3 className="font-medium text-lg">Bed</h3>
               </div>
               <div className="flex items-center gap-3">
                 <button
@@ -276,9 +278,9 @@ const Floor = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0
+            countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0 && countBathroom! > 0
               ? "opacity-100"
-              : "opacity-30"
+              : "opacity-30 cursor-not-allowed"
           }`}
         >
           Continue

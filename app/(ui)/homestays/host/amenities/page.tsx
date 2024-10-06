@@ -81,10 +81,12 @@ const Amenities = () => {
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="text-4xl font-semibold w-[640px]">
-          Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn?
+          {/* Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn? */}
+          Which of the following best describes your accommodation?
         </div>
         <div className="text-[#666] py-5 text-left">
-          Bạn có thể thêm tiện nghi sau khi đăng mục cho thuê.
+          {/* Bạn có thể thêm tiện nghi sau khi đăng mục cho thuê. */}
+          You can add amenities after posting your listing.
         </div>
         <div className="w-[630px] grid grid-cols-3 gap-5 my-5 ">
           {amenities?.map((amenity) => (
@@ -113,7 +115,7 @@ const Amenities = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            checkAmenities.length == 0 ? "opacity-30" : ""
+            checkAmenities.length == 0 ? "opacity-30 cursor-not-allowed" : ""
           }`}
         >
           Continue

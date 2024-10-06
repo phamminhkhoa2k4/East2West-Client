@@ -36,25 +36,33 @@ const Place = () => {
 
           <div className="flex gap-5 items-center justify-center pb-11">
             <div className="flex flex-col w-[585px] gap-1">
-              <div className="text-lg font-medium">Bước 1</div>
+              <div className="text-lg font-medium">Step 1</div>
               <div className="text-5xl font-medium">
-                Chia sẻ thông tin về chỗ ở của bạn cho chúng tôi
+                {/* Chia sẻ thông tin về chỗ ở của bạn cho chúng tôi */}
+                Share your accommodation information with us
               </div>
               <div className="text-lg font-normal text-[#222]">
-                Trong bước này, chúng tôi sẽ hỏi xem bạn cho thuê loại chỗ ở nào
+                {/* Trong bước này, chúng tôi sẽ hỏi xem bạn cho thuê loại chỗ ở nào
                 và bạn muốn cho khách đặt toàn bộ nhà hay chỉ một phòng cụ thể.
                 Sau đó, hãy cho chúng tôi biết vị trí và số lượng khách có thể ở
-                tại đó.
+                tại đó. */}
+                In this step, we will ask what type of accommodation you are
+                renting out and whether you want guests to book the entire house
+                or just a specific room. Then, tell us the location and how many
+                guests can stay there.
               </div>
             </div>
-            <div className="w-[568px] h-[498px]">
-              <Image
+            <div className="w-[568px] h-[498px] overflow-hidden relative">
+              {/* <Image
                 src={"/boat.png"}
                 alt=""
                 height={500}
                 width={500}
                 className="object-center object-cover w-full h-full"
-              />
+              /> */}
+              <video className="w-full h-full absolute" autoPlay muted>
+                <source src="https://stream.media.muscache.com/zFaydEaihX6LP01x8TSCl76WHblb01Z01RrFELxyCXoNek.mp4?v_q=high" type="video/mp4" />
+              </video>
             </div>
           </div>
         </div>

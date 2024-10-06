@@ -71,7 +71,7 @@ const Receipt = () => {
       data: {
         ...state?.data!,
         isApproved: false,
-        userId: user?.userId!,
+        userId: user?.userId! ?? 1,
         geom: "",
         homestayid: 0,
         availability: [],
@@ -169,20 +169,23 @@ const Receipt = () => {
           </div>
         </div>
         <div className="flex flex-col items-center justify-center mt-36 mb-30">
-          <div className="w-[900px]">
+          <div className="w-[600px]">
             <div className="text-[48px] font-medium py-5">
-              Xem lại mục cho thuê của bạn
+              {/* Xem lại mục cho thuê của bạn */}
+              Review your rental listings
             </div>
             <div className="text-lg font-medium text-[#6a6a6a]">
-              Dưới đây là những thông tin mà chúng tôi sẽ hiển thị cho khách.
-              Hãy đảm bảo mọi thứ đều ổn thỏa.
+              {/* Dưới đây là những thông tin mà chúng tôi sẽ hiển thị cho khách.
+              Hãy đảm bảo mọi thứ đều ổn thỏa. */}
+              Here is the information we will display to guests. Make sure
+              everything is in order.
             </div>
           </div>
           <Dialog open={isOpen} onOpenChange={(e) => setIsOpen(e)}>
             <DialogTrigger asChild>
               <div className="relative flex gap-10 w-[450px] mt-10">
                 <div className="absolute left-10 top-8 rounded-md px-4 py-0.5 bg-white text-[#222] font-semibold">
-                  display preview
+                  Display preview
                 </div>
                 <div className="border shadow-md rounded-xl overflow-hidden p-4">
                   <div className="rounded-xl overflow-hidden w-full h-96">
@@ -195,14 +198,14 @@ const Receipt = () => {
                     />
                   </div>
                   <div className="flex items-center justify-between pt-2">
-                    <div className="text-[14px] font-medium">name</div>
+                    <div className="text-[14px] font-medium">{state?.data.title}</div>
                     <div className="flex items-center gap-2">
-                      <div>new</div>
+                      <div>New</div>
                       <IoStar />
                     </div>
                   </div>
                   <div className="pt-2 text-[14px]">
-                    $ <span className="font-bold text-[#222]">18</span> Night
+                    $ <span className="font-bold text-[#222]">{state?.data.pricePerNight}</span>/Night
                   </div>
                 </div>
               </div>

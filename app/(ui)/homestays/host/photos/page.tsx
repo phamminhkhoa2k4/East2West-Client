@@ -107,11 +107,14 @@ const Photos = () => {
           <>
             <div className="w-[640px]">
               <div className="text-3xl font-medium py-5">
-                Bổ sung một số bức ảnh chụp chỗ ở thuộc danh mục nhà của bạn
+                {/* Bổ sung một số bức ảnh chụp chỗ ở thuộc danh mục nhà của bạn */}
+                Add some photos of your property in your home category
               </div>
               <div className="text-lg font-medium text-[#666]">
-                Bạn sẽ cần 5 bức ảnh để bắt đầu. Về sau, bạn vẫn có thể đăng
-                thêm hoặc thay đổi ảnh.
+                {/* Bạn sẽ cần 5 bức ảnh để bắt đầu. Về sau, bạn vẫn có thể đăng
+                thêm hoặc thay đổi ảnh. */}
+                You will need 5 photos to start. You can always add or change
+                photos later.
               </div>
             </div>
             <div className="w-[640px]  mt-5">
@@ -147,7 +150,7 @@ const Photos = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            imageUrls.length < 5 ? "opacity-30" : ""
+            imageUrls.length < 5 ? "opacity-30 cursor-not-allowed" : ""
           }`}
         >
           Continue

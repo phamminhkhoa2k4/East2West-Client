@@ -71,11 +71,11 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
       <div className="flex justify-between items-center ">
         <IoCloseSharp className="h-5 w-5" onClick={() => setIsOpen(false)} />
         <div className=" flex flex-col justify-center items-center pb-5">
-          <div className="text-base font-medium">Tải ảnh lên</div>
+          <div className="text-base font-medium">Upload photo</div>
           <div className="text-xs text-[#6a6a6a6a]">
             {files.length === 0
-              ? "Chưa có mục nào được chọn"
-              : `Đã chọn ${files.length} mục`}
+              ? "No items selected yet"
+              : `${files.length} items selected`}
           </div>
         </div>
         <FaPlus className="h-5 w-5" onClick={handlePlusClick} />
@@ -168,7 +168,7 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
       <div className="flex items-center justify-end">
         <button
           className={`px-5 py-3 rounded-lg bg-blue-500 text-white text-lg font-semibold ${
-            files.length === 0 ? "opacity-30" : ""
+            files.length === 0 ? "opacity-30 cursor-not-allowed" : ""
           }`}
           onClick={() => {
             if (files.length > 0) {

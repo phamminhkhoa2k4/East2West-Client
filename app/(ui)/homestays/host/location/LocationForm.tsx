@@ -168,47 +168,54 @@ const LocationForm = ({
   return (
     <>
       <div className="text-[32px] font-medium w-[640px]">
-        Xác nhận địa chỉ của bạn
+        {/* Xác nhận địa chỉ của bạn */}
+        Confirm your address
       </div>
       <div className="text-lg text-[#6a6a6a] tracking-tight  w-[640px]">
-        Địa chỉ của bạn chỉ được chia sẻ với khách sau khi họ đặt phòng thành
-        công.
+        {/* Địa chỉ của bạn chỉ được chia sẻ với khách sau khi họ đặt phòng thành
+        công. */}
+        Your address is only shared with guests after they have successfully
+        booked.
       </div>
 
       <div className="w-[640px] mt-5 pb-5 border-b-2">
         <SelectGroupTwo
-          label="Quoc Gia"
+          label="Nation"
           value={country}
           onChange={(e) => setCountry(e.target.value)}
         />
         <InputGroup
-          label="Địa Chỉ Đường/Phố"
+          // label="Địa Chỉ Đường/Phố"
+          label="Street Address"
           type="text"
-          placeholder="Please Enter Title !"
+          placeholder="Please Enter Street Address !"
           customClasses="w-full mb-4.5 mt-5"
           onChange={(e) => setStreet(e.target.value)}
           value={street}
         />
         <InputGroup
-          label="Phường/Xã/Thị Trấn"
+          // label="Phường/Xã/Thị Trấn"
+          label="Ward/Commune/Town"
           type="text"
-          placeholder="Please Enter Title !"
+          placeholder="Please Enter Ward/Commune/Town !"
           customClasses="w-full mb-4.5"
           onChange={(e) => setDistrict(e.target.value)}
           value={district}
         />
         <InputGroup
-          label="Quận/Thị Xã/Thành Phố/Huyện"
+          label="District/Town/City/County"
+          // label="Quận/Thị Xã/Thành Phố/Huyện"
           type="text"
-          placeholder="Please Enter Title !"
+          placeholder="Please Enter District/Town/City/County !"
           customClasses="w-full mb-4.5"
           onChange={(e) => setCity(e.target.value)}
           value={city}
         />
         <InputGroup
-          label="Tỉnh/Đô Thị"
+          label="Province/Municipality"
+          // label="Tỉnh/Đô Thị"
           type="text"
-          placeholder="Please Enter Title !"
+          placeholder="Please Enter Province/Municipality !"
           customClasses="w-full mb-4.5"
           onChange={(e) => setCounty(e.target.value)}
           value={county}
@@ -217,15 +224,18 @@ const LocationForm = ({
       <div className="flex items-center justify-between w-[640px] py-5">
         <div>
           <div className="text-base font-medium">
-            Hiển thị vị trí chính xác của bạn
+            {/* Hiển thị vị trí chính xác của bạn */}
+            Show your exact location
           </div>
           <div className="text-sm font-medium text-[#666]">
-            Chỉ rõ cho khách vị trí chỗ ở của bạn. Chúng tôi sẽ chỉ chia sẻ địa
-            chỉ của bạn sau khi khách đặt phòng thành công
+            {/* Chỉ rõ cho khách vị trí chỗ ở của bạn. Chúng tôi sẽ chỉ chia sẻ địa
+            chỉ của bạn sau khi khách đặt phòng thành công */}
+            Show guests where your property is located. We will only share your
+            address after a booking has been made.
           </div>
         </div>
         <div>
-          <label className="inline-flex items-start  cursor-pointer">
+          {/* <label className="inline-flex items-start  cursor-pointer">
             <input
               type="checkbox"
               checked={isZoomed}
@@ -233,7 +243,7 @@ const LocationForm = ({
               onChange={(e) => setIsZoomed(e.target.checked)}
             />
             <div className="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700 peer-focus:ring-4 peer-focus:ring-teal-300 dark:peer-focus:ring-teal-800 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-teal-600"></div>
-          </label>
+          </label> */}
         </div>
       </div>
       <div className="w-[640px] overflow-hidden h-[400px] flex items-center justify-center  rounded-2xl mb-90">

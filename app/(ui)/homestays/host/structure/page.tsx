@@ -72,7 +72,8 @@ const Structure = () => {
       </div>
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="text-4xl font-semibold w-[630px]">
-          Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn?
+          {/* Điều nào sau đây mô tả chính xác nhất về chỗ ở của bạn? */}
+          Which of the following best describes your accommodation?
         </div>
         <div className={`w-[630px] grid grid-cols-3 gap-5 my-5`}>
           {structures?.map((struct) => (
@@ -81,7 +82,7 @@ const Structure = () => {
               key={struct.structureid}
               className={`flex flex-col p-5  ${
                 structure === struct.structureid
-                  ? "border-4 border-[#666]"
+                  ? "border-2 border-blue-500"
                   : "border-2"
               } rounded-lg`}
             >
@@ -100,7 +101,10 @@ const Structure = () => {
         </button>
         <button
           onClick={handleClick}
-          className="px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500"
+          className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
+            structure ? "" : "opacity-30 cursor-not-allowed"
+          }`}
+          disabled={!structure}
         >
           Continue
         </button>

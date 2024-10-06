@@ -35,24 +35,34 @@ const Standout = () => {
 
           <div className="flex gap-5 items-center justify-center pb-11">
             <div className="flex flex-col w-[585px] gap-1">
-              <div className="text-lg font-medium">Bước 2</div>
+              <div className="text-lg font-medium">Step 2</div>
               <div className="text-5xl font-medium">
-                Làm cho chỗ ở của bạn trở nên nổi bật
+                {/* Làm cho chỗ ở của bạn trở nên nổi bật */}
+                Make your property stand out
               </div>
               <div className="text-lg font-normal text-[#222]">
-                Ở bước này, bạn sẽ thêm một số tiện nghi được cung cấp tại chỗ ở
+                {/* Ở bước này, bạn sẽ thêm một số tiện nghi được cung cấp tại chỗ ở
                 của bạn, cùng với 5 bức ảnh trở lên. Sau đó, bạn sẽ soạn tiêu đề
-                và nội dung mô tả.
+                và nội dung mô tả. */}
+                In this step, you will add some of the amenities offered at your
+                property, along with 5 or more photos. Then, you will write a
+                title and description.
               </div>
             </div>
-            <div className="w-[568px] h-[498px]">
-              <Image
+            <div className="w-[568px] h-[498px] relative">
+              {/* <Image
                 src={"/boat.png"}
                 alt=""
                 height={500}
                 width={500}
                 className="object-center object-cover w-full h-full"
-              />
+              /> */}
+              <video className="w-full h-full absolute" autoPlay muted>
+                <source
+                  src="https://stream.media.muscache.com/H0101WTUG2qWbyFhy02jlOggSkpsM9H02VOWN52g02oxhDVM.mp4?v_q=high"
+                  type="video/mp4"
+                />
+              </video>
             </div>
           </div>
         </div>
