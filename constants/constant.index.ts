@@ -53,35 +53,35 @@ export const NAV_LINKS = [
 
 
 
-// FEATURES SECTION
+
 export const FEATURES = [
   {
-    title: 'Booking Tours In Website',
-    icon: '/map.svg',
-    variant: 'green',
+    title: "Booking Tours In Website",
+    icon: "/map.svg",
+    variant: "green",
     description:
-      'We provide a solution for you to be able to use our application when climbing, yes offline maps you can use at any time there is no signal at the location',
+      "We provide a solution that helps you use our website when you are on tour. You can easily access our information and services at any time.",
   },
   {
-    title: 'Rental Cars In Website',
-    icon: '/calendar.svg',
-    variant: 'green',
+    title: "Rental Cars In Website",
+    icon: "/calendar.svg",
+    variant: "green",
     description:
-      "Schedule an adventure with friends. On holidays, there are many interesting offers from Hilink. That way, there's no more discussion",
+      "You can easily access our information and services at any time",
   },
   {
-    title: 'Order Ticket Flight In Website',
-    icon: '/tech.svg',
-    variant: 'green',
+    title: "Search Flights And Hotels In Website",
+    icon: "/tech.svg",
+    variant: "green",
     description:
-      'Technology uses augmented reality as a guide to your hiking trail in the forest to the top of the mountain. Already supported by the latest technology without an internet connection',
+      "Chúng tôi cung cấp giải pháp giúp bạn sử dụng ứng dụng của chúng tôi để tìm kiếm máy bay và khách sạn. Bạn có thể dễ dàng truy cập thông tin và dịch vụ của chúng tôi bất cứ lúc nào",
   },
   {
-    title: 'Bookings Homestay In Website',
-    icon: '/location.svg',
-    variant: 'orange',
+    title: "Bookings Homestay In Website",
+    icon: "/location.svg",
+    variant: "orange",
     description:
-      'Lots of new locations every month, because we have a worldwide community of climbers who share their best experiences with climbing',
+      "We provide homestays brokerage services, helping you find ideal places to stay with cozy, comfortable spaces and unique experiences on every trip.",
   },
 ];
 
