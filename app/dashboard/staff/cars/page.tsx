@@ -4,6 +4,7 @@ import SearchForm from "@/components/Header/SearchForm";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import StaffTable from "@/components/Tables/StaffTable";
 import { DataRow } from "@/types/table";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 const columns = [
   { key: "thumbnail", label: "Thumbnail" },
@@ -22,6 +23,7 @@ const columns = [
   { key: "fuelTankCapacity", label: "Fuel Tank Capacity" },
   { key: "fuel", label: "Fuel" },
   { key: "location", label: "Location" },
+  { key: "action", label: "Action" },
 ];
 
 interface Car {
@@ -53,7 +55,7 @@ interface Car {
   fueltankcapacity?: string | null;
   fuel?: string | null;
   location?: string | null;
-  imageUrl?: string;
+  thumbnail: string[];
 }
 
 interface CarTableData extends DataRow {
@@ -73,8 +75,10 @@ interface CarTableData extends DataRow {
   fuelTankCapacity: string;
   fuel: string;
   airConditioned: string;
+  action: string;
 }
 const Staff = () => {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [data, setData] = useState<CarTableData[]>([]);
 
@@ -83,9 +87,9 @@ const Staff = () => {
       const response = await fetch(
         `http://localhost:8080/api/cars${query ? `/search/name?name=${query}` : ""}`
       );
-      const result: Car[] = await response.json();
+      const result = await response.json();
       const formattedData = result.map((car: Car) => ({
-        thumbnail: car.imageUrl || "/car_thumbnail.png",
+        thumbnail: car.thumbnail[0],
         carName: car.carName,
         make: car.make?.makeName || "Unknown",
         model: car.model?.modelName || "Unknown",
@@ -101,6 +105,16 @@ const Staff = () => {
         fuelTankCapacity: car.fueltankcapacity || "Unknown",
         fuel: car.fuel || "Unknown",
         location: car.location || "Not Specified",
+        action: (
+          <button
+            className="bg-primary text-white py-1 px-3 rounded"
+            onClick={() =>
+              router.push(`/dashboard/staff/cars/rental/${car.carId}`)
+            } // Navigate to RentalStaff with tour id
+          >
+            Book
+          </button>
+        ),
       }));
       setData(formattedData);
     } catch (error) {

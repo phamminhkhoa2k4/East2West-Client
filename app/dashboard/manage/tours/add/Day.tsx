@@ -1,252 +1,260 @@
 import {
   Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import CardItinerary from "@/components/tour/CardItinerary";
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import TransferInfo from "@/components/tour/TransferInfo";
-import { FaRegStar, FaStar } from "react-icons/fa6";
-import { FaStarHalfAlt } from "react-icons/fa";
-import { GiForkKnifeSpoon } from "react-icons/gi";
-interface Accommodation {
-  accommodationid: number;
-  accommodationname: string;
-  durationaccommodation: string;
-  accommodationtype: string;
-  isbreadkfast: boolean;
-  accommodationthumbnail: string[];
-  roomtype: string;
-}
-
-interface Meal {
-  mealid: number;
-  mealname: string;
-  mealthumbnail: string;
-  mealduration: string;
-  mealactivity: string;
-}
-
-interface Place {
-  placeid: number;
-  placename: string;
-  placethumbnail: string;
-  description: string;
-  placeduration: string;
-}
-
-interface Transfer {
-  transferid: number;
-  transfername: string;
-  transferthumbnail: string;
-  description: string;
-  transferduration: string;
-}
-
-type DayType = {
-  setMeals: (value: Meal[]) => void;
-  setAccommodation: (value: Accommodation[]) => void;
-  setPlaces: (value: Place[]) => void;
-  setTransfers: (value: Transfer[]) => void;
-  meals: Meal[];
-  accommodation: Accommodation[];
-  places: Place[];
-  transfers: Transfer[];
-  day: number;
-  toursInfo: ToursInfoType;
-  setToursInfo: (value: ToursInfoType) => void;
-};
-
-type ToursInfoType = {
-  title: string;
-  price: number;
-  groupsize: string;
-  deposit: string;
-  bookinghold: string;
-  bookingchange: string;
-  categoryTourId: number[];
-  themeTourId: number[];
-  suitableTourId: number[];
-  departureDates: DateTimeOption[];
-  thumbnail: string[];
-  itineraries: Itinerary[];
-};
-
-interface DateTimeOption {
-  id: string;
-  dateTime: string;
-}
-
-interface Itinerary {
-  itineraryId?: number;
-  tourPackageId?: number;
-  accommodationIds?: number[];
-  mealIds?: number[];
-  placeIds?: number[];
-  transferIds?: number[];
-  day: number;
-}
-
-
-interface ItineraryData {
-  accommodationData: Accommodation[];
-  mealData: Meal[];
-  placeData: Place[];
-  transferData: Transfer[];
-  day: number;
-}
-
-interface ItineraryDatas  {
-  accommodations: Accommodation[];
-  meals: Meal[];
-  places: Place[];
-  transfers: Transfer[];
-  day: number;
-}
-
-const Day = ({
-  accommodation,
-  meals,
-  places,
-  transfers,
-  setAccommodation,
-  setMeals,
-  setPlaces,
-  setTransfers,
-  setToursInfo,
-  toursInfo,
-  day,
-}: DayType) => {
-  const [isExpanded, setIsExpanded] = useState<boolean>(false);
-   const [isOpenTransfers, setIsOpenTransfer] = useState<boolean>(false);
-   const [isOpenPlaces, setIsOpenPlaces] = useState<boolean>(false);
-   const [isOpenAccommodation, setIsOpenAccommodation] =
-     useState<boolean>(false);
-   const [isOpenMeals, setIsOpenMeals] = useState<boolean>(false);
-   const [itinerary, setItinerary] = useState<ItineraryData>();
-  const toggleExpansion = () => {
-    setIsExpanded(!isExpanded);
-  };
-
-  const convertToTimeUnit = (value: number): string => {
-    const minutesInHour = 60;
-    const minutesInDay = 60 * 24;
-
-    if (value >= minutesInDay) {
-      const days = Math.floor(value / minutesInDay);
-      const remainingMinutes = value % minutesInDay;
-      const hours = Math.floor(remainingMinutes / minutesInHour);
-      return `${days} Nights ${hours > 0 ? hours + " Hours" : ""}`;
-    } else if (value >= minutesInHour) {
-      const hours = Math.floor(value / minutesInHour);
-      const minutes = value % minutesInHour;
-      return `${hours} Hours ${minutes > 0 ? minutes + " Minutes" : ""}`;
-    } else {
-      return `${value} Minutes`;
-    }
-  };
-
-  
-  const isItinerary = (
-    itinerary: Itinerary | ItineraryData
-  ): itinerary is Itinerary => {
-    return Array.isArray((itinerary as Itinerary)?.accommodationIds);
-  };
-
-const getItineraryData = (
-  itinerary: Itinerary | ItineraryDatas,
-  accommodations: Accommodation[],
-  meals: Meal[],
-  places: Place[],
-  transfers: Transfer[]
-): ItineraryData => {
-  console.log("kkk", itinerary);
-  console.log("kkk1", accommodations);
-  console.log("kkk2", meals);
-  console.log("kkk3", places);
-  console.log("kkk4", transfers);
-
-  if (isItinerary(itinerary)) {
-    // If itinerary is of type Itinerary
-    return {
-      accommodationData:
-        itinerary?.accommodationIds
-          ?.map((id) =>
-            accommodations?.find((accom) => accom.accommodationid === id)
-          )
-          .filter((accom): accom is Accommodation => !!accom) || [],
-
-      mealData:
-        itinerary?.mealIds
-          ?.map((id) => meals?.find((meal) => meal.mealid === id))
-          .filter((meal): meal is Meal => !!meal) || [],
-
-      placeData:
-        itinerary?.placeIds
-          ?.map((id) => places?.find((place) => place.placeid === id))
-          .filter((place): place is Place => !!place) || [],
-
-      transferData:
-        itinerary?.transferIds
-          ?.map((id) =>
-            transfers?.find((transfer) => transfer.transferid === id)
-          )
-          .filter((transfer): transfer is Transfer => !!transfer) || [],
-
-      day: itinerary?.day, // Directly accessing the day property
-    };
-  } else {
-    console.log("sasa", itinerary);
-
-    return {
-      accommodationData: itinerary?.accommodations || [],
-      mealData: itinerary?.meals || [],
-      placeData: itinerary?.places || [],
-      transferData: itinerary?.transfers || [],
-      day: itinerary?.day, // Directly accessing the day property
-    };
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+  } from "@/components/ui/command";
+  import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+  } from "@/components/ui/popover";
+  import CardItinerary from "@/components/tour/CardItinerary";
+  import { useEffect, useState } from "react";
+  import Image from "next/image";
+  import TransferInfo from "@/components/tour/TransferInfo";
+  import { FaRegStar, FaStar } from "react-icons/fa6";
+  import { FaStarHalfAlt } from "react-icons/fa";
+  import { GiForkKnifeSpoon } from "react-icons/gi";
+  interface Accommodation {
+    accommodationid: number;
+    accommodationname: string;
+    durationaccommodation: string;
+    accommodationtype: string;
+    isbreadkfast: boolean;
+    accommodationthumbnail: string;
+    roomtype: string;
   }
-};
+
+  interface Meal {
+    mealid: number;
+    mealname: string;
+    mealthumbnail: string;
+    mealduration: string;
+    mealactivity: string;
+  }
+
+  interface Place {
+    placeid: number;
+    placename: string;
+    placethumbnail: string;
+    description: string;
+    placeduration: string;
+  }
+
+  interface Transfer {
+    transferid: number;
+    transfername: string;
+    transferthumbnail: string;
+    description: string;
+    transferduration: string;
+  }
+
+  type DayType = {
+    setMeals: (value: Meal[]) => void;
+    setAccommodation: (value: Accommodation[]) => void;
+    setPlaces: (value: Place[]) => void;
+    setTransfers: (value: Transfer[]) => void;
+    meals: Meal[];
+    accommodation: Accommodation[];
+    places: Place[];
+    transfers: Transfer[];
+    day: number;
+    toursInfo: ToursInfoType;
+    setToursInfo: (value: ToursInfoType) => void;
+  };
+
+  type ToursInfoType = {
+    title: string;
+    price: number;
+    groupsize: string;
+    deposit: string;
+    bookinghold: string;
+    bookingchange: string;
+    categoryTourId: number[];
+    themeTourId: number[];
+    suitableTourId: number[];
+    departureDates: DateTimeOption[];
+    thumbnail: string[];
+    itineraries: Itinerary[];
+  };
+
+  interface DateTimeOption {
+    id: string;
+    dateTime: string;
+  }
+
+  interface Itinerary {
+    itineraryId?: number;
+    tourPackageId?: number;
+    accommodationIds?: number[];
+    mealIds?: number[];
+    placeIds?: number[];
+    transferIds?: number[];
+    day: number;
+  }
 
 
+  interface ItineraryData {
+    accommodationData: Accommodation[];
+    mealData: Meal[];
+    placeData: Place[];
+    transferData: Transfer[];
+    day: number;
+  }
 
+  interface ItineraryDatas  {
+    accommodations: Accommodation[];
+    meals: Meal[];
+    places: Place[];
+    transfers: Transfer[];
+      day: number;
+  }
 
-  useEffect(() => {
-    const itineraryData = getItineraryData(
-      toursInfo.itineraries[day - 1],
-      accommodation,
-      meals,
-      places,
-      transfers
-    );
-    console.log("kokko", itineraryData);
-
-    setItinerary(itineraryData);
-  }, [
-    toursInfo,
+  const Day = ({
     accommodation,
-    day,
     meals,
     places,
     transfers,
+    setAccommodation,
+    setMeals,
+    setPlaces,
+    setTransfers,
+    setToursInfo,
+    toursInfo,
+    day,
+  }: DayType) => {
+    const [isExpanded, setIsExpanded] = useState<boolean>(false);
+    const [isOpenTransfers, setIsOpenTransfer] = useState<boolean>(false);
+    const [isOpenPlaces, setIsOpenPlaces] = useState<boolean>(false);
+    const [isOpenAccommodation, setIsOpenAccommodation] =
+      useState<boolean>(false);
+    const [isOpenMeals, setIsOpenMeals] = useState<boolean>(false);
+    const [itinerary, setItinerary] = useState<ItineraryData>();
+    const toggleExpansion = () => {
+      setIsExpanded(!isExpanded);
+    };
+
+    console.log(`meals ${day -1}`, meals);
+      console.log("places", places);
+      console.log("transfer", transfers);
+      console.log("accomodations", accommodation);
+
+    const convertToTimeUnit = (value: number): string => {
+      const minutesInHour = 60;
+      const minutesInDay = 60 * 24;
+
+      if (value >= minutesInDay) {
+        const days = Math.floor(value / minutesInDay);
+        const remainingMinutes = value % minutesInDay;
+        const hours = Math.floor(remainingMinutes / minutesInHour);
+        return `${days} Nights ${hours > 0 ? hours + " Hours" : ""}`;
+      } else if (value >= minutesInHour) {
+        const hours = Math.floor(value / minutesInHour);
+        const minutes = value % minutesInHour;
+        return `${hours} Hours ${minutes > 0 ? minutes + " Minutes" : ""}`;
+      } else {
+        return `${value} Minutes`;
+      }
+    };
+
     
-  ]);
+    const isItinerary = (
+      itinerary: Itinerary | ItineraryData
+    ): itinerary is Itinerary => {
+      return Array.isArray((itinerary as Itinerary)?.accommodationIds);
+    };
+
+  const getItineraryData = (
+    itinerary: Itinerary | ItineraryDatas,
+    accommodations: Accommodation[],
+    meals: Meal[],
+    places: Place[],
+    transfers: Transfer[]
+  ): ItineraryData => {
+    console.log("kkk", itinerary);
+    console.log("kkk1", accommodations);
+    console.log("kkk2", meals);
+    console.log("kkk3", places);
+    console.log("kkk4", transfers);
+
+    if (isItinerary(itinerary)) {
+      return {
+        accommodationData:
+          itinerary?.accommodationIds
+            ?.map((id) =>
+              accommodations?.find((accom) => accom.accommodationid === id)
+            )
+            .filter((accom): accom is Accommodation => !!accom) || [],
+
+        mealData:
+          itinerary?.mealIds
+            ?.map((id) => meals?.find((meal) => meal.mealid === id))
+            .filter((meal): meal is Meal => !!meal) || [],
+
+        placeData:
+          itinerary?.placeIds
+            ?.map((id) => places?.find((place) => place.placeid === id))
+            .filter((place): place is Place => !!place) || [],
+
+        transferData:
+          itinerary?.transferIds
+            ?.map((id) =>
+              transfers?.find((transfer) => transfer.transferid === id)
+            )
+            .filter((transfer): transfer is Transfer => !!transfer) || [],
+
+        day: itinerary?.day, 
+      };
+    } else {
+      console.log("sasa", itinerary);
+
+      return {
+        accommodationData: itinerary?.accommodations || [],
+        mealData: itinerary?.meals || [],
+        placeData: itinerary?.places || [],
+        transferData: itinerary?.transfers || [],
+        day: itinerary?.day, 
+      };
+    }
+  };
 
 
 
-   useEffect(() => {
-     console.log("la", toursInfo?.itineraries);
-     console.log("in", itinerary);
-   }, [toursInfo, itinerary]);
+
+    useEffect(() => {
+      const itineraryData = getItineraryData(
+        toursInfo?.itineraries[day - 1],
+        accommodation,
+        meals,
+        places,
+        transfers
+      );
+      console.log("kokko", itineraryData);
+
+      setItinerary(itineraryData);
+    }, [
+      toursInfo,
+      accommodation,
+      day,
+      meals,
+      places,
+      transfers,
+      
+    ]);
+
+
+
+    useEffect(() => {
+      console.log("la", toursInfo?.itineraries);
+      console.log("in", itinerary);
+      console.log(`meals ${day -1}`, meals);
+      console.log("places", places);
+      console.log("transfer", transfers);
+      console.log("accomodations", accommodation);
+    }, [toursInfo, itinerary,meals,places,transfers,accommodation]);
 
     
  
@@ -562,7 +570,7 @@ const getItineraryData = (
                       >
                         <div className="w-60 h-35 overflow-hidden rounded-lg">
                           <Image
-                            src={item.accommodationthumbnail[0]}
+                            src={item.accommodationthumbnail}
                             alt=""
                             height={400}
                             width={400}

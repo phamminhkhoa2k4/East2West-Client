@@ -1,5 +1,21 @@
 import React from 'react';
-import { RefundFetch } from './types'; 
+type RefundFetch = {
+  bookingTourId: number;
+  tourTitle: string;
+  status: string;
+  user: User;
+  bookingDate: string;
+  totalAmount: number;
+  refundAmount: number;
+  reason: string;
+  refundDate: string;
+};
+
+type User = {
+  firstname: string;
+  lastname: string;
+  phone: string;
+};
 
 interface RefundListProps {
   refunds: RefundFetch[];

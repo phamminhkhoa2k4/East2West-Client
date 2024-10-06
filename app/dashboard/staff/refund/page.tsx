@@ -1,6 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import DefaultLayout from '@/components/Layouts/DefaultLayout';
 
 interface User {
   firstname: string;
@@ -66,56 +67,65 @@ const Bookings: React.FC = () => {
   };
 
   return (
-    <div>
-      <h2>Booking List</h2>
-      <table border="1" width="100%" style={{ textAlign: 'left' }}>
-        <thead>
-          <tr>
-            <th>Booking ID</th>
-            <th>Tour Title</th>
-            <th>User</th>
-            <th>Status</th>
-            <th>Booking Date</th>
-            <th>Total Amount</th>
-            <th>Refund</th>
-          </tr>
-        </thead>
-        <tbody>
-          {bookings.map(booking => (
-            <tr key={booking.bookingTourId}>
-              <td>{booking.bookingTourId}</td>
-              <td>{booking.tourTitle}</td>
-              <td>{booking.user.firstname} {booking.user.lastname} ({booking.user.phone})</td>
-              <td>{booking.status}</td>
-              <td>{new Date(booking.bookingDate).toLocaleDateString()}</td>
-              <td>${booking.totalAmount}</td>
-              <td>
-                {booking.status !== 'Refunded' ? (
-                  <button onClick={() => handleRefund(booking.bookingTourId)}>Refund</button>
-                ) : (
-                  'Refunded'
-                )}
-              </td>
+    <DefaultLayout>
+      <div>
+        <h2>Booking List</h2>
+        <table width="100%" style={{ textAlign: "left" }}>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Tour Title</th>
+              <th>User</th>
+              <th>Status</th>
+              <th>Booking Date</th>
+              <th>Total Amount</th>
+              <th>Refund</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {bookings.map((booking) => (
+              <tr key={booking.bookingTourId}>
+                <td>{booking.bookingTourId}</td>
+                <td>{booking.tourTitle}</td>
+                <td>
+                  {booking.user.firstname} {booking.user.lastname} (
+                  {booking.user.phone})
+                </td>
+                <td>{booking.status}</td>
+                <td>{new Date(booking.bookingDate).toLocaleDateString()}</td>
+                <td>${booking.totalAmount}</td>
+                <td>
+                  {booking.status !== "Refunded" ? (
+                    <button onClick={() => handleRefund(booking.bookingTourId)}>
+                      Refund
+                    </button>
+                  ) : (
+                    "Refunded"
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
 
-      {/* Refund form */}
-      {selectedBookingId !== null && (
-        <div style={{ marginTop: '20px' }}>
-          <h3>Refund Booking ID: {selectedBookingId}</h3>
-          <textarea 
-            placeholder="Enter reason for refund" 
-            value={refundReason} 
-            onChange={(e) => setRefundReason(e.target.value)} 
-            rows={3} 
-            style={{ width: '100%' }} 
-          />
-          <button onClick={processRefund} style={{ marginTop: '10px' }}>Process Refund</button>
-        </div>
-      )}
-    </div>
+        {/* Refund form */}
+        {selectedBookingId !== null && (
+          <div style={{ marginTop: "20px" }}>
+            <h3>Refund Booking ID: {selectedBookingId}</h3>
+            <textarea
+              placeholder="Enter reason for refund"
+              value={refundReason}
+              onChange={(e) => setRefundReason(e.target.value)}
+              rows={3}
+              style={{ width: "100%" }}
+            />
+            <button onClick={processRefund} style={{ marginTop: "10px" }}>
+              Process Refund
+            </button>
+          </div>
+        )}
+      </div>
+    </DefaultLayout>
   );
 };
 

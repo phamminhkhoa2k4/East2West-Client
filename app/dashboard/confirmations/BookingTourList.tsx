@@ -1,6 +1,23 @@
 import React from 'react';
-import { BookingTourFetch } from './types'; // Import types từ file types
 
+
+type BookingTourFetch = {
+  bookingTourId: number;
+  tourTitle: string;
+  status: string;
+  user: User;
+  bookingDate: string;
+  totalAmount: number;
+  refundAmount : number;
+};
+
+type User = {
+  firstname: string;
+  lastname: string;
+  phone: string;
+  
+
+};
 interface BookingTourListProps {
   bookingTours: BookingTourFetch[];
 }

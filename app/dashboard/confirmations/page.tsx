@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import RentalList from './RentalList';
 import RefundList from './RefundList';
 import BookingTourList from './BookingTourList';
+import DefaultLayout from '@/components/Layouts/DefaultLayout';
 
 // Your types
 // import { Rental, Refund, BookingTour } from './types'; // Assume types are in a separate file
@@ -65,34 +66,51 @@ export interface UserFetch {
     }, []);
   
     return (
-      <div className="p-6">
-        {/* Navigation Tabs */}
-        <div className="flex mb-4 space-x-4">
-          <button 
-            className={`py-2 px-4 rounded ${activeTab === 'rental' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} 
-            onClick={() => setActiveTab('rental')}
-          >
-            Rentals
-          </button>
-          <button 
-            className={`py-2 px-4 rounded ${activeTab === 'refund' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} 
-            onClick={() => setActiveTab('refund')}
-          >
-            Refunds
-          </button>
-          <button 
-            className={`py-2 px-4 rounded ${activeTab === 'bookingTour' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`} 
-            onClick={() => setActiveTab('bookingTour')}
-          >
-            Booking Tours
-          </button>
+      <DefaultLayout>
+        {" "}
+        <div className="p-6">
+          {/* Navigation Tabs */}
+          <div className="flex mb-4 space-x-4">
+            <button
+              className={`py-2 px-4 rounded ${
+                activeTab === "rental"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setActiveTab("rental")}
+            >
+              Rentals
+            </button>
+            <button
+              className={`py-2 px-4 rounded ${
+                activeTab === "refund"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setActiveTab("refund")}
+            >
+              Refunds
+            </button>
+            <button
+              className={`py-2 px-4 rounded ${
+                activeTab === "bookingTour"
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+              onClick={() => setActiveTab("bookingTour")}
+            >
+              Booking Tours
+            </button>
+          </div>
+
+          {/* Conditional Rendering Based on Active Tab */}
+          {activeTab === "rental" && <RentalList rentals={rentals} />}
+          {activeTab === "refund" && <RefundList refunds={refunds} />}
+          {activeTab === "bookingTour" && (
+            <BookingTourList bookingTours={bookingTours} />
+          )}
         </div>
-  
-        {/* Conditional Rendering Based on Active Tab */}
-        {activeTab === 'rental' && <RentalList rentals={rentals} />}
-        {activeTab === 'refund' && <RefundList refunds={refunds} />}
-        {activeTab === 'bookingTour' && <BookingTourList bookingTours={bookingTours} />}
-      </div>
+      </DefaultLayout>
     );
   };
   

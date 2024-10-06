@@ -54,7 +54,7 @@ interface Accommodation {
   durationaccommodation: string;
   accommodationtype: string;
   isbreadkfast: boolean;
-  accommodationthumbnail: string[];
+  accommodationthumbnail: string;
   roomtype: string;
 }
 
@@ -172,40 +172,40 @@ const Update = () => {
         });
         setToursInfo((prev) => ({
           ...prev,
-          bookingchange: tours.bookingchange,
-          bookinghold: tours.bookinghold,
-          departureDates: tours.departureDates.map((dd) => ({
+          bookingchange: tours?.bookingchange,
+          bookinghold: tours?.bookinghold,
+          departureDates: tours?.departureDates.map((dd) => ({
             id: dd.departuredateid,
             dateTime: dd.departuredate,
           })),
-          deposit: tours.deposit,
-          groupsize: tours.groupsize,
-          price: tours.price,
-          title: tours.title,
-          thumbnail: tours.thumbnail,
-          itineraries: [
-            ...tours.itineraries.map((itin) => ({
+          deposit: tours?.deposit,
+          groupsize: tours?.groupsize,
+          price: tours?.price,
+          title: tours?.title,
+          thumbnail: tours?.thumbnail,
+          itineraries: 
+              tours?.itineraries.map((itin) => ({
               transferIds: itin?.transfers?.map((transfer) => transfer.transferid),
               placeIds:itin?.places?.map((place) => place.placeid),
               accommodationIds: itin?.accommodations?.map((acc) => acc.accommodationid ),
               mealIds:itin?.meals?.map((meal) => meal.mealid),
               day: itin?.day!
             })),
-          ],
-          categoryTourId: [
-            ...tours.categoryTours.map((ca) => ca.categoryTourId),
-          ],
-          suitableTourId: [
-            ...tours.suitableTours.map((su) => su.suitableTourId),
-          ],
-          themeTourId: [...tours.themeTours.map((th) => th.themeTourId)],
+          
+          categoryTourId: 
+          tours?.categoryTours.map((ca) => ca.categoryTourId),
+          
+          suitableTourId: 
+            tours?.suitableTours.map((su) => su.suitableTourId),
+          
+          themeTourId: tours?.themeTours.map((th) => th.themeTourId),
         }));
-        setSuitable(tours.suitableTours);
-        setCategories(tours.categoryTours);
-        setThemes(tours.themeTours);
-        setDays([...tours.itineraries.map((itin) => itin.day)]);
-        setPackageId(tours.packageid);   
-        setThumbnailUrl(tours.thumbnail)     
+        setSuitable(tours?.suitableTours);
+        setCategories(tours?.categoryTours);
+        setThemes(tours?.themeTours);
+        setDays([...tours?.itineraries.map((itin) => itin.day)]);
+        setPackageId(tours?.packageid);   
+        setThumbnailUrl(tours?.thumbnail)     
 
       } catch (error) {
         console.log(error);
@@ -219,6 +219,8 @@ const Update = () => {
     console.log("kaka", toursInfo);
   }, [toursInfo]);
 
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -261,35 +263,42 @@ const Update = () => {
 
   const handleUpload = async (): Promise<string[]> => {
     if (files.length === 0) {
-      console.error("No files selected");
+      console.log("sdsd", thumbnailUrl);
+      update(thumbnailUrl);
+      
       return [];
+
+    }else{
+      const uploadPromises = files.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", "homestays");
+
+        try {
+          const response = await fetch(
+            `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
+
+          const result = await response.json();
+          return result.secure_url;
+        } catch (error) {
+          console.error("Upload failed:", error);
+          return null;
+        }
+      });
+
+      const uploadedUrls = await Promise.all(uploadPromises);
+      const newImageUrls = uploadedUrls.filter(
+        (url) => url !== null
+      ) as string[];
+      return newImageUrls;
     }
 
-    const uploadPromises = files.map(async (file) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "homestays");
-
-      try {
-        const response = await fetch(
-          `https://api.cloudinary.com/v1_1/djddnvjpi/image/upload`,
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-
-        const result = await response.json();
-        return result.secure_url;
-      } catch (error) {
-        console.error("Upload failed:", error);
-        return null;
-      }
-    });
-
-    const uploadedUrls = await Promise.all(uploadPromises);
-    const newImageUrls = uploadedUrls.filter((url) => url !== null) as string[];
-    return newImageUrls;
+    
   };
 
   const handleChange = (
@@ -331,25 +340,15 @@ const Update = () => {
     selected: false,
   }));
 
-  const handleCreate = async () => {
+  const handleUpdate = async () => {
     await handleUpload()
       .then(async (data) => {
-        if (data) {
-          await updateData({
-            id: packageId,
-            endpoint: "tours/admin",
-            payload: {
-              ...toursInfo,
-              thumbnail: thumbnailUrl.length > 0 ? thumbnailUrl : data,
-            },
-          }).then((data) => {
-            router.push("/dashboard/manage/tours");
-          }).catch((error) => {
-            console.log(error);
-          });
-
+        if (data.length > 0) {
+              console.log("kakaka",[...thumbnailUrl, ...data]);
+              
+              update([...thumbnailUrl,...data]);
           
-        } else {
+        } else {    
           console.log("upload fail !!");
         }
       })
@@ -357,6 +356,27 @@ const Update = () => {
         console.log(error);
       });
   };
+
+
+
+  const update = async (url : string[]) => {
+        await updateData({
+          id: packageId,
+          endpoint: "tours/admin",
+          payload: {
+            ...toursInfo,
+            thumbnail: url,
+          },
+        })
+          .then((data) => {
+            if (data) {
+              router.push("/dashboard/manage/tours");
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+  }
 
   return (
     <DefaultLayout>
@@ -428,7 +448,7 @@ const Update = () => {
               <MultiSelect
                 label="Category Tour"
                 options={categoryOptions}
-                selectedOptions={toursInfo.categoryTourId.map((id) => ({
+                selectedOptions={toursInfo?.categoryTourId?.map((id) => ({
                   value: id,
                   text:
                     categories.find(
@@ -444,7 +464,7 @@ const Update = () => {
                 label="Theme Tour"
                 id=""
                 placeholder=""
-                selectedOptions={toursInfo.themeTourId.map((id) => ({
+                selectedOptions={toursInfo?.themeTourId?.map((id) => ({
                   value: id,
                   text:
                     themes.find((theme) => theme.themeTourId === id)
@@ -457,7 +477,7 @@ const Update = () => {
               />
               <MultiSelect
                 label="Suitable Tour"
-                selectedOptions={toursInfo.suitableTourId.map((id) => ({
+                selectedOptions={toursInfo?.suitableTourId?.map((id) => ({
                   value: id,
                   text:
                     suitable.find((sui) => sui.suitableTourId === id)
@@ -509,7 +529,7 @@ const Update = () => {
 
       {isItinerary && (
         <Itinerary
-          handleCreate={handleCreate}
+          handleCreate={handleUpdate}
           days={days}
           setDays={setDays}
           transfers={transfers!}

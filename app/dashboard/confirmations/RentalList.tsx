@@ -1,5 +1,22 @@
 import React from 'react';
-import { RentalFetch } from './types'; // Import types từ file types
+type RentalFetch = {
+  rentalId: number
+  tourTitle: string;
+  status: string;
+  user: User;
+  rentalDate: string;
+  totalAmount: number;
+  refundAmount: number;
+  reabson: string;
+  refundDate: string;
+  carName: string;
+};
+
+type User = {
+  firstname: string;
+  lastname: string;
+  phone: string;
+};
 
 interface RentalCarListProps {
   rentals: RentalFetch[];

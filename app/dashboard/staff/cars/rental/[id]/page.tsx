@@ -32,6 +32,7 @@ interface Car {
   fueltankcapacity: number | null;
   fuel: string | null;
   location: string | null;
+  thumbnail: string[];
 }
 
 const RentalStaff = ({ params }: { params: { id: string } }) => {
@@ -111,7 +112,7 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
               <div className="flex items-center gap-10 p-4 border border-gray-300 rounded-2xl overflow-hidden w-3/5">
                 <div className="h-35 rounded-lg overflow-hidden">
                   <Image
-                    src={`/images/car-placeholder.png`} // Use a placeholder or car-specific image
+                    src={car.thumbnail[0]}
                     alt={car.carName}
                     height={300}
                     width={300}
@@ -130,7 +131,9 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
                   </div>
                   <div className="flex items-center gap-1 mt-1 mb-2">
                     <span className="text-sm">Seats: {car.seatCapacity}</span>
-                    <span className="text-sm">Air Conditioned: {car.airConditioned ? "Yes" : "No"}</span>
+                    <span className="text-sm">
+                      Air Conditioned: {car.airConditioned ? "Yes" : "No"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -184,7 +187,9 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
             <div className="border border-gray-300 rounded-2xl mx-5 mt-5 p-4 px-6">
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between">
-                  <span>${car.pricePerDay} x {days} Days</span>
+                  <span>
+                    ${car.pricePerDay} x {days} Days
+                  </span>
                   <span>${totalAmount}</span>
                 </div>
                 <hr />

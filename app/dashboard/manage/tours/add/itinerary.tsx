@@ -11,7 +11,7 @@ interface Accommodation {
   durationaccommodation: string;
   accommodationtype: string;
   isbreadkfast:boolean;
-  accommodationthumbnail:string[];
+  accommodationthumbnail:string;
   roomtype: string;
 }
 
@@ -180,20 +180,23 @@ const Itinerary = ({
             </div>
             <div className="flex flex-col gap-10">
               {days?.map((day) => (
-                <Day
-                  key={day}
-                  day={day}
-                  transfers={transfers!}
-                  places={places!}
-                  accommodation={accommodation!}
-                  meals={meals!}
-                  setTransfers={setTransfers}
-                  setPlaces={setPlaces}
-                  setAccommodation={setAccommodation}
-                  setMeals={setMeals}
-                  setToursInfo={setToursInfo}
-                  toursInfo={toursInfo}
-                />
+                <div key={day}>
+                  <Day
+                    day={day}
+                    transfers={transfers!}
+                    places={places!}
+                    accommodation={accommodation!}
+                    meals={meals!}
+                    setTransfers={setTransfers}
+                    setPlaces={setPlaces}
+                    setAccommodation={setAccommodation}
+                    setMeals={setMeals}
+                    setToursInfo={setToursInfo}
+                    toursInfo={toursInfo}
+                  />
+                  <div>
+                  </div>
+                </div>
               ))}
             </div>
             <div className="mb-6"></div>

@@ -125,7 +125,6 @@ const CreateCar = () => {
 
 
 
-
    const handleChange = (
      e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
    ) => {
@@ -143,41 +142,6 @@ const CreateCar = () => {
        }));
      }
    };
-
-  // const handleSelectChange = (name: keyof Car, value: number) => {
-
-  //   setCarData((prev) => {
-  //     const currentState = prev || {}; 
-
-  //     let newValue: any;
-
-  //     switch (name) {
-  //       case "cargearbox":
-  //         newValue = value === 1 ? "Manual" : "Automatic";
-  //         break;
-  //       case "fuel":
-  //         newValue = value === 1 ? "Petrol" : "Diesel";
-  //         break;
-  //       default:
-  //         const optionsMap: { [key in keyof Car]?: Option[] } = {
-  //           make: makeOptions,
-  //           model: modelOptions,
-  //           type: typeOptions,
-  //           locationType: locationTypeOptions,
-  //         };
-
-  //         const options = optionsMap[name];
-  //         const selectedOption = options?.find((option) => option.id === value);
-  //         newValue = selectedOption || null;
-  //     }
-
-  //     return {
-  //       ...currentState,
-  //       [name]: newValue,
-  //     };
-  //   });
-  // };
-
 
 const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
   const { name, value } = e.target;
@@ -238,7 +202,7 @@ const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
               fueltankcapacity: carData.fueltankcapacity,
               fuel: carData.fuel,
               location: carData.location,
-              thumbnail: data, // Đảm bảo thumbnail được gửi
+              thumbnail: data, 
             };
             await createData({endpoint: "/cars",payload: carsData })
           }

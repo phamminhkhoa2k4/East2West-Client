@@ -23,7 +23,7 @@ const columns = [
   { key: "category", label: "Category" },
   { key: "departure", label: "Departure Date" },
   { key: "itinerary", label: "Itinerary" },
-  { key: "action", label: "Action" } // Add Action column
+  { key: "action", label: "Action" } 
 ];
 
 interface Itinerary {
@@ -109,7 +109,7 @@ interface FormattedTourData extends DataRow  {
   category: string;
   departure: string;
   itinerary: string;
-  action: string // Use optional property if not always needed
+  action: string 
 }
 const Staff = () => {
   const [searchQuery, setSearchQuery] = useState("");

@@ -5,6 +5,7 @@ import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
 
 const columns = [
+  { key: "carId", label: "Id" },
   { key: "thumbnail", label: "Thumbnail" },
   { key: "carName", label: "Name" },
   { key: "make", label: "Make" },
@@ -21,6 +22,7 @@ const columns = [
   { key: "fuelTankCapacity", label: "Fuel Tank Capacity" },
   { key: "fuel", label: "Fuel" },
   { key: "location", label: "Location" },
+  { key: "action", label: "Action" },
 ];
 
 interface Car {
@@ -52,7 +54,7 @@ interface Car {
   fueltankcapacity?: string | null;
   fuel?: string | null;
   location?: string | null;
-  imageUrl?: string;
+  thumbnail?: string[];
 }
 
 interface CarTableData extends DataRow {
@@ -87,22 +89,23 @@ const Cars = () => {
         });
         const result: Car[] = await response.json();
         const formattedData = result.map((car) => ({
-          thumbnail: car.imageUrl || "/car_thumbnail.png",
+           carId: car?.carId!,
+          thumbnail: car?.thumbnail?.[0]! ,
           carName: car.carName,
-          make: car.make?.makeName || "Unknown",
-          model: car.model?.modelName || "Unknown",
-          type: car.type?.typeName || "Unknown",
-          locationType: car.locationtype?.locationtypename || "Not Specified",
-          year: car.year,
+          make: car.make?.makeName!,
+          model: car.model?.modelName!,
+          type: car.type?.typeName!,
+          locationType: car.locationtype?.locationtypename!,
+          year: car?.year!,
           seatingCapacity: car.seatCapacity,
           airConditioned: car.airConditioned ? "Yes" : "No",
           pricePerDay: car.pricePerDay,
-          gearbox: car.cargearbox || "Unknown",
-          status: car.status,
-          mileages: car.miles || "Unknown",
-          fuelTankCapacity: car.fueltankcapacity || "Unknown",
-          fuel: car.fuel || "Unknown",
-          location: car.location || "Not Specified",
+          gearbox: car.cargearbox!,
+          status: car.status!,
+          mileages: car.miles!,
+          fuelTankCapacity: car.fueltankcapacity!,
+          fuel: car.fuel!,
+          location: car.location!,
         }));
 
         setData(formattedData);
@@ -122,7 +125,7 @@ const Cars = () => {
         title="Cars"
         createUrl="/dashboard/manage/cars/add"
         deleteUrl="api database delete"
-        editUrl="link vao trang edit"
+        editUrl="/dashboard/manage/cars/edit"
       />
       <div></div>
     </DefaultLayout>
