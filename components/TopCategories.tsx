@@ -8,60 +8,62 @@ import {
   PuzzlePieceIcon,
   HeartIcon,
 } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
 const CATEGORIES = [
   {
-    img: "/image/service/blog-3.png",
+    img: "/image/service/blog-10.jpeg",
     icon: HeartIcon,
     title: "Service Rent Cars",
-    desc: "up to 40% OFF",
+    link: "/cars",
   },
   {
-    img: "/image/service/blog-12.jpeg",
+    img: "/image/service/flight.jpg",
     icon: PuzzlePieceIcon,
-    title: "Service Booking Flights",
-    desc: "up to 40% OFF",
+    title: "Service Search Flights",
+    link: "/Flights",
   },
   {
-    img: "/image/service/blog-10.jpeg",
+    img: "/image/service/blog-3.png",
     icon: GlobeEuropeAfricaIcon,
-    title: "Service Booking Home Stay",
-    desc: "up to 40% OFF",
+    title: "Service Booking Homestays",
+    link: "/homestays",
   },
   {
     img: "/image/service/blog-13.png",
     icon: MicrophoneIcon,
-    title: "Service Booking Hotels",
-    desc: "up to 40% OFF",
+    title: "Service Search Hotels",
+    link: "/hotels",
   },
 ];
 
 interface CategoryCardProps {
   img: string;
   title: string;
-  desc: string;
   icon: React.ElementType;
+  link: string;
 }
 
-function CategoryCard({ img, title, desc, icon: Icon }: CategoryCardProps) {
+function CategoryCard({ img, title, icon: Icon,link }: CategoryCardProps) {
   return (
-    <div className="relative grid min-h-[12rem] w-full overflow-hidden rounded-lg shadow-lg">
-      <Image
-        width={768}
-        height={768}
-        src={img}
-        alt={title}
-        className="absolute inset-0 h-full w-full object-cover object-center"
-      />
-      <div className="absolute inset-0 h-full w-full bg-black/70"></div>
-      <div className="relative flex flex-col justify-between p-4 text-white">
-        <Icon className="h-8 w-8" />
-        <div>
-          <h5 className="text-lg font-bold mb-1">{title}</h5>
-          <p className="text-xs font-bold opacity-50">{desc}</p>
+    <Link href={link}>
+      <div className="relative grid min-h-[12rem] w-full overflow-hidden rounded-lg shadow-lg">
+        <Image
+          width={768}
+          height={768}
+          src={img}
+          alt={title}
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 h-full w-full bg-black/70"></div>
+        <div className="relative flex flex-col justify-between p-4 text-white">
+          <Icon className="h-8 w-8" />
+          <div>
+            <h5 className="text-lg font-bold mb-1">{title}</h5>
+          </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }
 
@@ -73,23 +75,23 @@ export function TopCategories() {
           Top Service Categories
         </h2>
         <p className="text-lg text-gray-500 lg:w-6/12">
-          Explore our diverse range of categories and embark on a reading
-          journey that suits your mood, passion, or curiosity.
+          Explore our diverse categories and start your journey to find a
+          homestay, rent a car or book a tour that suits your interests,
+          passions or curiosities.
         </p>
       </div>
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         <div className="relative grid h-full w-full place-items-center overflow-hidden text-center bg-gray-700 text-white p-8 rounded-lg">
           <div className="absolute inset-0 h-full w-full bg-gray-900/75"></div>
           <div className="relative w-full">
-            <p className="text-xs font-bold opacity-50">up to 40% OFF</p>
             <h4 className="text-2xl font-bold mt-9">Tours Package</h4>
             <p className="mt-4 mb-14 font-normal opacity-50">
               Explore many places you have never been to and experience new
               things, visit famous places, etc.
             </p>
-            <button className="px-4 py-2 bg-white text-gray-700 font-bold rounded">
-              Read More
-            </button>
+            <Link href={"/tours"} className="px-4 py-2 bg-white text-gray-700 font-bold rounded">
+              Discovery now
+            </Link>
           </div>
         </div>
         <div className="col-span-1 flex flex-col gap-6">

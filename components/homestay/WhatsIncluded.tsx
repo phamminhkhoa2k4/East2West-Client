@@ -29,26 +29,40 @@ const items = [
   },
 ];
 
-const WhatsIncluded = () => {
+type AmenitiesType = {
+  amenitiesid: number;
+  amenitiesname: string;
+};
+
+type WhatsIncludedProps = {
+  amenities : AmenitiesType[];
+  checkAmenities : number[];
+}
+
+const WhatsIncluded = ({amenities,checkAmenities}: WhatsIncludedProps) => {
   return (
     <div className="flex flex-col space-y-6 my-8">
-      <h2 className="text-lg font-bold">What&apos;s included?</h2>
+      <h2 className="text-lg font-bold">Amenities</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 w-full">
-        {items.map(({ icon: IconComponent, color, text, title }) => (
-          <div key={title} className="aspect-w-16 aspect-h-9 md:aspect-h-1">
+        {amenities?.filter((amenity) => checkAmenities?.includes(amenity.amenitiesid))
+          .map((amenity) => (
             <div
-              className={`flex flex-col h-full justify-between p-6 rounded-xl ${color}`}
+              key={amenity.amenitiesid}
+              className="aspect-w-16 aspect-h-9 md:aspect-h-1"
             >
-              <div className="flex justify-start w-full">
-                <IconComponent className="text-3xl" />
-              </div>
-              <div className="flex flex-col flex-1 space-y-2 justify-end">
-                <h3 className="text-sm font-bold">{title}</h3>
-                <p className="text-sm">{text}</p>
+              <div
+                className={`flex flex-col h-full items-center justify-between p-6 rounded-xl bg-blue-50`}
+              >
+                <div className="flex justify-center  w-full">
+                  <HiWifi className="text-3xl" />
+                </div>
+                <div className="flex flex-col flex-1 space-y-2 justify-end">
+                  <h3 className="text-sm font-bold">{amenity.amenitiesname}</h3>
+                  {/* <p className="text-sm">{text}</p> */}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
       </div>
     </div>
   );

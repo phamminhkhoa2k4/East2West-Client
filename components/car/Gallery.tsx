@@ -29,19 +29,17 @@ const Gallery = ({ slides}: GalleryProps) => {
               className="flex w-full transition-transform ease-out duration-500"
               style={{ transform: `translateX(-${curve * 16.6666}%)` }}
             >
-              {[
-                ...slides.map((s) => (
-                  <div key={s} className="flex w-full border-white">
-                    <Image
-                      src={"/boat.png"}
-                      alt=""
-                      height={3000}
-                      width={4000}
-                      className="object-cover object-center w-full h-full"
-                    />
-                  </div>
-                )),
-              ]}
+              {slides.map((s) => (
+                <div key={s} className="flex w-full border-white">
+                  <Image
+                    src={s}
+                    alt=""
+                    height={3000}
+                    width={4000}
+                    className="object-cover object-center w-full h-full"
+                  />
+                </div>
+              ))}
             </div>
           </div>
           <div className="flex justify-between px-5 absolute top-54 w-full">
@@ -60,11 +58,13 @@ const Gallery = ({ slides}: GalleryProps) => {
             className="col-span-1 row-span-1 rounded-xl overflow-hidden"
           >
             <Image
-              src={"/boat.png"}
+              src={s}
               alt=""
               height={3000}
               width={4000}
-              className={`${curve === index ? "scale-110 border-blue-500 border-4" : ""} object-cover object-center w-full h-full`}
+              className={`${
+                curve === index ? "scale-110 border-blue-500 border-4" : ""
+              } object-cover object-center w-full h-full`}
             />
           </div>
         ))}

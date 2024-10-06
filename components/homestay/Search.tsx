@@ -107,6 +107,14 @@ export default function Search({isScroll}: SearchProps) {
   }, [checkInDate, checkOutDate, position, countAdult, countChildren, radius]);
 
   const handleSubmitSearch  = async () =>{
+    if (
+        position != null &&
+        radius > 0 &&
+        checkInDate != null &&
+        checkOutDate != null &&
+        countAdult > 0
+      ) {
+        console.log("kaka");
       try{
           const homestay = await getData({
             endpoint: `/homestays/search?longitude=${position?.lng}&latitude=${
@@ -123,7 +131,7 @@ export default function Search({isScroll}: SearchProps) {
           console.log(error);
           
       }
-  }
+  }}
 
   const handleClickOutside = (event: MouseEvent) => {
     if (PlaceRef.current && !PlaceRef.current.contains(event.target as Node)) {
@@ -308,6 +316,7 @@ export default function Search({isScroll}: SearchProps) {
                   className={`flex items-center gap-5 justify-center ${
                     isScroll ? "p-1.5 absolute -right-11" : "w-full"
                   }  bg-slate-400 text-white  rounded-full`}
+                  onClick={handleSubmitSearch}
                 >
                   <div>
                     <svg
@@ -325,12 +334,7 @@ export default function Search({isScroll}: SearchProps) {
                       />
                     </svg>
                   </div>
-                  <span
-                    className={`${isScroll ? "hidden" : ""}`}
-                    onClick={handleSubmitSearch}
-                  >
-                    Search
-                  </span>
+                  <span className={`${isScroll ? "hidden" : ""}`}>Search</span>
                 </div>
               </div>
             </PopoverTrigger>

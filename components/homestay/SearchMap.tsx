@@ -78,6 +78,7 @@ const Search: React.FC<{
   const [error, setError] = useState<{
     title: string;
     description: string;
+    status: string;
   } | null>(null);
   const selectingRef = useRef(false);
   const { toast } = useToast();
@@ -89,6 +90,7 @@ const Search: React.FC<{
       toast({
         title: error.title,
         description: error.description,
+        status: error.status
       });
       setError(null);
     }
@@ -132,26 +134,33 @@ const Search: React.FC<{
       })
       .catch((error) => {
         console.log("Error caught:", error.message);
-        let title, description;
+        let title, description , status;
 
         if (error.message === "We could not find your location.") {
           title = error.message;
           description = "Vì vậy, xin vui lòng nhập địa chỉ của bạn.";
+          status = "error";
         } else if (
           error.message === "The request to get user location timed out"
         ) {
           title = error.message;
           description = "Vì vậy, xin vui lòng thử lại";
+          status = "error";
+
         } else if (error.message === "User denied Geolocation") {
           title = error.message;
           description =
             "Please enable location access in your browser settings to use this feature.";
+          status = "error";
+
         } else {
           title = "An unknown error occurred";
           description = "Something went wrong, please try again.";
+          status = "error";
+
         }
 
-        setError({ title, description });
+        setError({ title, description, status });
       });
   }, [getCurrentPosition]);
 

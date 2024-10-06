@@ -130,7 +130,12 @@ const ListingDetails = ({
         </div>
         <hr />
         <div className="flex flex-col space-y-4">
-          <p>{description}</p>
+          <p>
+            {" "}
+            <strong>Description</strong>
+            <br />
+            {description}
+          </p>
           <p>
             <strong>Extra Information</strong>
             <br />
@@ -142,7 +147,7 @@ const ListingDetails = ({
         <div className="flex justify-between">
           <div>
             <div className="flex items-baseline space-x-2">
-              <span className="text-lg line-through text-gray-500">$115</span>
+              {/* <span className="text-lg line-through text-gray-500">$115</span> */}
               <span className="text-lg">${pricePerNight}</span>
               <span className="text-gray-500">/ night</span>
             </div>

@@ -11,7 +11,7 @@ interface Accommodation {
   durationaccommodation: string;
   accommodationtype: string;
   isbreadkfast: boolean;
-  accommodationthumbnail: string[];
+  accommodationthumbnail: string;
   roomtype: string;
 }
 

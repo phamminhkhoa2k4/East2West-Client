@@ -17,9 +17,10 @@ const Hero = () => {
         />
         <h1 className="bold-52 lg:bold-88">East2West Tours and Travel </h1>
         <p className="regular-16 mt-6 text-gray-30 xl:max-w-[520px]">
-          We want to be on each of your journeys seeking the satisfaction of
-          seeing the incorruptible beauty of nature. We can help you on an
-          adventure around the world in just one app
+          We always accompany you on every journey to discover the irresistible
+          charm of wonderful places. With just one application, you can easily
+          rent a homestays, book a car and book a tour to enjoy memorable
+          experiences on every trip.
         </p>
 
         <div className="my-11 flex flex-wrap gap-5">
@@ -44,9 +45,9 @@ const Hero = () => {
           </p>
         </div>
 
-        <div className="flex flex-col w-full gap-3 sm:flex-row">
+        {/* <div className="flex flex-col w-full gap-3 sm:flex-row">
           <Button title="Discovery Now" variant="btn_green" />
-        </div>
+        </div> */}
       </div>
       <div className=" relative top-36 right-36 mt-40 w-[33rem] grid gap-6 lg:mt-0">
         <div className="grid grid-cols-4 gap-6">

@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import Slider from "@/components/ui/Slider";
+// import Slider from "@/components/ui/Slider";
 interface Car {
   carId: number;
   carName: string;
@@ -162,71 +162,123 @@ const CarSearchResult = () => {
               type="text"
               placeholder="Car Name"
               value={filters.carName}
-              onChange={(e) => setFilters({ ...filters, carName: e.target.value })}
+              onChange={(e) =>
+                setFilters({ ...filters, carName: e.target.value })
+              }
             />
             <div>
-
-
               <Select
                 value={filters.modelId?.toString()}
-                onValueChange={(value) => setFilters({ ...filters, modelId: parseInt(value) })}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, modelId: parseInt(value) })
+                }
               >
                 <SelectTrigger className="w-full border outline-none">
                   <SelectValue>
-                    {filters.modelId ? `Model : ${models.find(model => model.modelId === filters.modelId)?.modelName}` : "Select Model"}
+                    {filters.modelId
+                      ? `Model : ${
+                          models.find(
+                            (model) => model.modelId === filters.modelId
+                          )?.modelName
+                        }`
+                      : "Select Model"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {models.map(model => (
-                    <SelectItem key={model.modelId} value={model.modelId.toString()}>{model.modelName}</SelectItem>
+                  {models.map((model) => (
+                    <SelectItem
+                      key={model.modelId}
+                      value={model.modelId.toString()}
+                    >
+                      {model.modelName}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
               <Select
                 value={filters.makeId?.toString()}
-                onValueChange={(value) => setFilters({ ...filters, makeId: parseInt(value) })}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, makeId: parseInt(value) })
+                }
               >
                 <SelectTrigger className="w-full border outline-none">
                   <SelectValue>
-                    {filters.makeId ? `Make : ${makes.find(make => make.makeId === filters.makeId)?.makeName}` : "Select Make"}
+                    {filters.makeId
+                      ? `Make : ${
+                          makes.find((make) => make.makeId === filters.makeId)
+                            ?.makeName
+                        }`
+                      : "Select Make"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {makes.map(make => (
-                    <SelectItem key={make.makeId} value={make.makeId.toString()}>{make.makeName}</SelectItem>
+                  {makes.map((make) => (
+                    <SelectItem
+                      key={make.makeId}
+                      value={make.makeId.toString()}
+                    >
+                      {make.makeName}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
               <Select
                 value={filters.typeId?.toString()}
-                onValueChange={(value) => setFilters({ ...filters, typeId: parseInt(value) })}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, typeId: parseInt(value) })
+                }
               >
                 <SelectTrigger className="w-full border outline-none">
                   <SelectValue>
-                    {filters.typeId ? `Type : ${types.find(type => type.typeId === filters.typeId)?.typeName}` : "Select Type"}
+                    {filters.typeId
+                      ? `Type : ${
+                          types.find((type) => type.typeId === filters.typeId)
+                            ?.typeName
+                        }`
+                      : "Select Type"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {types.map(type => (
-                    <SelectItem key={type.typeId} value={type.typeId.toString()}>{type.typeName}</SelectItem>
+                  {types.map((type) => (
+                    <SelectItem
+                      key={type.typeId}
+                      value={type.typeId.toString()}
+                    >
+                      {type.typeName}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
               <Select
                 value={filters.locationtypeId?.toString()}
-                onValueChange={(value) => setFilters({ ...filters, locationtypeId: parseInt(value) })}
+                onValueChange={(value) =>
+                  setFilters({ ...filters, locationtypeId: parseInt(value) })
+                }
               >
                 <SelectTrigger className="w-full border outline-none">
                   <SelectValue>
-                    {filters.locationtypeId ? `Location Type : ${locationtypes.find(locationtypes => locationtypes.locationtypeid === filters.locationtypeId)?.locationtypename}` : "Select Type"}
+                    {filters.locationtypeId
+                      ? `Location Type : ${
+                          locationtypes.find(
+                            (locationtypes) =>
+                              locationtypes.locationtypeid ===
+                              filters.locationtypeId
+                          )?.locationtypename
+                        }`
+                      : "Select Type"}
                   </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  {locationtypes.map(locationtypes => (
-                    <SelectItem key={locationtypes.locationtypeid} value={locationtypes.locationtypeid.toString()}>{locationtypes.locationtypename}</SelectItem>
+                  {locationtypes.map((locationtypes) => (
+                    <SelectItem
+                      key={locationtypes.locationtypeid}
+                      value={locationtypes.locationtypeid.toString()}
+                    >
+                      {locationtypes.locationtypename}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -236,33 +288,53 @@ const CarSearchResult = () => {
                 <input
                   type="checkbox"
                   checked={filters.airConditioned ?? false}
-                  onChange={(e) => setFilters({ ...filters, airConditioned: e.target.checked })}
+                  onChange={(e) =>
+                    setFilters({ ...filters, airConditioned: e.target.checked })
+                  }
                 />
               </label>
 
-              <div>
+              {/* <div>
                 <div>Price Range:</div>
                 <Slider
                   min={0}
                   max={1000}
                   step={10}
                   value={[filters.minPrice ?? 0, filters.maxPrice ?? 1000]}
-                  onValueChange={(value) => setFilters({ ...filters, minPrice: value[0], maxPrice: value[1] })}
+                  onValueChange={(value) =>
+                    setFilters({
+                      ...filters,
+                      minPrice: value[0],
+                      maxPrice: value[1],
+                    })
+                  }
                 />
-                <div>Min: ${filters.minPrice ?? 0}, Max: ${filters.maxPrice ?? 1000}</div>
-              </div>
+                <div>
+                  Min: ${filters.minPrice ?? 0}, Max: $
+                  {filters.maxPrice ?? 1000}
+                </div>
+              </div> */}
 
-              <div>
+              {/* <div>
                 <div>Miles Range:</div>
                 <Slider
                   min={0}
                   max={200000}
                   step={1000}
                   value={[filters.minMiles ?? 0, filters.maxMiles ?? 200000]}
-                  onValueChange={(value) => setFilters({ ...filters, minMiles: value[0], maxMiles: value[1] })}
+                  onValueChange={(value) =>
+                    setFilters({
+                      ...filters,
+                      minMiles: value[0],
+                      maxMiles: value[1],
+                    })
+                  }
                 />
-                <div>Min: {filters.minMiles ?? 0}, Max: {filters.maxMiles ?? 200000}</div>
-              </div>
+                <div>
+                  Min: {filters.minMiles ?? 0}, Max:{" "}
+                  {filters.maxMiles ?? 200000}
+                </div>
+              </div> */}
               <button onClick={resetFilters}>Clear All</button>
               <button onClick={handleSearch}>Search</button>
             </div>
@@ -299,9 +371,10 @@ const CarSearchResult = () => {
                   <SelectTrigger className="w-[180px] border outline-none">
                     <SelectValue>
                       {selectedValue
-                        ? `Sort By : ${selectedValue.charAt(0).toUpperCase() +
-                        selectedValue.slice(1)
-                        }`
+                        ? `Sort By : ${
+                            selectedValue.charAt(0).toUpperCase() +
+                            selectedValue.slice(1)
+                          }`
                         : "Sort By :"}
                     </SelectValue>
                   </SelectTrigger>
@@ -319,10 +392,8 @@ const CarSearchResult = () => {
               </div>
             </div>
             <div className="ml-5 flex flex-col gap-5 ">
-              {cars.map((car) => (
-                <CardSearch
-                  car={car} // Pass the entire car object to CardSearch
-                />
+              {cars.map((car, index) => (
+                <CardSearch car={car} key={index} />
               ))}
             </div>
           </div>
