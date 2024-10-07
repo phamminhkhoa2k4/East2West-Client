@@ -106,32 +106,48 @@ export default function Search({isScroll}: SearchProps) {
     });
   }, [checkInDate, checkOutDate, position, countAdult, countChildren, radius]);
 
-  const handleSubmitSearch  = async () =>{
-    if (
-        position != null &&
-        radius > 0 &&
-        checkInDate != null &&
-        checkOutDate != null &&
-        countAdult > 0
-      ) {
-        console.log("kaka");
-      try{
-          const homestay = await getData({
-            endpoint: `/homestays/search?longitude=${position?.lng}&latitude=${
-              position?.lat
-            }&radius=${radius}&checkin_date=${
-              checkInDate ? format(new Date(checkInDate), "yyyy-dd-MM") : ""
-            }&checkout_date=${
-              checkOutDate ? format(new Date(checkOutDate), "yyyy-dd-MM") : ""
-            }&guests=${countAdult + countChildren}&status=available`,
-          });
-          setHomestaysContext(homestay);
-          setIs(true)
-      }catch(error){
-          console.log(error);
-          
-      }
-  }}
+  const parseDateString = (dateString : string) => {
+    const [day, month, year] = dateString.split("/").map(Number);
+    return new Date(year, month - 1, day); 
+  };
+
+const handleSubmitSearch = async () => {
+  if (
+    position != null &&
+    radius > 0 &&
+    checkInDate != null &&
+    checkOutDate != null &&
+    countAdult > 0
+  ) {
+    console.log("kaka");
+
+    try {
+      const formattedCheckInDate =
+        checkInDate && !isNaN(new Date(parseDateString(checkInDate)).getTime())
+          ? format(new Date(parseDateString(checkInDate)), "yyyy-MM-dd") // Định dạng chính xác là yyyy-MM-dd
+          : "";
+      const formattedCheckOutDate =
+        checkOutDate &&
+        !isNaN(new Date(parseDateString(checkOutDate)).getTime())
+          ? format(new Date(parseDateString(checkOutDate)), "yyyy-MM-dd") // Định dạng chính xác là yyyy-MM-dd
+          : "";
+
+      const homestay = await getData({
+        endpoint: `/homestays/search?longitude=${position?.lng}&latitude=${
+          position?.lat
+        }&radius=${radius}&checkin_date=${formattedCheckInDate}&checkout_date=${formattedCheckOutDate}&guests=${
+          countAdult + countChildren
+        }&status=available`,
+      });
+      setHomestaysContext(homestay);
+      setIs(true);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+};
+
+
 
   const handleClickOutside = (event: MouseEvent) => {
     if (PlaceRef.current && !PlaceRef.current.contains(event.target as Node)) {
@@ -316,7 +332,6 @@ export default function Search({isScroll}: SearchProps) {
                   className={`flex items-center gap-5 justify-center ${
                     isScroll ? "p-1.5 absolute -right-11" : "w-full"
                   }  bg-slate-400 text-white  rounded-full`}
-                  onClick={handleSubmitSearch}
                 >
                   <div>
                     <svg
@@ -334,7 +349,16 @@ export default function Search({isScroll}: SearchProps) {
                       />
                     </svg>
                   </div>
-                  <span className={`${isScroll ? "hidden" : ""}`}>Search</span>
+                  <span
+                    className={`${isScroll ? "hidden" : ""}`}
+                    onClick={() =>  {
+                      console.log("asddfsdf");
+                      
+                      handleSubmitSearch();
+                    }}
+                  >
+                    Search
+                  </span>
                 </div>
               </div>
             </PopoverTrigger>

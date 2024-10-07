@@ -6,6 +6,7 @@ import { TbAirConditioning } from "react-icons/tb";
 import { SiFueler } from "react-icons/si";
 import { GoPeople } from "react-icons/go";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 interface Car {
   carId: number;
   carName: string;
@@ -31,7 +32,7 @@ interface Car {
   fueltankcapacity?: string | null;
   fuel?: string | null;
   location?: string | null;
-  imageUrl?: string;
+  thumbnail: string[];
 }
 
 interface CardSearchProps {
@@ -50,7 +51,7 @@ const CardSearch = ({ car }: CardSearchProps) => {
       <div className="flex items-center gap-5 p-6">
         <div className="w-2/4 h-[80%] rounded-lg overflow-hidden">
           <Image
-            src={car.imageUrl || "/placeholder.png"}
+            src={car?.thumbnail[0]}
             alt={car.carName || "Car Image"}
             height={300}
             width={400}
@@ -127,9 +128,9 @@ const CardSearch = ({ car }: CardSearchProps) => {
               <div className="text-base font-medium">Price For 1 Day:</div>
               <div className="text-2xl font-bold">${car.pricePerDay}</div>
             </div>
-            <button className="font-bold text-lg px-8 py-3 border shadow-sm rounded-lg text-white bg-blue-500" >
+            <Link  href={`/cars/${car?.carId}`} className="font-bold text-lg px-8 py-3 border shadow-sm rounded-lg text-white bg-blue-500" >
               View Detail
-            </button>
+            </Link>
           </div>
         </div>
       </div>

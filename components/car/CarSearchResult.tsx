@@ -49,7 +49,7 @@ interface Car {
   miles: string;
   fueltankcapacity: string;
   fuel: string;
-  imageUrl?: string;
+  thumbnail: string[];
 }
 
 interface CarSearchFilters {
@@ -157,16 +157,17 @@ const CarSearchResult = () => {
         </div>
         <div className="flex">
           <div className="p-5 w-1/4 border-r ">
-            <label>test</label>
+            <label>Search   </label>
             <input
               type="text"
+              className="border py-1 px-2 rounded-xl"
               placeholder="Car Name"
               value={filters.carName}
               onChange={(e) =>
                 setFilters({ ...filters, carName: e.target.value })
               }
             />
-            <div>
+            <div className="mt-5 flex flex-col gap-5">
               <Select
                 value={filters.modelId?.toString()}
                 onValueChange={(value) =>
@@ -335,14 +336,14 @@ const CarSearchResult = () => {
                   {filters.maxMiles ?? 200000}
                 </div>
               </div> */}
-              <button onClick={resetFilters}>Clear All</button>
-              <button onClick={handleSearch}>Search</button>
+              <button onClick={resetFilters} className="bg-blue-500 rounded-lg text-white font-bold py-3">Clear All</button>
+              <button onClick={handleSearch} className="bg-blue-500 rounded-lg text-white font-bold py-3">Search</button>
             </div>
           </div>
           <div className="p-5 w-3/4 h-[1032px] overflow-y-scroll scroll-transparent">
             <div className="flex items-center justify-between ml-5 mb-5">
               <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1 py-1 px-2 bg-blue-200 border-blue rounded-lg">
+                {/* <div className="flex items-center gap-1 py-1 px-2 bg-blue-200 border-blue rounded-lg">
                   Customizable{" "}
                   <span>
                     <svg
@@ -360,11 +361,11 @@ const CarSearchResult = () => {
                       />
                     </svg>
                   </span>
-                </div>
-                <div className="font-bold text-blue">Clear All</div>
+                </div> */}
+                {/* <div className="font-bold text-blue">Clear All</div> */}
               </div>
               <div>
-                <Select
+                {/* <Select
                   value={selectedValue}
                   onValueChange={(value) => setSelectedValue(value)}
                 >
@@ -388,7 +389,7 @@ const CarSearchResult = () => {
                       <SelectItem value="pineapple">Pineapple</SelectItem>
                     </SelectGroup>
                   </SelectContent>
-                </Select>
+                </Select> */}
               </div>
             </div>
             <div className="ml-5 flex flex-col gap-5 ">

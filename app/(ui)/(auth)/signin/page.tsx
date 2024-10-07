@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 const SignIn: React.FC = () => {
   return (
     <>
-      <div className="mx-20">
+      {/* <div className="mx-20">
         <Breadcrumb />
-      </div>
+      </div> */}
 
-      <div className="border shadow-md mx-24 my-10 rounded-[10px] bg-white">
+      <div className="border shadow-md mx-24 my-10 rounded-[10px] bg-white mt-40">
         <div className="flex flex-wrap items-center">
           <div className="w-full xl:w-1/2">
             <div className="w-full p-4 sm:p-12.5 xl:p-15 xl:-mt-8">

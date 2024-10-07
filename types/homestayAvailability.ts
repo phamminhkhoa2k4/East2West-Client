@@ -3,4 +3,5 @@ interface HomestayAvailability {
   date: string;
   pricepernight: number;
   status: string;
+  homestayid?: number;
 }

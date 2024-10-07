@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-
 import {
   Tooltip,
   TooltipContent,
@@ -19,8 +18,8 @@ interface Events {
 }
 
 type CalendarProps = {
-  setCheckInDate: (value: string) => void;
-  setCheckOutDate: (value: string) => void;
+  setCheckInDate: (value: string | null) => void;
+  setCheckOutDate: (value: string | null) => void;
   checkInDate: string | null;
   checkOutDate: string | null;
 };
@@ -93,7 +92,7 @@ const Calendar = ({
       setCheckOutDate(date);
     } else {
       setCheckInDate(date);
-      setCheckOutDate(null!);
+      setCheckOutDate(null);
     }
   };
 
@@ -102,10 +101,12 @@ const Calendar = ({
       return events[date].map((event, index) => (
         <div
           key={index}
-          className="event invisible absolute left-2 z-99 mb-1 flex w-[200%] flex-col rounded-r-[5px] border-l-[3px] border-primary bg-gray-2 px-3 py-1 text-left opacity-0 group-hover:visible group-hover:opacity-100  md:visible md:w-[190%] md:opacity-100"
+          className="event invisible absolute left-1 z-99 mb-0.5 flex w-full flex-col rounded-r-[2.5px] border-l-[1.5px] border-primary bg-gray-2 px-1.5 py-0.5 text-left opacity-0 group-hover:visible group-hover:opacity-100  md:visible md:w-full md:opacity-100"
         >
-          <span className="event-name font-medium text-dark">{event.name}</span>
-          <span className="time text-sm">{event.time}</span>
+          <span className="event-name font-medium text-dark text-xs">
+            {event.name}
+          </span>
+          <span className="time text-[10px]">{event.time}</span>
         </div>
       ));
     }
@@ -131,10 +132,10 @@ const Calendar = ({
       days.push(
         <td
           key={`prev-${i}`}
-          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200  md:h-25 md:p-6 xl:h-31"
+          className="ease relative h-10 cursor-pointer border border-stroke p-1 transition duration-500 bg-gray-200 md:h-12 xl:h-15"
           onClick={() => handleDayClick(dateString)}
         >
-          <span className="font-medium text-gray-500 ">
+          <span className="font-medium text-gray-500 text-xs">
             {prevMonthDays - i}
           </span>
           {renderEvents(dateString)}
@@ -147,7 +148,7 @@ const Calendar = ({
       days.push(
         <td
           key={day}
-          className={`ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 ${
+          className={`ease relative h-10 cursor-pointer border border-stroke p-1 transition duration-500 ${
             (checkInDate && checkInDate === dateString) ||
             (checkOutDate &&
               checkInDate &&
@@ -155,23 +156,25 @@ const Calendar = ({
               dateString <= checkOutDate)
               ? "bg-blue-200"
               : "hover:bg-gray-2"
-          } md:h-25 md:p-6 xl:h-31`}
+          } md:h-12 xl:h-15`}
           onClick={() => handleDayClick(dateString)}
         >
           <span
-            className={`font-medium  ${
+            className={`font-medium text-xs ${
               (checkInDate && checkInDate === dateString) ||
               (checkOutDate && checkOutDate === dateString)
                 ? "text-blue-500 "
                 : dateString === todayString
-                ? "text-white bg-blue-500 p-4 rounded-full"
+                ? "text-white bg-blue-500 p-2 rounded-full"
                 : "text-dark"
             }`}
           >
             {day}
           </span>
-          <div className="group h-16 w-full flex-grow cursor-pointer py-1 md:h-30">
-            <span className="group-hover:text-primary md:hidden">More</span>
+          <div className="group h-8 w-full flex-grow cursor-pointer py-0.5 md:h-15">
+            <span className="group-hover:text-primary md:hidden text-xs">
+              More
+            </span>
             {renderEvents(dateString)}
           </div>
         </td>
@@ -184,10 +187,10 @@ const Calendar = ({
       days.push(
         <td
           key={`next-${i}`}
-          className="ease relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 bg-gray-200  md:h-25 md:p-6 xl:h-31"
+          className="ease relative h-10 cursor-pointer border border-stroke p-1 transition duration-500 bg-gray-200 md:h-12 xl:h-15"
           onClick={() => handleDayClick(dateString)}
         >
-          <span className="font-medium text-gray-500 ">{i}</span>
+          <span className="font-medium text-gray-500 text-xs">{i}</span>
           {renderEvents(dateString)}
         </td>
       );
@@ -197,14 +200,14 @@ const Calendar = ({
   };
 
   return (
-    <div className="w-full max-w-full rounded-[10px] bg-white shadow-1 ">
-      <div className="flex items-center justify-between p-4">
+    <div className="w-full max-w-full rounded-[5px] bg-white shadow-1 transform scale-70">
+      <div className="flex items-center justify-between p-2">
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={goToPreviousMonth}
-                className="p-2 border-none rounded"
+                className="p-1 border-none rounded"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +215,7 @@ const Calendar = ({
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  className="size-6"
+                  className="size-3"
                 >
                   <path
                     stroke-linecap="round"
@@ -223,7 +226,7 @@ const Calendar = ({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Previous Year</p>
+              <p className="text-xs">Previous Year</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -233,7 +236,7 @@ const Calendar = ({
             <TooltipTrigger asChild>
               <button
                 onClick={goToPreviousYear}
-                className="p-2 border-none  rounded"
+                className="p-1 border-none rounded"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -241,7 +244,7 @@ const Calendar = ({
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  className="size-6"
+                  className="size-3"
                 >
                   <path
                     stroke-linecap="round"
@@ -252,21 +255,22 @@ const Calendar = ({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Previous Month</p>
+              <p className="text-xs">Previous Month</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
-        <h2 className="text-lg font-bold">
+        <h2 className="text-sm font-bold">
           {currentDate.toLocaleString("default", { month: "long" })}{" "}
           {currentDate.getFullYear()}
         </h2>
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={goToNextYear}
-                className="p-2  border-none rounded"
+                className="p-1 border-none rounded"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -274,7 +278,7 @@ const Calendar = ({
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  className="size-6"
+                  className="size-3"
                 >
                   <path
                     stroke-linecap="round"
@@ -285,16 +289,17 @@ const Calendar = ({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Next Month</p>
+              <p className="text-xs">Next Month</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
+
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={goToNextMonth}
-                className="p-2 border-none rounded"
+                className="p-1 border-none rounded"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -302,7 +307,7 @@ const Calendar = ({
                   viewBox="0 0 24 24"
                   stroke-width="1.5"
                   stroke="currentColor"
-                  className="size-6"
+                  className="size-3"
                 >
                   <path
                     stroke-linecap="round"
@@ -313,14 +318,15 @@ const Calendar = ({
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Next Year</p>
+              <p className="text-xs">Next Year</p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </div>
+
       <table className="w-full">
         <thead>
-          <tr className="grid grid-cols-7 rounded-t-[10px] bg-primary text-white">
+          <tr className="grid grid-cols-7 rounded-t-[5px] bg-primary text-white">
             {[
               "Sunday",
               "Monday",
@@ -332,11 +338,11 @@ const Calendar = ({
             ].map((day, index) => (
               <th
                 key={index}
-                className={`flex h-15 items-center justify-center ${
-                  index === 0 ? "rounded-tl-[10px]" : ""
+                className={`flex h-7.5 items-center justify-center ${
+                  index === 0 ? "rounded-tl-[5px]" : ""
                 } ${
-                  index === 6 ? "rounded-tr-[10px]" : ""
-                } p-1 text-body-xs font-medium sm:text-base xl:p-5`}
+                  index === 6 ? "rounded-tr-[5px]" : ""
+                } p-0.5 text-[10px] font-medium sm:text-xs xl:p-2.5`}
               >
                 <span className="hidden lg:block">{day}</span>
                 <span className="block lg:hidden">{day.slice(0, 3)}</span>

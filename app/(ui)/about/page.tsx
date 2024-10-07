@@ -11,26 +11,25 @@ export const metadata: Metadata = {
 export default function About(){
     return (
       <>
-        <Banner url={"/banner/about_banner.jpeg"}  />
-        <div className="mx-20">
+        <Banner url={"/banner/about_banner.jpeg"} />
+        {/* <div className="mx-20">
           <Breadcrumb />
-        </div>
+        </div> */}
         <div className="mx-40">
           <div>
             <h1 className="my-5 text-center font-medium text-3xl text-[#757474aa]">
               Our Experts Are Like No Other
             </h1>
             <p className="text-center mb-10 text-lg">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatem nisi vel nostrum dolores enim obcaecati est qui quia
-              laudantium at nesciunt velit atque, ut, nobis perspiciatis id hic
-              exercitationem minima!
+              We built a website with 3 services including booking tours and
+              renting cars by the day, and a brokerage platform for posting
+              homestays, and a flight and hotel search function.
             </p>
           </div>
           <div className="grid grid-cols-3 gap-5 mx-60">
             <div className="h-80 rounded-lg mt-30 overflow-hidden relative">
               <Image
-                src={"/boat.png"}
+                src={"/person/minh.jpg"}
                 alt=""
                 height={200}
                 width={150}
@@ -50,7 +49,7 @@ export default function About(){
             </div>
             <div className="h-80 rounded-lg overflow-hidden relative">
               <Image
-                src={"/boat.png"}
+                src={"/person/khoa.jpg"}
                 alt=""
                 height={200}
                 width={150}
@@ -70,7 +69,7 @@ export default function About(){
             </div>
             <div className="h-80 rounded-lg mt-30 overflow-hidden relative">
               <Image
-                src={"/boat.png"}
+                src={"/person/tan.jpg"}
                 alt=""
                 height={200}
                 width={150}
@@ -93,3 +92,7 @@ export default function About(){
       </>
     );
 }
+
+
+
+

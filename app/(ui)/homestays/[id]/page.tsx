@@ -12,6 +12,11 @@ type Role = {
   roleId: number;
   roleName: string;
 };
+
+type AmenitiesType = {
+  amenitiesid: number;
+  amenitiesname: string;
+};
 type User = {
   userId: number;
   username: string;
@@ -26,9 +31,28 @@ type User = {
 const [homestay, setHomestay] = useState<Homestay>();
 const [owner, setOwner] = useState <User>();
 const [loading, setLoading] = useState(true);
+const [amenities, setAmenities] = useState<AmenitiesType[] | null>();
+const [checkAmenities, setCheckAmenities] = useState<number[]>(
+  homestay?.perkIds!,
+);
 
 
 
+
+  useEffect(() => {
+    const fetchAmenities = async () => {
+      try {
+        const amenities = await getData({
+          endpoint: "/homestays/host/amenities",
+        });
+        setAmenities(amenities);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchAmenities();
+  }, []);
 
             
             
@@ -41,6 +65,7 @@ const [loading, setLoading] = useState(true);
                 }).then((owner: User) => {
                   setHomestay(data);
                   setOwner(owner);
+                  setCheckAmenities(data?.perkIds!)
                 });
             })
        
@@ -66,7 +91,7 @@ const [loading, setLoading] = useState(true);
    return (
      <>
        <div className="mx-20 mt-36">
-         <Breadcrumb />
+         {/* <Breadcrumb /> */}
          <TitleDetails
            title={homestay?.title}
            location={homestay?.address}
@@ -80,6 +105,7 @@ const [loading, setLoading] = useState(true);
          />
          <Gallery photos={homestay?.photos ?? []} />
          <ListingDetails
+           homestay={homestay!}
            description={homestay?.description}
            extraInfo={homestay?.extraInfo}
            pricePerNight={todayAvailability?.pricepernight}
@@ -88,7 +114,10 @@ const [loading, setLoading] = useState(true);
            maxGuest={homestay?.maxGuest}
            homestayId={homestay?.homestayid}
          />
-         <WhatsIncluded />
+         <WhatsIncluded
+           amenities={amenities!}
+           checkAmenities={checkAmenities}
+         />
          <hr className="my-4 border-t border-gray-300" />
          {/* <ThingsToKnow /> */}
        </div>

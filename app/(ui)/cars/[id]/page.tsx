@@ -62,8 +62,8 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
     "/boat.png",
     "/boat.png",
   ]);
-  const [rentalDate, setRentalDate] = useState<string>('');
-  const [returnDate, setReturnDate] = useState<string>('');
+  const [rentalDate, setRentalDate] = useState<string |null >('');
+  const [returnDate, setReturnDate] = useState<string | null>("");
   const [error, setError] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<any>(null);
 
@@ -100,7 +100,7 @@ const fetchCarData = async (id: string): Promise<Car> => {
     return <div>Loading...</div>;
   }
 
-  const days = Math.ceil((new Date(returnDate).getTime() - new Date(rentalDate).getTime()) / (1000 * 3600 * 24));
+  const days = Math.ceil((new Date(returnDate!).getTime() - new Date(rentalDate!).getTime()) / (1000 * 3600 * 24));
   const totalAmount = car.pricePerDay * days;
 
   const handleSubmit = async () => {
@@ -148,10 +148,10 @@ const fetchCarData = async (id: string): Promise<Car> => {
 
   return (
     <>
-      <div className="mx-10 mt-40">
+      {/* <div className="mx-10 mt-40">
         <Breadcrumb />
-      </div>
-      <div className="mx-20">
+      </div> */}
+      <div className="mx-20 mt-40">
         <Gallery slides={slides} />
         <div className="flex flex-col gap-2 my-15 w-2/3">
           <div className="text-4xl font-bold mt-5 mb-3">{car.carName}</div>

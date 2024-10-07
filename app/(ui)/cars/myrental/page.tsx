@@ -7,9 +7,9 @@ import { CiLocationOn } from "react-icons/ci";
 const MyRental = () => {
   return (
     <>
-      <div className="mx-10 mt-36">
+      {/* <div className="mx-10 mt-36">
         <Breadcrumb />
-      </div>
+      </div> */}
       <div className="mx-20 rounded-2xl border shadow-md">
         <Tabs
           defaultValue="Upcoming"

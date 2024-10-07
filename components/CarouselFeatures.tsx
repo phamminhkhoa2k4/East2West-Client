@@ -31,8 +31,13 @@ export function CarouselFeatures() {
                 <div className="flex flex-col items-start justify-center md:w-3/5">
                   <p className="mb-5 text-xl font-normal text-white">
                     Easy Booking, Easy Payment <br />
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Error qui nemo voluptas nisi aliquid ut
-                    beatae animi, nesciunt cupiditate adipisci unde non in sed aut, placeat aspernatur eum, praesentium esse?
+                    We offer comprehensive car rental and tour booking services,
+                    making it easy for customers to explore their favorite
+                    destinations. Additionally, our homestay brokerage platform
+                    connects travelers with local hosts, providing unique,
+                    comfortable, and affordable accommodation experiences. With
+                    a fast, secure, and transparent booking system, we are
+                    always ready to accompany you on every journey.
                   </p>
                   <div className="flex items-center gap-2">
                     🚚

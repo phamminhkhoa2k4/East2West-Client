@@ -50,9 +50,9 @@ const Flights = () => {
       {!isLoading && (
         <>
           {!isDetail && <Banner url={"/banner/flight_banner.jpeg"} />}
-          <div className={`mx-20 ${!isDetail ? "" : "mt-45"}`}>
+          {/* <div className={`mx-20 ${!isDetail ? "" : "mt-45"}`}>
             <Breadcrumb />
-          </div>
+          </div> */}
           {!isDetail && <Search setFlights={setFlights} />}
           {console.log(flights!)}
 

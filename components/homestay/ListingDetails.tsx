@@ -40,6 +40,7 @@ type ListingDetailsProps = {
   maxGuest: number | undefined;
   homestayId: number | undefined | null;
   owner: User | undefined;
+  homestay: Homestay;
 };
 
 const ListingDetails = ({
@@ -50,6 +51,7 @@ const ListingDetails = ({
   cleaningFee,
   homestayId,
   owner,
+  homestay
 }: ListingDetailsProps) => {
   const [amount, setAmount] = useState<number>();
   const [checkInDate, setCheckInDate] = useState<string | null>(null);
@@ -63,6 +65,10 @@ const ListingDetails = ({
     countAdult: number;
     countChildren: number;
   };
+
+
+  
+  
 
   const totalGuest = ({ countAdult, countChildren }: totalGuestProps) => {
     return countAdult + countChildren;
@@ -186,6 +192,7 @@ const ListingDetails = ({
             </PopoverTrigger>
             <PopoverContent>
               <Calendar
+                availability={homestay?.availability!}
                 setCheckOutDate={setCheckOutDate}
                 setCheckInDate={setCheckInDate}
                 checkInDate={checkInDate}
@@ -212,6 +219,7 @@ const ListingDetails = ({
             </PopoverTrigger>
             <PopoverContent>
               <Calendar
+                availability={homestay?.availability!}
                 setCheckOutDate={setCheckOutDate}
                 setCheckInDate={setCheckInDate}
                 checkInDate={checkInDate}

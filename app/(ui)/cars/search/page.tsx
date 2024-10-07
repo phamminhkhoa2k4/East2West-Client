@@ -4,10 +4,10 @@ import CarSearchResult from "@/components/car/CarSearchResult";
 const Search = () => {
     return (
       <>
-        <div className="mx-20">
+        {/* <div className="mx-20 mt-40">
           <Breadcrumb />
-        </div>
-        <div className="mx-40">
+        </div> */}
+        <div className="mx-40 mt-40">
             <CarSearchResult/>
         </div>
       </>

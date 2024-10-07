@@ -13,9 +13,9 @@ import { Metadata } from "next";export const metadata: Metadata = {
   return (
     <>
       <Banner url={"/banner/car_banner.jpeg"} />
-      <div className="mx-20">
+      {/* <div className="mx-20">
         <Breadcrumb />
-      </div>
+      </div> */}
       <Brands />
       <div className="mx-20">
         <OurService />
