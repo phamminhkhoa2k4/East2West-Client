@@ -18,9 +18,9 @@ const Tours = () => {
   return (
     <>
       <Banner url={"/banner/tour_banner.jpeg"} />
-      <div className="mx-20">
+      {/* <div className="mx-20">
         <Breadcrumb />
-      </div>
+      </div> */}
       <div className="mx-40">
         <Recently />
         <CarouselFeatures />

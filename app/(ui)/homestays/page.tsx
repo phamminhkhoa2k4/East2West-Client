@@ -20,6 +20,7 @@ interface HomestayAvailability {
   date: string;
   pricepernight: number;
   status: string;
+  homestayid?: number;
 }
 
 export type Homestay = {
@@ -275,8 +276,7 @@ const Homestays: React.FC = () => {
         setIsLoading(false);
       }
     };
-
-    fetchFilterStructure();
+    if (structuresId) fetchFilterStructure();
   }, [structuresId]);
 
   React.useEffect(() => {
@@ -293,9 +293,9 @@ const Homestays: React.FC = () => {
           {!isMap && (
             <>
               <Banner url={"/banner/homestay_banner.jpeg"} />
-              <div className="mx-20">
+              {/* <div className="mx-20">
                 <Breadcrumb />
-              </div>
+              </div> */}
             </>
           )}
 

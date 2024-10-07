@@ -74,9 +74,12 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
+    console.log("kaka");
     if (typeof window !== "undefined") {
       const storedUserInfo = localStorage.getItem("userInfo");
       if (storedUserInfo) {
+        console.log("kaka");
+        
         setUser(JSON.parse(storedUserInfo));
       }
     }
@@ -229,14 +232,14 @@ const Navbar = () => {
                     <DropdownMenuLabel>Homestays</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuGroup>
-                      <DropdownMenuItem>
+                      {/* <DropdownMenuItem>
                         <IoIosNotificationsOutline className="mr-2 h-4 w-4" />
                         <Link href="/">Notification</Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <MdCardTravel className="mr-2 h-4 w-4" />
                         <Link href="">Trips</Link>
-                      </DropdownMenuItem>
+                      </DropdownMenuItem> */}
                       {user.roles[0] === "ROLE_BUSINESS" ||
                         (user.roles[0] === "ROLE_MODERATOR" && (
                           <DropdownMenuItem>
@@ -276,7 +279,7 @@ const Navbar = () => {
                   url="/signin"
                 />
               )}
-              <div className="relative">
+              {/* <div className="relative">
                 <Select value={selectedValue} onValueChange={setSelectedValue}>
                   <SelectTrigger className="p-3 w-[50px] outline-none">
                     <SelectValue>
@@ -323,7 +326,7 @@ const Navbar = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select>
-              </div>
+              </div> */}
               <Image
                 src="/menu.svg"
                 width={32}
@@ -340,16 +343,16 @@ const Navbar = () => {
               <Search isScroll={isScroll} />
             </div>
           )}
-          {pathname === "/tours" && (
+          {/* {pathname === "/tours" && (
             <div className="flex justify-center">
               <SearchTour isScroll={isScroll} />
             </div>
-          )}
-          {pathname === "/cars" && (
+          )} */}
+          {/* {pathname === "/cars" && (
             <div className="flex justify-center">
               <SearchCar isScroll={isScroll} />
             </div>
-          )}
+          )} */}
         </nav>
       )}
     </>

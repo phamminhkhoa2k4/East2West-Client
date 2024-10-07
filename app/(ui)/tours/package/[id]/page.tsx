@@ -117,7 +117,7 @@ const Package = () => {
   return (
     <>
       <div className="mx-10 mt-40">
-        <Breadcrumb />
+        {/* <Breadcrumb /> */}
       </div>
       <div className="mx-20">
         <div className="mb-5">

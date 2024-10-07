@@ -12,12 +12,15 @@ export default function Home() {
   return (
     <div className="mx-20">
       <Hero />
-      <TopCategories />
+      <div className="mt-20">
+        <TopCategories />
+      </div>
+
       {/* <Categories /> */}
       {/* <OtherOffers /> */}
       <Feature />
       <CarouselFeatures />
-      <Criteria />
+      {/* <Criteria /> */}
       {/* <Faq /> */}
     </div>
   );

@@ -7,7 +7,7 @@ const MyBooking = () => {
   return (
     <>
       <div className="mx-10 mt-36">
-        <Breadcrumb />
+        {/* <Breadcrumb /> */}
       </div>
       <div className="mx-20 rounded-2xl border shadow-md">
         <Tabs

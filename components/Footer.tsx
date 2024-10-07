@@ -1,5 +1,5 @@
 "use client"
-import { FOOTER_CONTACT_INFO, FOOTER_LINKS, GALLERY, SOCIALS } from '@/constants/constant.index'
+import { FOOTER_CONTACT_INFO, FOOTER_LINKS, GALLERY, Member, SOCIALS } from '@/constants/constant.index'
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -19,9 +19,9 @@ const Footer = () => {
                     <Image src="/Logo.png" alt="logo" width={181} height={56} />
                   </Link>
                   <p className="mt-7 medium-20 whitespace-nowrap text-blue-70">
-                    Lorem ipsum dolor sit amet,
-                    <br /> consectetur adipiscing elit,
-                    <br /> sed do eiusmod tempo.
+                    service rental cars
+                    <br /> service booking tour
+                    <br /> homestay brokerage platform
                   </p>
 
                   <ul className="mt-9 regular-14 flex gap-4 text-gray-30">
@@ -34,8 +34,8 @@ const Footer = () => {
                 </div>
 
                 <div className="flex flex-col gap-5">
-                  <FooterColumn title={FOOTER_CONTACT_INFO.title}>
-                    {FOOTER_CONTACT_INFO.links.map((link: any) => (
+                  <FooterColumn title={Member.title}>
+                    {Member.links.map((link: any) => (
                       <Link
                         href="/"
                         key={link.label}

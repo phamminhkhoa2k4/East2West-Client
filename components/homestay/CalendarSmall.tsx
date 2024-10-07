@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -22,9 +22,11 @@ type CalendarProps = {
   setCheckOutDate: (value: string | null) => void;
   checkInDate: string | null;
   checkOutDate: string | null;
+  availability: HomestayAvailability[];
 };
 
 const Calendar = ({
+  availability,
   setCheckInDate,
   setCheckOutDate,
   checkInDate,
@@ -34,6 +36,17 @@ const Calendar = ({
     "2024-12-01": [{ name: "Redesign Website", time: "1 Dec - 3 Dec" }],
     "2024-12-25": [{ name: "App Design", time: "25 Dec - 27 Dec" }],
   };
+  const availabilityMap = useMemo(() => {
+    const map = new Map<string, HomestayAvailability>();
+    availability?.forEach((item) => {
+      // Convert UTC date to local date string
+      const localDate = new Date(item.date);
+      const dateString = localDate.toISOString().split("T")[0]; // Example: '2024-12-01'
+      console.log("Converted dateString: ", dateString); // Debug log
+      map.set(dateString, item);
+    });
+    return map;
+  }, [availability]);
 
   const [events, setEvents] = useState<Events>(initialEvents);
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,7 +63,7 @@ const Calendar = ({
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`; // Định dạng yyyy-MM-dd
   };
 
   const goToPreviousMonth = () => {
@@ -78,10 +91,16 @@ const Calendar = ({
   };
 
   const handleDayClick = (date: string) => {
+    const availabilityInfo = availabilityMap.get(date); // Lấy thông tin tình trạng từ map
+
+    // Nếu status là "Booked", không cho phép chọn ngày
+    if (availabilityInfo?.status === "Booked") {
+      return; // Ngưng thực hiện hàm nếu ngày đã được đặt
+    }
+
     const [day, month, year] = date.split("/").map(Number);
     const selectedDate = new Date(year, month - 1, day);
     const today = new Date();
-
 
     if (selectedDate.getTime() < today.setHours(0, 0, 0, 0)) {
       return;
@@ -96,6 +115,7 @@ const Calendar = ({
       setCheckOutDate(null);
     }
   };
+
 
   const renderEvents = (date: string) => {
     if (events[date]) {
@@ -145,11 +165,83 @@ const Calendar = ({
     }
 
     for (let day = 1; day <= totalDays; day++) {
-      const dateString = formatDate(new Date(year, month, day));
+      const date = new Date(year, month, day);
+      const dateString = formatDate(date);
+      console.log("dd", availabilityMap.get(dateString));
+      console.log("Checking dateString: ", dateString); // Debug log
+      console.log(
+        "availabilityInfo from map: ",
+        availabilityMap.get(dateString)
+      );
+
+      const availabilityInfo = availabilityMap.get(dateString);
+      const isPastDate = date < today;
+      let statusClass = isPastDate ? "bg-[#ebebeb]" : "";
+      let statusText = "";
+      let priceText = "";
+      let classDay = "";
+      console.log(availabilityInfo);
+      if (availabilityInfo) {
+        console.log("adasdasssssssssssd");
+        switch (availabilityInfo.status) {
+          case "Available":
+            statusClass = isPastDate ? "bg-[#ebebeb]" : "";
+            console.log("adasdasd");
+
+            //  statusText =  "Available";
+            priceText = `$${availabilityInfo.pricepernight}`;
+            break;
+          case "Booked":
+            statusClass = isPastDate ? "bg-[#ebebeb]" : "";
+            classDay = "line-through";
+            //  statusText =  "Booked";
+            priceText = `$${availabilityInfo.pricepernight}`;
+            break;
+        }
+      }
+      // days.push(
+
+      //   <td
+      //     key={day}
+      //     className={`ease relative h-10 cursor-pointer border border-stroke p-1 transition duration-500 ${statusClass} ${
+      //       (checkInDate && checkInDate === dateString) ||
+      //       (checkOutDate &&
+      //         checkInDate &&
+      //         dateString >= checkInDate &&
+      //         dateString <= checkOutDate)
+      //         ? "bg-blue-200"
+      //         : "hover:bg-gray-2"
+      //     } md:h-12 xl:h-15`}
+      //     onClick={() => handleDayClick(dateString)}
+      //   >
+      //     <span
+      //       className={`font-medium text-xs ${classDay} ${
+      //         (checkInDate && checkInDate === dateString) ||
+      //         (checkOutDate && checkOutDate === dateString)
+      //           ? "text-blue-500 "
+      //           : dateString === todayString
+      //           ? "text-white bg-blue-500 p-2 rounded-full"
+      //           : "text-dark"
+      //       }`}
+      //     >
+      //       {day}
+      //     </span>
+      //     <div className="text-xs mt-1">
+      //       <div>{statusText}</div>
+      //       {priceText && <div className="font-semibold">{priceText}</div>}
+      //     </div>
+      //     <div className="group h-8 w-full flex-grow cursor-pointer py-0.5 md:h-15">
+      //       <span className="group-hover:text-primary md:hidden text-xs">
+      //         More
+      //       </span>
+      //       {renderEvents(dateString)}
+      //     </div>
+      //   </td>
+      // );
       days.push(
         <td
           key={day}
-          className={`ease relative h-10 cursor-pointer border border-stroke p-1 transition duration-500 ${
+          className={`ease relative h-10 cursor-pointer border border-stroke p-1 transition duration-500 ${statusClass} ${
             (checkInDate && checkInDate === dateString) ||
             (checkOutDate &&
               checkInDate &&
@@ -157,11 +249,17 @@ const Calendar = ({
               dateString <= checkOutDate)
               ? "bg-blue-200"
               : "hover:bg-gray-2"
-          } md:h-12 xl:h-15`}
-          onClick={() => handleDayClick(dateString)}
+          } ${
+            availabilityInfo?.status === "Booked"
+              ? "cursor-not-allowed bg-gray-300"
+              : ""
+          } md:h-12 xl:h-15`} 
+          onClick={() =>
+            availabilityInfo?.status !== "Booked" && handleDayClick(dateString)
+          } 
         >
           <span
-            className={`font-medium text-xs ${
+            className={`font-medium text-xs ${classDay} ${
               (checkInDate && checkInDate === dateString) ||
               (checkOutDate && checkOutDate === dateString)
                 ? "text-blue-500 "
@@ -172,6 +270,10 @@ const Calendar = ({
           >
             {day}
           </span>
+          <div className="text-xs mt-1">
+            <div>{statusText}</div>
+            {priceText && <div className="font-semibold">{priceText}</div>}
+          </div>
           <div className="group h-8 w-full flex-grow cursor-pointer py-0.5 md:h-15">
             <span className="group-hover:text-primary md:hidden text-xs">
               More

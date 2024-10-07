@@ -6,7 +6,7 @@ const Search = () => {
     return (
       <>
         <div className="mx-20">
-          <Breadcrumb />
+          {/* <Breadcrumb /> */}
         </div>
         <div className="mx-40">
           <TitleSearch/>

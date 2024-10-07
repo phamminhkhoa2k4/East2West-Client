@@ -19,9 +19,9 @@ const Hotels = () => {
   return (
     <>
       <Banner url={"/banner/hotel_banner.jpeg"} />
-      <div className="mx-20">
+      {/* <div className="mx-20">
         <Breadcrumb />
-      </div>
+      </div> */}
       <div className="mb-5">
 
       <Search setHotel={setHotel} />

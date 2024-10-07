@@ -1,5 +1,6 @@
 
 import Image from "next/image";
+import Link from "next/link";
 import { TbCircleDotFilled } from "react-icons/tb";
 
 
@@ -11,7 +12,7 @@ const Grid = ({homestays} : Grid) => {
       <>
         <div className="grid gap-5 grid-cols-3">
           {homestays?.map((homestay) => (
-            <div key={homestay.homestayid}>
+            <Link href={`/homestays/host/editor/${homestay.homestayid}`} key={homestay.homestayid}>
               <div className="w-full h-[400px] overflow-hidden rounded-lg relative">
                 <Image
                   src={homestay.photos[0]}
@@ -31,7 +32,7 @@ const Grid = ({homestays} : Grid) => {
               <div className="text-[#666] font-medium">
                 {homestay.districtName + ", " + homestay.cityProvinceName}
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </>

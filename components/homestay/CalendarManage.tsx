@@ -106,12 +106,12 @@ const CalendarManage = ({ availability }: CalendarProps) => {
 
      if (availabilityInfo) {
        switch (availabilityInfo.status) {
-         case "available":
+         case "Available":
            statusClass = isPastDate ? "bg-[#ebebeb]" : "";
           //  statusText =  "Available";
            priceText = `$${availabilityInfo.pricepernight}`;
            break;
-         case "booked":
+         case "Booked":
            statusClass = isPastDate ? "bg-[#ebebeb]" : "";
            classDay = "line-through";
           //  statusText =  "Booked";
