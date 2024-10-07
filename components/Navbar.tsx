@@ -217,7 +217,9 @@ const Navbar = () => {
                       {user.roles[0] === "ROLE_MODERATOR" && (
                         <DropdownMenuItem>
                           <RxDashboard className="mr-2 h-4 w-4" />
-                          <Link href={"/dashboard"}>Dashboard</Link>
+                          <Link href={"/dashboard/charts/basic-chart"}>
+                            Dashboard
+                          </Link>
                         </DropdownMenuItem>
                       )}
                       {/* {user.roles[0] === "ROLE_BUSINESS" && ()} */}

@@ -10,7 +10,7 @@ const BasicChartPage: React.FC = () => {
   return (
     <>
     <DefaultLayout>
-      <Breadcrumb pageName="Basic Chart" />
+      {/* <Breadcrumb pageName="Basic Chart" /> */}
 
       < RevenueStatisticsPage/>
    

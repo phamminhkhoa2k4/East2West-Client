@@ -1,0 +1,35 @@
+# Node.js build
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Output của build Next.js
+.next/
+out/
+
+# Logs
+logs/
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# IDE and editor settings
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Git
+.git/
+.gitignore
+
+# Docker files (nếu không cần thiết trong image)
+Dockerfile
+docker-compose.yml
+.dockerignore
