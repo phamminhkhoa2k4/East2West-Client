@@ -7,6 +7,7 @@ import CustomTable from "@/components/Tables/CustomTable";
 const columns = [
   { key: "makeId", label: "ID" },
   { key: "makeName", label: "Make Name" },
+  { key: "action", label: "Action"}
 ];
 interface DataRow {
   [key: string]: string | number; // Generic structure matching any row data
@@ -46,11 +47,8 @@ const Makes = () => {
         data={data}
         title="Makes"
         createUrl="/dashboard/manage/cars/make/add"
-<<<<<<< HEAD
-=======
         deleteUrl="/cars/makes/{id}"
        
->>>>>>> 7ec56dd (add delete fetch)
       />
       <div></div>
     </DefaultLayout>

@@ -7,6 +7,7 @@ import { DataRow } from "@/types/table";
 const columns = [
   { key: "typeId", label: "ID" },
   { key: "typeName", label: "Type Name" },
+   { key: "action", label: "Action"}
 ];
 
 interface Type extends DataRow {
@@ -45,11 +46,7 @@ const Types = () => {
         data={data}
         title="Types"
         createUrl="/dashboard/manage/cars/type/add"
-<<<<<<< HEAD
-        deleteUrl="api database delete"
-=======
         deleteUrl="/cars/types/{id}"
->>>>>>> 7ec56dd (add delete fetch)
         editUrl="link vao trang edit"
       />
       <div></div>

@@ -33,10 +33,7 @@ const Suitable = () => {
           data={data}
           title="Suitable"
           createUrl="/dashboard/manage/tours/suitable/add"
-<<<<<<< HEAD
-=======
            deleteUrl="/tours/admin/suitable/{id}"
->>>>>>> 7ec56dd (add delete fetch)
         />
       </DefaultLayout>
     </>

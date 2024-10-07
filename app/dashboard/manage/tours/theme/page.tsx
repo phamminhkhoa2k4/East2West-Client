@@ -29,10 +29,7 @@ const Theme = () => {
           data={data}
           title="Theme"
           createUrl="/dashboard/manage/tours/theme/add"
-<<<<<<< HEAD
-=======
           deleteUrl="/tours/admin/theme/{id}"
->>>>>>> 7ec56dd (add delete fetch)
         />
       </DefaultLayout>
     </>

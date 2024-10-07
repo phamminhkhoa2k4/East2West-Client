@@ -162,11 +162,7 @@ const Tour = () => {
         title="Tours"
         createUrl="/dashboard/manage/tours/add"
         editUrl="/dashboard/manage/tours/edit"
-<<<<<<< HEAD
-        deleteUrl="tours/admin"
-=======
         deleteUrl="/tours/admin/{id}"
->>>>>>> 7ec56dd (add delete fetch)
       />
       <div></div>
     </DefaultLayout>
