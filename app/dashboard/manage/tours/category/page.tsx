@@ -2,16 +2,17 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-
+import { useMessage } from "@/store/MessageCotext";
 // Define columns for CustomTable
 const columns = [
   { key: "categoryTourId", label: "ID" },
   { key: "categoryTourName", label: "Category Name" },
+  { key: "action", label: "Action"}
 ];
 
 const Category = () => {
   const [data, setData] = useState([]);
-
+  const {message} = useMessage();
   useEffect(() => {
     // Fetch data from API
     fetch("http://localhost:8080/api/tours/category")
@@ -23,7 +24,7 @@ const Category = () => {
       .catch(error => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [message]);
 
   return (
     <DefaultLayout>
@@ -32,7 +33,8 @@ const Category = () => {
         data={data}
         title="Category"
         createUrl="/dashboard/manage/tours/category/add"
-        deleteUrl="/tours/admin/category/"
+        deleteUrl="tours/admin/category"
+        editUrl="/dashboard/manage/tours/category/edit"
       />
     </DefaultLayout>
   );

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-
+import { useMessage } from "@/store/MessageCotext";
 const columns = [
   { key: "makeId", label: "ID" },
   { key: "makeName", label: "Make Name" },
@@ -19,7 +19,7 @@ interface Make {
 
 const Makes = () => {
   const [data, setData] = useState<DataRow[]>([]);
-
+  const {message} = useMessage();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -38,7 +38,7 @@ const Makes = () => {
     };
 
     fetchData();
-  }, []);
+  }, [message]);
 
   return (
     <DefaultLayout>
@@ -47,8 +47,8 @@ const Makes = () => {
         data={data}
         title="Makes"
         createUrl="/dashboard/manage/cars/make/add"
-        deleteUrl="/cars/makes/"
-       
+        deleteUrl="cars/makes"
+       editUrl="/dashboard/manage/cars/make/edit"
       />
       <div></div>
     </DefaultLayout>
