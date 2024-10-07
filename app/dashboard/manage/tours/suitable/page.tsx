@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-
+import { useMessage } from "@/store/MessageCotext";
 
 const columns = [
   { key: "suitableTourId", label: "ID", isNumeric: true },
@@ -12,7 +12,7 @@ const columns = [
 
 const Suitable = () => {
   const [data, setData] = useState([]);
-
+  const {message} = useMessage();
   useEffect(() => {
     // Fetch data from API
     fetch("http://localhost:8080/api/tours/suitable")
@@ -24,7 +24,7 @@ const Suitable = () => {
       .catch(error => {
         console.error("Error fetching data:", error);
       });
-  }, []);
+  }, [message]);
 
   return (
     <>
@@ -34,8 +34,8 @@ const Suitable = () => {
           data={data}
           title="Suitable"
           createUrl="/dashboard/manage/tours/suitable/add"
-          deleteUrl=""
-          editUrl="/dashboard/manage/tours/suitable/edit"
+           deleteUrl="tours/admin/suitable"
+           editUrl="/dashboard/manage/tours/suitable/edit"
         />
       </DefaultLayout>
     </>

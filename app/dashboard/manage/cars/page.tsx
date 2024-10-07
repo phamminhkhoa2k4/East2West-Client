@@ -124,7 +124,7 @@ const Cars = () => {
         data={data}
         title="Cars"
         createUrl="/dashboard/manage/cars/add"
-        deleteUrl="api database delete"
+        deleteUrl="/cars/"
         editUrl="/dashboard/manage/cars/edit"
       />
       <div></div>

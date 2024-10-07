@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
-
+import { useMessage } from "@/store/MessageCotext";
 const columns = [
   { key: "modelId", label: "ID" },
   { key: "modelName", label: "Model Name" },
+  { key: "action", label: "Action"}
 ];
 
 interface Model {
@@ -13,14 +14,13 @@ interface Model {
   modelName: string;
 }
 
-// Assuming DataRow is an object with string keys and any values
 interface DataRow {
   [key: string]: any;
 }
 
 const Models = () => {
   const [data, setData] = useState<DataRow[]>([]);
-
+  const {message} = useMessage();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +39,7 @@ const Models = () => {
     };
 
     fetchData();
-  }, []);
+  }, [message]);
 
   return (
     <DefaultLayout>
@@ -48,6 +48,8 @@ const Models = () => {
         data={data}
         title="Models"
         createUrl="/dashboard/manage/cars/model/add"
+        deleteUrl="cars/models"
+        editUrl="/dashboard/manage/cars/model/edit"
       />
     </DefaultLayout>
   );
