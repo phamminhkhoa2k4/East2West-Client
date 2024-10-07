@@ -6,6 +6,7 @@ import CustomTable from "@/components/Tables/CustomTable";
 const columns = [
   { key: "modelId", label: "ID" },
   { key: "modelName", label: "Model Name" },
+  { key: "action", label: "Action"}
 ];
 
 interface Model {
@@ -48,10 +49,7 @@ const Models = () => {
         data={data}
         title="Models"
         createUrl="/dashboard/manage/cars/model/add"
-<<<<<<< HEAD
-=======
-        deleteUrl="cars/models/{id}"
->>>>>>> 7ec56dd (add delete fetch)
+        deleteUrl="/cars/models/{id}"
       />
     </DefaultLayout>
   );
