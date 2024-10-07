@@ -49,7 +49,7 @@ const FlightDetail = ({airplane}: FlightDetailType) => {
   return (
     <>
       {(airplane?.type! == "One way" || airplane?.type! == "Round trip") && (
-        <div className="mx-40 mt-5">
+        <div className="mx-40 mt-40">
           <div className="flex items-center justify-between">
             <div className=" flex gap-4 items-center">
               <div className="text-3xl font-bold">Cần Thơ</div>
@@ -207,7 +207,7 @@ const FlightDetail = ({airplane}: FlightDetailType) => {
         </div>
       )}
       {airplane?.type! == "Multi-city" && (
-        <div className="mx-40 mt-5">
+        <div className="mx-40 mt-40">
           <div className="flex items-center justify-between">
             <div className=" flex gap-4 items-center">
               <div className="text-3xl font-bold">Cần Thơ</div>

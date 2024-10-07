@@ -57,7 +57,7 @@ const UpdateUser = () => {
   };
 
   return (
-    <div className='flex items-center justify-center min-h-screen bg-gray-100'>
+    <div className='flex items-center justify-center min-h-screen bg-gray-100 mt-20'>
       <div className='w-full max-w-lg p-8 bg-white rounded-lg shadow-lg'>
         <h2 className='text-2xl font-bold mb-6'>Update User Information</h2>
         <form onSubmit={handleSubmit} className='space-y-4'>

@@ -55,28 +55,28 @@ const Hero = () => {
             width={768}
             height={768}
             src="/hero/1.jpg"
-            className="rounded-lg shadow-md"
+            className="rounded-lg shadow-md  object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
           <Image
-            width={768}
+            width={200}
             height={768}
             src="/hero/4.jpg"
-            className="-mt-28 rounded-lg shadow-md"
+            className="-mt-28 rounded-lg shadow-md object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
           <Image
-            width={768}
+            width={200}
             height={768}
             src="/hero/2.jpg"
-            className="-mt-20 rounded-lg shadow-md"
+            className="-mt-20 rounded-lg shadow-md object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
           <Image
-            width={768}
+            width={200}
             height={768}
             src="/hero/3.jpg"
-            className="-mt-20 rounded-lg shadow-md"
+            className="-mt-20 rounded-lg shadow-md object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
         </div>
@@ -85,22 +85,22 @@ const Hero = () => {
           <Image
             width={768}
             height={768}
-            src="/hero/4.jpg"
-            className="-mt-28 rounded-lg shadow-md"
+            src="/hero/nn.jpg"
+            className="-mt-28 rounded-lg shadow-md object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/hero/2.jpg"
-            className="-mt-10 rounded-lg shadow-md"
+            src="/hero/ii.jpg"
+            className="-mt-10 rounded-lg shadow-md object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
           <Image
             width={768}
             height={768}
-            src="/hero/4.jpg"
-            className="-mt-20 rounded-lg shadow-md"
+            src="/hero/pp.jpg"
+            className="-mt-20 rounded-lg shadow-md object-center object-cover w-[200px] h-[200px]"
             alt="flowers"
           />
         </div>

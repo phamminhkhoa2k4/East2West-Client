@@ -7,7 +7,7 @@ const Feature = () => {
       <div className="max-container padding-container relative w-full flex justify-end">
         <div className="flex flex-1 lg:min-h-[900px]">
           <Image
-            src="/hero/4.jpg"
+            src="/hero/map.png"
             width={440}
             height={1000}
             alt="phone"
@@ -31,7 +31,7 @@ const Feature = () => {
                 key={index}
                 className="flex w-full flex-1 flex-col items-start"
               >
-                <div className="rounded-full p-4 lg:p-7 bg-green-50">
+                <div className="rounded-full p-4 lg:p-7 bg-blue-400">
                   <Image src={f.icon} width={28} height={28} alt={f.title} />
                 </div>
                 <h2 className="bold-20 lg:bold-32 mt-5 capitalize">

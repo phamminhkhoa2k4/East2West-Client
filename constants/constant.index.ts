@@ -15,7 +15,7 @@ export const NAV_LINKS = [
     icon_active: "/navicon/tour_color.png",
   },
   {
-    href: "/cars",
+    href: "/cars/search",
     key: "Cars",
     label: "Cars",
     icon: "/navicon/car.png",
@@ -50,9 +50,6 @@ export const NAV_LINKS = [
     icon_active: "/navicon/about_color.png",
   },
 ];
-
-
-
 
 export const FEATURES = [
   {
@@ -94,34 +91,37 @@ export const FOOTER_LINKS = [
 ];
 
 export const FOOTER_CONTACT_INFO = {
-  title: 'Contact Us',
+  title: "Contact Us",
   links: [
-    { label: 'Admin Officer', value: '123-456-7890' },
-    { label: 'Email Officer', value: 'East2West@gmail.com' },
+    { label: "Admin Officer", value: "123-456-7890" },
+    { label: "Email Officer", value: "East2West@gmail.com" },
+  ],
+};
+
+export const Member = {
+  title: "Member",
+  links: [
+    { label: "Leader", value: "Pham Minh Khoa" },
+    { label: "Member", value: "Pham Van Minh" },
+    { label: "Member", value: "Duong Gia Tan" },
   ],
 };
 
 export const SOCIALS = {
-  title: 'Social',
-  links: [
-    '/facebook.svg',
-    '/instagram.svg',
-    '/twitter.svg',
-    '/youtube.svg',
-  ],
+  title: "Social",
+  links: ["/facebook.svg", "/instagram.svg", "/twitter.svg", "/youtube.svg"],
 };
-
 
 export const GALLERY = {
   title: "Gallery",
   links: [
-    "/img-1.png",
-    "/img-2.png",
-    "/img-1.png",
-    "/img-2.png",
-    "/img-1.png",
-    "/img-2.png",
-    "/img-1.png",
-    "/img-2.png",
+    "/footer/1.jpeg",
+    "/footer/2.jpeg",
+    "/footer/3.jpeg",
+    "/footer/4.jpeg",
+    "/footer/5.jpeg",
+    "/footer/6.jpeg",
+    "/footer/7.jpeg",
+    "/footer/8.jpeg",
   ],
 };

@@ -7,6 +7,7 @@ import CustomTable from "@/components/Tables/CustomTable";
 const columns = [
   { key: "suitableTourId", label: "ID", isNumeric: true },
   { key: "suitableName", label: "Suitable Name" },
+  { key: "action", label: "Action" },
 ];
 
 const Suitable = () => {
@@ -33,6 +34,8 @@ const Suitable = () => {
           data={data}
           title="Suitable"
           createUrl="/dashboard/manage/tours/suitable/add"
+          deleteUrl=""
+          editUrl="/dashboard/manage/tours/suitable/edit"
         />
       </DefaultLayout>
     </>

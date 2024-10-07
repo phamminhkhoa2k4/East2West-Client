@@ -7,6 +7,7 @@ import axios from 'axios';
 const columns = [
   { key: "themeTourId", label: "ID" },
   { key: "themeTourName", label: "Theme Name" },
+  { key: "action", label: "Action" },
 ];
 const Theme = () => {
   const [data, setData] = useState([]);
@@ -29,6 +30,8 @@ const Theme = () => {
           data={data}
           title="Theme"
           createUrl="/dashboard/manage/tours/theme/add"
+          deleteUrl=""
+          editUrl="/dashboard/manage/tours/theme/edit"
         />
       </DefaultLayout>
     </>

@@ -79,8 +79,9 @@ const Footer = () => {
                             <Image
                               src={link}
                               alt="logo"
-                              width={100}
-                              height={100}
+                              width={200}
+                              height={150}
+                              className={"object-cover object-center w-full h-full  "}
                             />
                           </Link>
                         </div>
@@ -93,7 +94,7 @@ const Footer = () => {
 
             <div className="border bg-gray-20" />
             <p className="regular-14 w-full text-center text-gray-30">
-              2023 East2West | All rights reserved
+              2024 East2West | All rights reserved
             </p>
           </div>
         </footer>

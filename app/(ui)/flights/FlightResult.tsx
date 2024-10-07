@@ -69,7 +69,7 @@ const FlightResult = ({ flights, isDetail, setIsDetail }: FlightResultType) => {
     <>
       {isDetail && <FlightDetail airplane={airplane!} />}
       {!isDetail && flights?.best_flights?.[0].type === "One way" && (
-        <div className="mt-20 mx-40">
+        <div className="mt-50 mx-40">
           <div className="text-xl font-semibold my-5">
             Best Departing Flights
           </div>
@@ -425,7 +425,7 @@ const FlightResult = ({ flights, isDetail, setIsDetail }: FlightResultType) => {
         </div>
       )}
       {!isDetail && flights?.best_flights?.[0].type === "Round trip" && (
-        <div className="mt-20 mx-40">
+        <div className="mt-50 mx-40">
           <div className="text-xl font-semibold my-5">
             Best Departing Flights
           </div>
@@ -780,7 +780,7 @@ const FlightResult = ({ flights, isDetail, setIsDetail }: FlightResultType) => {
         </div>
       )}
       {!isDetail && flights?.best_flights?.[0].type === "Multi-city" && (
-        <div className="mt-20 mx-40">
+        <div className="mt-50 mx-40">
           <div className="text-xl font-semibold my-5">
             Best Departing Flights
           </div>
