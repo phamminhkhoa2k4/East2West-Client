@@ -3,10 +3,11 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
-
+import { useMessage } from "@/store/MessageCotext";
 const columns = [
   { key: "typeId", label: "ID" },
   { key: "typeName", label: "Type Name" },
+   { key: "action", label: "Action"}
 ];
 
 interface Type extends DataRow {
@@ -16,19 +17,16 @@ interface Type extends DataRow {
 
 const Types = () => {
   const [data, setData] = useState<Type[]>([]);
-
+  const {message} = useMessage();
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:8080/api/cars/type");
         const result: Type[] = await response.json();
-
-        // Map the API response to the data format expected by the table
         const formattedData = result.map((type: Type) => ({
           typeId: type.typeId,
           typeName: type.typeName,
         }));
-
         setData(formattedData);
       } catch (error) {
         console.error("Error fetching types:", error);
@@ -36,7 +34,7 @@ const Types = () => {
     };
 
     fetchData();
-  }, []);
+  }, [message]);
 
   return (
     <DefaultLayout>
@@ -45,8 +43,8 @@ const Types = () => {
         data={data}
         title="Types"
         createUrl="/dashboard/manage/cars/type/add"
-        deleteUrl="api database delete"
-        editUrl="link vao trang edit"
+        deleteUrl="cars/types"
+        editUrl="/dashboard/manage/cars/type/edit"
       />
       <div></div>
     </DefaultLayout>

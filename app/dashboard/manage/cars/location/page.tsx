@@ -4,10 +4,11 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { getData } from "@/utils/axios";
 import { Column  } from "@/types/table";
-
+import { useMessage } from "@/store/MessageCotext";
 const columns: Column[] = [
-  { key: "locationTypeId", label: "ID" },
-  { key: "locationTypeName", label: "Location Type Name" },
+  { key: "locationtypeid", label: "ID" },
+  { key: "locationtypename", label: "Location Type Name" },
+  { key: "action", label: "Action"}
 ];
 
 interface LocationType {
@@ -19,7 +20,7 @@ interface DataRow {
 }
 const LocationTypes = () => {
   const [data, setData] = useState<DataRow[]>([]);
-
+  const {message} = useMessage();
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +40,7 @@ const LocationTypes = () => {
     };
 
     fetchData();
-  }, []);
+  }, [message]);
 
   return (
     <DefaultLayout>
@@ -48,6 +49,8 @@ const LocationTypes = () => {
         data={data}
         title="Location Types"
         createUrl="/dashboard/manage/cars/location/add"
+        deleteUrl="cars/locationtypes"
+        editUrl="/dashboard/manage/cars/location/edit"
       />
     </DefaultLayout>
   );
