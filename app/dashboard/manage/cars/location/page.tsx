@@ -49,7 +49,7 @@ const LocationTypes = () => {
         data={data}
         title="Location Types"
         createUrl="/dashboard/manage/cars/location/add"
-        deleteUrl="/cars/locationtypes/{id}"
+        deleteUrl="/cars/locationtypes/"
       />
     </DefaultLayout>
   );

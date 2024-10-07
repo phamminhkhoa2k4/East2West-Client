@@ -47,7 +47,7 @@ const Makes = () => {
         data={data}
         title="Makes"
         createUrl="/dashboard/manage/cars/make/add"
-        deleteUrl="/cars/makes/{id}"
+        deleteUrl="/cars/makes/"
        
       />
       <div></div>

@@ -46,7 +46,7 @@ const Types = () => {
         data={data}
         title="Types"
         createUrl="/dashboard/manage/cars/type/add"
-        deleteUrl="/cars/types/{id}"
+        deleteUrl="/cars/types/"
         editUrl="link vao trang edit"
       />
       <div></div>

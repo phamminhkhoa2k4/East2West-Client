@@ -14,7 +14,6 @@ interface Model {
   modelName: string;
 }
 
-// Assuming DataRow is an object with string keys and any values
 interface DataRow {
   [key: string]: any;
 }
@@ -49,7 +48,7 @@ const Models = () => {
         data={data}
         title="Models"
         createUrl="/dashboard/manage/cars/model/add"
-        deleteUrl="/cars/models/{id}"
+        deleteUrl="/cars/models/"
       />
     </DefaultLayout>
   );
