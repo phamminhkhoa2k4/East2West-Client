@@ -5,6 +5,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CiCalendar, CiUser } from "react-icons/ci";
+import { createData, getData } from '@/utils/axios';
 
 interface Car {
   carId: number;
@@ -45,9 +46,7 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/cars/${id}`);
-        if (!response.ok) throw new Error('Failed to fetch car data');
-        const carData = await response.json();
+        const carData :Car = await getData({ endpoint: `/cars/${id}`});
         setCar(carData);
       } catch (error) {
         console.error('Error fetching car data:', error);
@@ -75,13 +74,11 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/rental', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(rentalData),
+      const response = await createData({
+        endpoint: "/employee-bookings/rental",
+        payload: rentalData, 
       });
+      
 
       if (!response.ok) throw new Error('Failed to submit rental data');
       alert('Rental successfully booked!');

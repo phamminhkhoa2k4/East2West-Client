@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { useMessage } from "@/store/MessageCotext";
+import { getData } from "@/utils/axios";
 // Define columns for CustomTable
 const columns = [
   { key: "categoryTourId", label: "ID" },
@@ -14,16 +15,17 @@ const Category = () => {
   const [data, setData] = useState([]);
   const {message} = useMessage();
   useEffect(() => {
-    // Fetch data from API
-    fetch("http://localhost:8080/api/tours/category")
-      .then(response => response.json())
-      .then(data => {
-        console.log("Data fetched:", data); // Log the data to verify
-        setData(data); // Set data to state
-      })
-      .catch(error => {
+    const fetchData = async () => {
+      try {
+        const response = await getData({ endpoint: "/tours/category" });
+        console.log("Data fetched:", response); 
+        setData(response); 
+      } catch (error) {
         console.error("Error fetching data:", error);
-      });
+      }
+    };
+
+    fetchData();
   }, [message]);
 
   return (

@@ -4,10 +4,11 @@ import SearchForm from "@/components/Header/SearchForm";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import StaffTable from "@/components/Tables/StaffTable";
 import { DataRow } from "@/types/table";
+import { getData } from "@/utils/axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 const columns = [
-  { key: "thumbnail", label: "Thumbnail" },
+  // { key: "thumbnail", label: "Thumbnail" },
   { key: "carName", label: "Name" },
   { key: "make", label: "Make" },
   { key: "model", label: "Model" },
@@ -59,7 +60,7 @@ interface Car {
 }
 
 interface CarTableData extends DataRow {
-  thumbnail: string;
+  // thumbnail: string;
   carName: string;
   make: string;
   model: string;
@@ -84,12 +85,12 @@ const Staff = () => {
 
   const fetchData = async (query = "") => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/cars${query ? `/search/name?name=${query}` : ""}`
-      );
-      const result = await response.json();
+      
+       const endpoint = `/cars${query ? `/search/name?name=${query}` : ""}`
+      
+       const result = await getData({ endpoint });
       const formattedData = result.map((car: Car) => ({
-        thumbnail: car.thumbnail[0],
+        // thumbnail: car.thumbnail[0],
         carName: car.carName,
         make: car.make?.makeName || "Unknown",
         model: car.model?.modelName || "Unknown",

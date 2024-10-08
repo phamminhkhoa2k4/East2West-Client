@@ -3,20 +3,20 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const EditMake = ({ params }: { params: { id: string } }) => {
   const [makeName, setMakeName] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch data từ API để lấy thông tin của Make dựa trên ID
+    // Fetch data from API to get Make info based on ID
     const fetchMake = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/cars/make/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch make.");
+        const data = await getData({ endpoint: `cars/make/${params.id}` });
+        if (!data) throw new Error("Failed to fetch make.");
 
-        const make = await response.json();
-        setMakeName(make.makeName); // Đặt giá trị của input
+        setMakeName(data.makeName); // Set the value of the input
       } catch (err) {
         console.error(err);
         setError("Failed to load make.");
@@ -31,15 +31,13 @@ const EditMake = ({ params }: { params: { id: string } }) => {
 
     // Update make
     try {
-      const response = await fetch(`http://localhost:8080/api/cars/make/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ makeName: makeName }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "cars/make",
+        payload: { makeName: makeName },
       });
 
-      if (response.ok) {
+      if (response) {
         alert("Make updated successfully!");
         setError(""); // Clear any previous errors
       } else {

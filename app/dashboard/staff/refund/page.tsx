@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import DefaultLayout from '@/components/Layouts/DefaultLayout';
+import { createData, getData } from '@/utils/axios';
 
 interface User {
   firstname: string;
@@ -28,11 +29,16 @@ const Bookings: React.FC = () => {
   const [refundReason, setRefundReason] = useState<string>('');
   const [selectedBookingId, setSelectedBookingId] = useState<number | null>(null);
 
-  // Fetch bookings from API
+  // Fetch bookings from API using custom axios
   useEffect(() => {
-    axios.get('http://localhost:8080/api/bookings')
-      .then(response => setBookings(response.data))
-      .catch(error => console.error('Error fetching bookings:', error));
+    const fetchBookings = async () => {
+      const data = await getData({ endpoint: 'bookings' });
+      if (data) {
+        setBookings(data);
+      }
+    };
+
+    fetchBookings();
   }, []);
 
   // Handle refund button click
@@ -40,8 +46,8 @@ const Bookings: React.FC = () => {
     setSelectedBookingId(bookingId);
   };
 
-  // Submit refund request
-  const processRefund = () => {
+  // Submit refund request using custom axios
+  const processRefund = async () => {
     if (selectedBookingId === null || refundReason.trim() === '') {
       alert('Please select a booking and provide a reason for the refund.');
       return;
@@ -52,18 +58,29 @@ const Bookings: React.FC = () => {
       reasson: refundReason
     };
 
-    axios.post('http://localhost:8080/api/employee-bookings/refund', refundRequest)
-      .then(response => {
+    try {
+      const response = await createData({
+        endpoint: '/employee-bookings/refund',
+        payload: refundRequest
+      });
+  
+      if (response) {
         alert('Refund processed successfully');
         // Refresh bookings after refund
-        setBookings(bookings.map(booking => 
-          booking.bookingTourId === selectedBookingId ? 
+        setBookings(bookings.map(booking =>
+          booking.bookingTourId === selectedBookingId ?
             { ...booking, status: 'Refunded' } : booking
         ));
         setSelectedBookingId(null);
         setRefundReason('');
-      })
-      .catch(error => alert('Error processing refund: ' + error.response?.data || error.message));
+      } else {
+        alert('Error processing refund');
+      }
+    } catch (error) {
+      // Log the error response for more details
+      
+      alert('Error processing refund: ');
+    }
   };
 
   return (

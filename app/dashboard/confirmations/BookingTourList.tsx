@@ -1,3 +1,4 @@
+import { updateData } from '@/utils/axios';
 import React from 'react';
 
 
@@ -23,19 +24,14 @@ interface BookingTourListProps {
 }
 
 const BookingTourList: React.FC<BookingTourListProps> = ({ bookingTours }) => {
-  const confirmBookingTour = (bookingTourId: number) => {
-    fetch(`http://localhost:8080/api/confirmations/tour/${bookingTourId}/confirm`, {
-      method: 'PUT',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert('Booking Tour confirmed');
-<<<<<<< HEAD
-        // Cập nhật danh sách hoặc tải lại dữ liệu ở đây nếu cần
-=======
->>>>>>> 7ec56dd (add delete fetch)
-      })
-      .catch((error) => console.error('Error confirming booking tour:', error));
+  const confirmBookingTour = async (bookingTourId: number) => {
+    try {
+      const endpoint = `/confirmations/tour/${bookingTourId}/confirm`;
+      await updateData({ id: bookingTourId, endpoint, payload: {} });
+      alert('Booking Tour confirmed');
+    } catch (error) {
+      console.error('Error confirming booking tour:', error);
+    }
   };
 
   return (

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
+import { getData } from "@/utils/axios";
 
 const columns = [
   { key: "carId", label: "Id" },
@@ -82,11 +83,7 @@ const Cars = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // Quan trọng để gửi cookie
-        });
+        const response =  await getData({ endpoint: "/cars" })
         const result: Car[] = await response.json();
         const formattedData = result.map((car) => ({
            carId: car?.carId!,

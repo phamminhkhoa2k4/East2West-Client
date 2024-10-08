@@ -4,6 +4,7 @@ import RentalList from './RentalList';
 import RefundList from './RefundList';
 import BookingTourList from './BookingTourList';
 import DefaultLayout from '@/components/Layouts/DefaultLayout';
+import { getData } from '@/utils/axios';
 
 // Your types
 // import { Rental, Refund, BookingTour } from './types'; // Assume types are in a separate file
@@ -49,21 +50,22 @@ export interface UserFetch {
     const [bookingTours, setBookingTours] = useState<BookingTour[]>([]);
   
     useEffect(() => {
-      // Fetch Rentals from API
-      fetch('http://localhost:8080/api/rental')
-        .then((response) => response.json())
-        .then((data) => setRentals(data));
-  
-      // Fetch Refunds from API
-      fetch('http://localhost:8080/api/bookings/refund')
-        .then((response) => response.json())
-        .then((data) => setRefunds(data));
-  
-      // Fetch Booking Tours from API
-      fetch('http://localhost:8080/api/bookings')
-        .then((response) => response.json())
-        .then((data) => setBookingTours(data));
+      const fetchData = async () => {
+        try {
+          const rentalsData = await getData({ endpoint: '/rental' });
+          setRentals(rentalsData);
+          const refundsData = await getData({ endpoint: '/bookings/refund' });
+          setRefunds(refundsData);
+          const bookingToursData = await getData({ endpoint: '/bookings' });
+          setBookingTours(bookingToursData);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+    
+      fetchData();
     }, []);
+    
   
     return (
       <DefaultLayout>

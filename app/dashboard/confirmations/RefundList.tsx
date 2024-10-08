@@ -1,3 +1,4 @@
+import { updateData } from '@/utils/axios';
 import React from 'react';
 type RefundFetch = {
   bookingTourId: number;
@@ -22,16 +23,17 @@ interface RefundListProps {
 }
 
 const RefundList: React.FC<RefundListProps> = ({ refunds }) => {
-  const confirmRefund = (bookingTourId: number) => {
-    fetch(`http://localhost:8080/api/confirmations/tour/${bookingTourId}/refund`, {
-      method: 'PUT',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert('Refund confirmed');
-        // Optionally, you can update the refund list or refetch data here
-      })
-      .catch((error) => console.error('Error confirming refund:', error));
+  const confirmRefund = async (bookingTourId: number) => {
+    try {
+      const data = await updateData({
+        id: bookingTourId,
+        endpoint: 'api/confirmations/tour',
+        payload: {}, 
+      });
+      alert('Refund confirmed');
+    } catch (error) {
+      console.error('Error confirming refund:', error);
+    }
   };
 
   return (

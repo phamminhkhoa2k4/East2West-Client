@@ -24,18 +24,14 @@ const LocationTypes = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars/locationtypes");
-        const result: LocationType[] = await response.json();
-    
-        // Transform result to match DataRow structure
+        const result: LocationType[] = await getData({ endpoint: '/cars/locationtypes' });
         const formattedData: DataRow[] = result.map((location: LocationType) => ({
           locationtypeid: location.locationtypeid,
           locationtypename: location.locationtypename,
         }));
-    
-        setData(formattedData);
+        setData(formattedData); 
       } catch (error) {
-        console.error("Error fetching location types:", error);
+        console.error("Error fetching location types:", error); // Handle any errors
       }
     };
 

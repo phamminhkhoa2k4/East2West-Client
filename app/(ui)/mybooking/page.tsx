@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { createData, getData } from "@/utils/axios";
 
 // Define interfaces for your data
 interface TourPackage {
@@ -41,13 +42,26 @@ const MyBookingPage: React.FC = () => {
 
   useEffect(() => {
     if (userId) {
-      axios.get<Booking[]>(`http://localhost:8080/api/bookings/user/${userId}`)
-        .then(response => setBookings(response.data))
-        .catch(error => console.error("Error fetching bookings:", error));
-
-      axios.get<Rental[]>(`http://localhost:8080/api/rental/user/${userId}`)
-        .then(response => setRentals(response.data))
-        .catch(error => console.error("Error fetching rentals:", error));
+      const fetchBookings = async () => {
+        try {
+          const response = await getData({ endpoint: `bookings/user/${userId}` });
+          setBookings(response);
+        } catch (error) {
+          console.error("Error fetching bookings:", error);
+        }
+      };
+  
+      const fetchRentals = async () => {
+        try {
+          const response = await getData({ endpoint: `rental/user/${userId}` });
+          setRentals(response);
+        } catch (error) {
+          console.error("Error fetching rentals:", error);
+        }
+      };
+  
+      fetchBookings();
+      fetchRentals();
     }
   }, [userId]);
 
@@ -58,44 +72,42 @@ const MyBookingPage: React.FC = () => {
   const handleRefundChange = (bookingId: number, value: string) => {
     setRefundReason({ ...refundReason, [bookingId]: value });
   };
-  const handleCancelRefund = (bookingId: number) => {
-    axios.post(`http://localhost:8080/api/bookings/cancelRefund/${bookingId}`)
-      .then(response => {
-        setRefundMessages({ ...refundMessages, [bookingId]: response.data });
-        // Optionally refresh bookings here
-      })
-      .catch(error => console.error("Error canceling refund:", error));
+  const handleCancelRefund = async (bookingId: number) => {
+    try {
+      const response = await createData({ endpoint: `bookings/cancelRefund/${bookingId}`, payload: {} });
+      setRefundMessages({ ...refundMessages, [bookingId]: response });
+      // Optionally refresh bookings here
+    } catch (error) {
+      console.error("Error canceling refund:", error);
+    }
   };
-  const handleRefundSubmit = (bookingId: number) => {
+  const handleRefundSubmit = async (bookingId: number) => {
     const reason = refundReason[bookingId];
     if (reason) {
-      axios.post("http://localhost:8080/api/bookings/cancel", {
-        bookingTourId: bookingId,
-        reasson: reason
-      })
-        .then(response => {
-          setRefundMessages({ ...refundMessages, [bookingId]: response.data });
-          // Optionally, refresh bookings data here
-        })
-        .catch(error => console.error("Error processing refund:", error));
+      try {
+        const response = await createData({ endpoint: 'bookings/cancel', payload: { bookingTourId: bookingId, reasson: reason } });
+        setRefundMessages({ ...refundMessages, [bookingId]: response });
+        // Optionally, refresh bookings data here
+      } catch (error) {
+        console.error("Error processing refund:", error);
+      }
     }
   };
 
-  const handlePrintPDF = (rentalId: number) => {
-    axios.post(`http://localhost:8080/api/rental/pdf/${rentalId}`, {}, { responseType: 'blob' })
-      .then(response => {
-        // Create a URL for the PDF blob and open it in a new tab
-        const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `rental_${rentalId}.pdf`);
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-      })
-      .catch(error => console.error("Error printing PDF:", error));
+  const handlePrintPDF = async (rentalId: number) => {
+    try {
+      const response = await createData({ endpoint: `rental/pdf/${rentalId}`, payload: {} });
+      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `rental_${rentalId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      console.error("Error printing PDF:", error);
+    }
   };
-
   return (
     <div className="p-6 bg-gray-100 min-h-screen mt-36">
       <h1 className="text-3xl font-bold mb-6 text-center">My Booking</h1>
