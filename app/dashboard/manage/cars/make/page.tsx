@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { useMessage } from "@/store/MessageCotext";
+import { getData } from "@/utils/axios";
 const columns = [
   { key: "makeId", label: "ID" },
   { key: "makeName", label: "Make Name" },
@@ -23,17 +24,18 @@ const Makes = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars/make");
-        const result: Make[] = await response.json();
-
+        // Use getData to fetch data from the API
+        const result: Make[] = await getData({ endpoint: "/cars/make" });
+    
+        // Transform result to match the desired format
         const formattedData = result.map((make: Make) => ({
           makeId: make.makeId,
           makeName: make.makeName,
         }));
-
-        setData(formattedData);
+    
+        setData(formattedData); // Update state with formatted data
       } catch (error) {
-        console.error("Error fetching makes:", error);
+        console.error("Error fetching makes:", error); // Log any errors
       }
     };
 

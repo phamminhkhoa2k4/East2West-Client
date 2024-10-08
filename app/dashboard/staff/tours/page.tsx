@@ -9,9 +9,10 @@ import StaffTable from "@/components/Tables/StaffTable";
 import { DataRow } from "@/types/table";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation"; // Import useRouter
+import { getData } from "@/utils/axios";
 
 const columns = [
-  { key: "thumbnail", label: "Thumbnail" },
+  // { key: "thumbnail", label: "Thumbnail" },
   { key: "title", label: "Title" },
   { key: "price", label: "Price", isNumeric: true },
   { key: "groupSize", label: "Group Size" },
@@ -118,10 +119,10 @@ const Staff = () => {
 
   const fetchData = async (query = "") => {
     try {
-      const response = await fetch(
-        `http://localhost:8080/api/tours${query ? `/search/name?title=${query}` : ""}`
-      );
-      const result = await response.json();
+      const endpoint = `/tours${query ? `/search/name?title=${query}` : ""}`;
+    
+    // Sử dụng custom axios getData
+    const result = await getData({ endpoint });
       const formattedData = result.map((tour: TourPackage) => ({
         thumbnail: tour.thumbnail[0],
         title: tour.title,

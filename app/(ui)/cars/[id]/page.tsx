@@ -10,6 +10,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CiCalendar } from 'react-icons/ci';
 import Calendar from '@/components/car/Calendar';
+import { createData, getData } from '@/utils/axios';
 
 interface Model {
   modelId: number;
@@ -68,13 +69,15 @@ const CarDetail = ({ params }: { params: { id: string } }) => {
   const [userInfo, setUserInfo] = useState<any>(null);
 
   
-const fetchCarData = async (id: string): Promise<Car> => {
-  const response = await fetch(`http://localhost:8080/api/cars/${id}`);
-  if (!response.ok) {
-    throw new Error("Failed to fetch car details");
-  }
-  return response.json();
-};
+  const fetchCarData = async (id: string): Promise<Car> => {
+    try {
+      const response = await getData({ endpoint: `cars/${id}` });
+      return response;
+    } catch (error) {
+      console.error("Error fetching car details:", error);
+      throw new Error("Failed to fetch car details");
+    }
+  };
 
   useEffect(() => {
     const storedUserInfo = localStorage.getItem('userInfo');
@@ -119,31 +122,32 @@ const fetchCarData = async (id: string): Promise<Car> => {
       totalAmount,
     };
     try {
-      const response = await fetch(`http://localhost:8080/api/rental/create_payment/${totalAmount}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(rentalData),
+      const response = await createData({
+        endpoint: `/rental/create_payment/${totalAmount}`,
+        payload: rentalData,
       });
-  
-      if (!response.ok) {
+    
+      // Log the response object to see its structure
+      console.log('Server response:', response);
+    
+      // Instead of using response.ok or response.json(), check how the response is structured
+      if (response.status !== 'OK') {
         throw new Error('Failed to submit rental data');
       }
-  
-      const result = await response.json();
-  
-      if (result.status === 'OK' && result.url) {
+    
+      // Now you can check for the URL and status
+      if (response.status === 'OK' && response.url) {
         alert('Rental successfully booked!');
-        // Chuyển hướng người dùng đến URL của cổng thanh toán
-        window.location.href = result.url;
+        window.location.href = response.url;
       } else {
-        throw new Error('Payment URL not available');
+        throw new Error(response.message || 'Payment URL not available');
       }
     } catch (error) {
-      setError('Failed to book rental');
-      console.error('Error:', error);
+      console.error('Error during rental payment process:', error);
+      alert( 'An error occurred while processing the payment.');
     }
+    
+    
   };
 
   return (

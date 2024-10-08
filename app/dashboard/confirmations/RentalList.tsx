@@ -1,3 +1,4 @@
+import { updateData } from '@/utils/axios';
 import React from 'react';
 type RentalFetch = {
   rentalId: number
@@ -23,17 +24,19 @@ interface RentalCarListProps {
 }
 
 const RentalCarList: React.FC<RentalCarListProps> = ({ rentals }) => {
-  const confirmRental = (rentalId: number) => {
-    fetch(`http://localhost:8080/api/confirmations/rental/${rentalId}/confirm`, {
-      method: 'PUT',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        alert('Rental confirmed');
-        // Cập nhật danh sách hoặc tải lại dữ liệu ở đây nếu cần
-      })
-      .catch((error) => console.error('Error confirming rental:', error));
+  const confirmRental = async (rentalId: number) => {
+    try {
+      const data = await updateData({
+        id: rentalId,
+        endpoint: '/confirmations/rental',
+        payload: {},
+      });
+      alert('Rental confirmed');
+    } catch (error) {
+      console.error('Error confirming rental:', error);
+    }
   };
+  
 
   return (
     <div>

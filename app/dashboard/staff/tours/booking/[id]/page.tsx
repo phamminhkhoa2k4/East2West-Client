@@ -6,7 +6,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CiUser } from "react-icons/ci";
-import { createData } from "@/utils/axios";
+import { createData, getData } from "@/utils/axios";
 
 interface Tour {
   id: number;
@@ -64,10 +64,13 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchTourData = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/tours/${id}`);
-        if (!response.ok) throw new Error("Failed to fetch tour data");
-        const data: Tour = await response.json();
-        setTour(data);
+        const endpoint = `/tours/${id}`; 
+        const data: Tour = await getData({ endpoint });
+        if (data) {
+          setTour(data); 
+        } else {
+          throw new Error("Failed to fetch tour data");
+        }
       } catch (error:any) {
         setError(error.message);
       }
@@ -98,7 +101,7 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
     };
 
     try {
-     const response = await createData({endpoint:"/bookings",payload: bookingData}
+     const response = await createData({endpoint:"/employee-bookings/tour",payload: bookingData}
       );
 
       if (!response.ok) throw new Error("Failed to submit booking data");
@@ -127,7 +130,7 @@ const BookingStaff = ({ params }: { params: { id: string } }) => {
               <div className="flex items-center gap-10 p-4 border border-gray-300 rounded-2xl overflow-hidden w-3/5">
                 <div className="h-35 rounded-lg overflow-hidden">
                   <Image
-                    src={tour.thumbnail[0]}
+                    src=""
                     alt={tour.title}
                     height={300}
                     width={300}

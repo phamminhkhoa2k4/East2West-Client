@@ -3,17 +3,19 @@
 import React, { useState } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
+import { createData, getData } from "@/utils/axios";
+interface Theme {
+  themeTourId: number;
+  themeTourName: string;
+}
 const Create = () => {
   const [themeName, setThemeName] = useState("");
   const [error, setError] = useState("");
 
   const checkThemeExists = async (themeName: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/tours/theme");
-      if (!response.ok) throw new Error("Failed to fetch themes.");
-
-      const themes = await response.json();
+      const themes:Theme[] = await  getData({ endpoint: '/tours/theme' });
+    
       return themes.some((theme: { themeTourName: string }) => theme.themeTourName === themeName);
     } catch (err) {
       console.error(err);
@@ -34,12 +36,9 @@ const Create = () => {
 
     // Proceed with creating a new theme
     try {
-      const response = await fetch("http://localhost:8080/api/tours/theme", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ themeTourName: themeName }),
+      const response = await createData( {
+        endpoint:'/tours/theme',
+        payload:{ themeTourName: themeName },
       });
 
       if (response.ok) {

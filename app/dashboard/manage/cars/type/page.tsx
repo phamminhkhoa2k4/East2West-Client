@@ -4,6 +4,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
 import { useMessage } from "@/store/MessageCotext";
+import { getData } from "@/utils/axios";
 const columns = [
   { key: "typeId", label: "ID" },
   { key: "typeName", label: "Type Name" },
@@ -21,8 +22,7 @@ const Types = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars/type");
-        const result: Type[] = await response.json();
+        const result: Type[] = await getData({ endpoint: "/cars/type" });
         const formattedData = result.map((type: Type) => ({
           typeId: type.typeId,
           typeName: type.typeName,

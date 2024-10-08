@@ -1,3 +1,4 @@
+import { getData } from '@/utils/axios';
 import React, { useEffect, useState } from 'react';
 import Chart from 'react-apexcharts';
 
@@ -27,23 +28,31 @@ const RevenueStatisticsPage: React.FC = () => {
   const [isCarMonthly, setIsCarMonthly] = useState<boolean>(true);
 
   const fetchTourData = async () => {
-    const url = isTourMonthly
-      ? `http://localhost:8080/api/revenuestatistics/toptours/month?year=${tourYear}&month=${tourMonth}`
-      : `http://localhost:8080/api/revenuestatistics/toptours/year?year=${tourYear}`;
-    const response = await fetch(url);
-    const data: TourRevenueDTO[] = await response.json();
-    setTours(data);
+    try {
+      const endpoint = isTourMonthly
+        ? `/revenuestatistics/toptours/month?year=${tourYear}&month=${tourMonth}`
+        : `/revenuestatistics/toptours/year?year=${tourYear}`;
+      
+      const data: TourRevenueDTO[] = await getData({ endpoint });
+      setTours(data);
+    } catch (error) {
+      console.error("Error fetching tour data:", error);
+    }
   };
-
+  
   const fetchCarData = async () => {
-    const url = isCarMonthly
-      ? `http://localhost:8080/api/revenuestatistics/topcars/month?year=${carYear}&month=${carMonth}`
-      : `http://localhost:8080/api/revenuestatistics/topcars/year?year=${carYear}`;
-    const response = await fetch(url);
-    const data: CarRevenueDTO[] = await response.json();
-    setCars(data);
+    try {
+      const endpoint = isCarMonthly
+        ? `/revenuestatistics/topcars/month?year=${carYear}&month=${carMonth}`
+        : `/revenuestatistics/topcars/year?year=${carYear}`;
+      
+      const data: CarRevenueDTO[] = await getData({ endpoint });
+      setCars(data);
+    } catch (error) {
+      console.error("Error fetching car data:", error);
+    }
   };
-
+  
   useEffect(() => {
     fetchTourData();
   }, [tourYear, tourMonth, isTourMonthly]);

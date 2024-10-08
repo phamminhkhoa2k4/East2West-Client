@@ -3,19 +3,17 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const EditType = ({ params }: { params: { id: string } }) => {
   const [typeName, setTypeName] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // Fetch data từ API để lấy thông tin của Type dựa trên ID
     const fetchType = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/cars/type/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch type.");
-        const type = await response.json();
-        setTypeName(type.typeName); // Đặt giá trị của input
+        const type = await getData({ endpoint: `cars/type/${params.id}` });
+        setTypeName(type.typeName);
       } catch (err) {
         console.error(err);
         setError("Failed to load type.");
@@ -28,13 +26,12 @@ const EditType = ({ params }: { params: { id: string } }) => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/api/cars/type/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ typeName: typeName }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "cars/type",
+        payload: { typeName: typeName },
       });
+
 
       if (response.ok) {
         alert("Type updated successfully!");
