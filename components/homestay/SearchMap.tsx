@@ -164,6 +164,7 @@ const Search: React.FC<{
       });
   }, [getCurrentPosition]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchSuggestions = useCallback(
     debounce(async (query: string) => {
       if (!query || selectingRef.current) return;
@@ -172,14 +173,14 @@ const Search: React.FC<{
         const response: Response = await getData({
           endpoint: `https://geocode.search.hereapi.com/v1/geocode?q=${query}&in=countryCode:VNM&apiKey=${APIKEY}`,
         });
-       
+
         const items = response.items || [];
         setSuggestions(items);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
       }
     }, 500),
-    []
+    [setSuggestions]
   );
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

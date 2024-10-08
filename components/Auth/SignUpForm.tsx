@@ -45,25 +45,31 @@ const SignUpForm: React.FC = () => {
   const [errors, setErrors] = useState<SignupErrors>({});
   const [success, setSuccess] = useState<string>("");
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type, checked } = e.target;
+ const handleChange = (
+   e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+ ) => {
+   const { name, value, type } = e.target;
 
-    if (type === "checkbox") {
-      setData(prev => ({
-        ...prev,
-        [name]: checked,
-        role: name === "isBusiness" && checked ? ["business"] : ["user"],
-      }));
-    } else if (type === "select-multiple") {
-      const target = e.target as HTMLSelectElement;
-      const selectedOptions = Array.from(target.options)
-        .filter(option => option.selected)
-        .map(option => option.value);
-      setData(prev => ({ ...prev, role: selectedOptions }));
-    } else {
-      setData(prev => ({ ...prev, [name]: value }));
-    }
-  };
+   // Using type assertion to specify the target type as HTMLInputElement
+   if (type === "checkbox") {
+     const checked = (e.target as HTMLInputElement).checked; // assert as HTMLInputElement
+
+     setData((prev) => ({
+       ...prev,
+       [name]: checked,
+       role: name === "isBusiness" && checked ? ["business"] : ["user"],
+     }));
+   } else if (type === "select-multiple") {
+     const target = e.target as HTMLSelectElement;
+     const selectedOptions = Array.from(target.options)
+       .filter((option) => option.selected)
+       .map((option) => option.value);
+     setData((prev) => ({ ...prev, role: selectedOptions }));
+   } else {
+     setData((prev) => ({ ...prev, [name]: value }));
+   }
+ };
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();

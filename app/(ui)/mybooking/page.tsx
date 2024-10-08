@@ -37,7 +37,15 @@ const MyBookingPage: React.FC = () => {
   const [showRefundField, setShowRefundField] = useState<{ [key: number]: boolean }>({});
   const [refundReason, setRefundReason] = useState<{ [key: number]: string }>({});
   const [refundMessages, setRefundMessages] = useState<{ [key: number]: string }>({});
-  const userId = JSON.parse(localStorage.getItem("userInfo") || "{}")?.userId as string;
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // This will only run in the browser
+    const storedUserId = JSON.parse(
+      localStorage.getItem("userInfo") || "{}"
+    )?.userId;
+    setUserId(storedUserId);
+  }, []);
 
   useEffect(() => {
     if (userId) {

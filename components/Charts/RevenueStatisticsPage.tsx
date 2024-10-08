@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
+"use client"
+import { ApexOptions } from 'apexcharts';
+import dynamic from 'next/dynamic';
+import React, { useCallback, useEffect, useState } from 'react';
+const Chart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
 interface TourRevenueDTO {
   tourId: number;
@@ -26,45 +31,52 @@ const RevenueStatisticsPage: React.FC = () => {
   const [isTourMonthly, setIsTourMonthly] = useState<boolean>(true);
   const [isCarMonthly, setIsCarMonthly] = useState<boolean>(true);
 
-  const fetchTourData = async () => {
+  const fetchTourData = useCallback(async () => {
     const url = isTourMonthly
       ? `http://localhost:8080/api/revenuestatistics/toptours/month?year=${tourYear}&month=${tourMonth}`
       : `http://localhost:8080/api/revenuestatistics/toptours/year?year=${tourYear}`;
+
     const response = await fetch(url);
     const data: TourRevenueDTO[] = await response.json();
     setTours(data);
-  };
-
-  const fetchCarData = async () => {
-    const url = isCarMonthly
-      ? `http://localhost:8080/api/revenuestatistics/topcars/month?year=${carYear}&month=${carMonth}`
-      : `http://localhost:8080/api/revenuestatistics/topcars/year?year=${carYear}`;
-    const response = await fetch(url);
-    const data: CarRevenueDTO[] = await response.json();
-    setCars(data);
-  };
+  }, [isTourMonthly, tourYear, tourMonth]); 
 
   useEffect(() => {
     fetchTourData();
-  }, [tourYear, tourMonth, isTourMonthly]);
+  }, [fetchTourData]);
+
+ const fetchCarData = useCallback(async () => {
+   const url = isCarMonthly
+     ? `http://localhost:8080/api/revenuestatistics/topcars/month?year=${carYear}&month=${carMonth}`
+     : `http://localhost:8080/api/revenuestatistics/topcars/year?year=${carYear}`;
+
+   const response = await fetch(url);
+   const data: CarRevenueDTO[] = await response.json();
+   setCars(data);
+ }, [isCarMonthly, carYear, carMonth]);
+
+  useEffect(() => {
+    fetchTourData();
+  }, [tourYear, tourMonth, isTourMonthly, fetchTourData]);
 
   useEffect(() => {
     fetchCarData();
-  }, [carYear, carMonth, isCarMonthly]);
+  }, [carYear, carMonth, isCarMonthly, fetchCarData]);
 
-  const tourChartOptions = {
+  const tourChartOptions: ApexOptions = {
     chart: {
-      type: 'bar',
+      type: "bar" as "bar",
       height: 350,
     },
+
     xaxis: {
-      categories: tours.map(tour => tour.tourTitle), // Updated to use 'tourTitle'
+      categories: tours.map((tour) => tour.tourTitle), // Updated to use 'tourTitle'
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded',
+        columnWidth: "55%",
+        // endingShape: "rounded",
       },
     },
     fill: {
@@ -74,7 +86,7 @@ const RevenueStatisticsPage: React.FC = () => {
       enabled: true,
     },
     legend: {
-      position: 'top',
+      position: "top",
     },
   };
 
@@ -93,19 +105,20 @@ const RevenueStatisticsPage: React.FC = () => {
     },
   ];
 
-  const carChartOptions = {
+  const carChartOptions: ApexOptions = {
     chart: {
-      type: 'bar',
+      type: "bar" as "bar", // Đảm bảo kiểu 'bar' được gán đúng
       height: 350,
     },
     xaxis: {
-      categories: cars.length > 0 ? cars.map(car => car.carName) : ['No Data'],
+      categories:
+        cars.length > 0 ? cars.map((car) => car.carName) : ["No Data"],
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '55%',
-        endingShape: 'rounded',
+        columnWidth: "55%",
+        // endingShape: "rounded",
       },
     },
     fill: {
@@ -115,7 +128,7 @@ const RevenueStatisticsPage: React.FC = () => {
       enabled: true,
     },
     legend: {
-      position: 'top',
+      position: "top",
     },
   };
 

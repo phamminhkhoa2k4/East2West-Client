@@ -31,10 +31,10 @@ export default function Map() {
   ];
 
 
-  const coordinates = wkbArray.map((wkbString) => {
-    const geoJSON: Point = decodeWKB(wkbString);
-    return geoJSON.coordinates as [number, number];
-  });
+  // const coordinates = wkbArray.map((wkbString) => {
+  //   const geoJSON: Point = decodeWKB(wkbString);
+  //   return geoJSON.coordinates as [number, number];
+  // });
   return (
     <div className="mt-72">
       {/* <TableThree/> */}

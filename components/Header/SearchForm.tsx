@@ -44,25 +44,35 @@
 // };
 
 // export default SearchForm;
-import React, { useState } from "react";
 
-const SearchForm = ({ onSearch }) => {
+
+
+import React, { useCallback, useEffect, useState } from "react";
+
+
+type SearchFormProps = {
+  onSearch: (value: string) => void;
+};
+const SearchForm = ({ onSearch } :  SearchFormProps) => {
   const [query, setQuery] = useState("");
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); 
+  const handleSubmit = useCallback(async () => {
     if (onSearch) {
       onSearch(query);
     }
-  };
+  }, [onSearch, query]);
+
+  useEffect(() => {
+    handleSubmit();
+  }, [query, handleSubmit]);
+
 
   return (
     <li className="hidden lg:block">
-      <form onSubmit={handleSubmit}>
         <div className="relative w-full max-w-[300px]">
           <button
             type="submit" // Đảm bảo nút là nút submit
@@ -106,7 +116,6 @@ const SearchForm = ({ onSearch }) => {
             focus:outline-none dark:border-dark-4 dark:bg-dark-3 dark:text-white dark:focus:border-primary xl:w-[300px]"
           />
         </div>
-      </form>
     </li>
   );
 };

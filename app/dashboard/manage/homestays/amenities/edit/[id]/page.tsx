@@ -1,7 +1,9 @@
 "use client"
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { useMessage } from "@/store/MessageCotext";
 import { createData, getData } from "@/utils/axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 type AmenitiesType = {
@@ -11,21 +13,23 @@ type AmenitiesType = {
 
 
 const Update = ({params}:{params : {id:string}}) => {
+  const router = useRouter();
   const [amenities, setAmenities] = useState<AmenitiesType>();
   const [amenity, setAmenity] = useState<AmenitiesType>();
+   const { message, setMessage } = useMessage();
   useEffect(() => {
-      const fetchAmenities = async () => {
-        try {
-          const amenities = await getData({endpoint: `/homestays/host/amenities/${params.id}`});
-          setAmenity(amenities);
-        } catch (error) {
-          console.log(error);
-        }
-
-        
+    const fetchAmenities = async () => {
+      try {
+        const amenities = await getData({
+          endpoint: `/homestays/host/amenities/${params.id}`,
+        });
+        setAmenity(amenities);
+      } catch (error) {
+        console.log(error);
       }
-      fetchAmenities();
-  },[])
+    };
+    fetchAmenities();
+  }, [params.id]);
 
 
   useEffect(() => {
@@ -39,6 +43,12 @@ const Update = ({params}:{params : {id:string}}) => {
           endpoint: "/homestays/host/amenities",
           payload: amenities,
         });
+         setMessage({
+           title: "Edit Amenities",
+           description: amenities?.amenitiesname!,
+           status: "success",
+         });
+        router.push("/dashboard/manage/homestays/amenities");
         
 
     }catch(error){

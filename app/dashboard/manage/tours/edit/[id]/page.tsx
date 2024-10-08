@@ -99,10 +99,10 @@ interface DepartureDate {
 }
 
 // Interface cho accommodation
-interface Accommodation {
-  accommodationid: number;
-  accommodationname: string;
-}
+// interface Accommodation {
+//   accommodationid: number;
+//   accommodationname: string;
+// }
 
 // Interface cho itinerary
 interface ItineraryDataType {

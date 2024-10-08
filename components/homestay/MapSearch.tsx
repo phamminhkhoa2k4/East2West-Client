@@ -1,4 +1,4 @@
-  import React, { useEffect, useRef, useState } from "react";
+  import React, { useCallback, useEffect, useRef, useState } from "react";
 
   declare global {
     interface Window {
@@ -14,53 +14,7 @@
     const [mapLoaded, setMapLoaded] = useState<boolean>(false);
     const [map, setMap] = useState<any>(null);
     const [marker, setMarker] = useState<any>(null);
-
-    useEffect(() => {
-      if (typeof window !== "undefined" && !window.H) {
-        loadMapScript();
-      } else if (window.H) {
-        initMap();
-      }
-    }, []);
-    
-    const BehaviorMap = () => {
-      if (window.H && window.H.mapevents) {
-        new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
-      } else {
-        console.error("mapevents is not available in window.H");
-      }
-    };
-    useEffect(() => {
-      if (map) {
-        BehaviorMap();
-      }
-    }, [map]);
-
-    const loadMapScript = () => {
-      const scripts = [
-        "https://js.api.here.com/v3/3.1/mapsjs-core.js",
-        "https://js.api.here.com/v3/3.1/mapsjs-service.js",
-        "https://js.api.here.com/v3/3.1/mapsjs-ui.js",
-        "https://js.api.here.com/v3/3.1/mapsjs-mapevents.js",
-      ];
-
-      const loadScript = (index: number) => {
-        if (index < scripts.length) {
-          const script = document.createElement("script");
-          script.src = scripts[index];
-          script.async = true;
-          script.onload = () => loadScript(index + 1);
-          script.onerror = (e) => console.error(`Failed to load script: ${scripts[index]}`, e);
-          document.body.appendChild(script);
-        } else {
-          initMap();
-        }
-      };
-
-      loadScript(0);
-    };
-
-    const initMap = () => {
+    const initMap = useCallback(() => {
       if (mapRef.current && !mapLoaded && window.H) {
         const platform = new window.H.service.Platform({
           apikey: KEYSECRET,
@@ -93,10 +47,63 @@
         });
         newMap.addObject(defaultMarker);
 
-        console.log("Map and default marker initialized:", newMap, defaultMarker);
+        console.log(
+          "Map and default marker initialized:",
+          newMap,
+          defaultMarker
+        );
       }
-    };
+    }, [mapRef, mapLoaded, KEYSECRET]);
 
+   const loadMapScript = useCallback(() => {
+     const scripts = [
+       "https://js.api.here.com/v3/3.1/mapsjs-core.js",
+       "https://js.api.here.com/v3/3.1/mapsjs-service.js",
+       "https://js.api.here.com/v3/3.1/mapsjs-ui.js",
+       "https://js.api.here.com/v3/3.1/mapsjs-mapevents.js",
+     ];
+
+     const loadScript = (index: number) => {
+       if (index < scripts.length) {
+         const script = document.createElement("script");
+         script.src = scripts[index];
+         script.async = true;
+         script.onload = () => loadScript(index + 1);
+         script.onerror = (e) =>
+           console.error(`Failed to load script: ${scripts[index]}`, e);
+         document.body.appendChild(script);
+       } else {
+         initMap();
+       }
+     };
+
+     loadScript(0);
+   }, [initMap]); 
+
+    useEffect(() => {
+      if (typeof window !== "undefined" && !window.H) {
+        loadMapScript();
+      } else if (window.H) {
+        initMap();
+      }
+    }, [initMap, loadMapScript]);
+    
+    const BehaviorMap = useCallback(() => {
+      if (window.H && window.H.mapevents) {
+        new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
+      } else {
+        console.error("mapevents is not available in window.H");
+      }
+    }, [map]);
+    useEffect(() => {
+      if (map) {
+        BehaviorMap();
+      }
+    }, [map, BehaviorMap]);
+
+    
+
+   
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
       const query = event.target.value;
       setSearchQuery(query);

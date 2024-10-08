@@ -1,14 +1,18 @@
 "use client"
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { useMessage } from "@/store/MessageCotext";
 import { createData } from "@/utils/axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 type AmenitiesType = {
   amenitiesid: number | null;
   amenitiesname: string;
 };
 const Create = () => {
+  const router = useRouter();
   const [amenities, setAmenities] = useState<AmenitiesType>();
+   const { message, setMessage } = useMessage();
 
 
   const handleSubmit = async () => {
@@ -18,6 +22,12 @@ const Create = () => {
               endpoint: "/homestays/host/amenities",
               payload: amenities,
             });
+             setMessage({
+               title: "Create Amenities",
+               description: amenities?.amenitiesname!,
+               status: "success",
+             });
+            router.push("/dashboard/manage/homestays/amenities");
             
         } catch (error) {
             console.log(error);

@@ -588,7 +588,7 @@ export default function Search({ setFlights }: SearchType) {
                 </PopoverContent>
               </Popover>
               <div>
-                <button className="border-2 rounded-full p-1 absolute top-3 left-[270px] z-9 bg-white">
+                <button className="border-2 rounded-full p-1 absolute top-3 left-[250px] z-9 bg-white">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"

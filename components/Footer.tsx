@@ -1,5 +1,5 @@
 "use client"
-import { FOOTER_CONTACT_INFO, FOOTER_LINKS, GALLERY,SOCIALS } from '@/constants/constant.index'
+import { FOOTER_CONTACT_INFO, FOOTER_LINKS, GALLERY,Member,SOCIALS } from '@/constants/constant.index'
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -34,7 +34,7 @@ const Footer = () => {
                 </div>
 
                 <div className="flex flex-col gap-5">
-                  {/* <FooterColumn title={Member.title}>
+                  <FooterColumn title={Member.title}>
                     {Member.links.map((link: any) => (
                       <Link
                         href="/"
@@ -47,7 +47,7 @@ const Footer = () => {
                         </p>
                       </Link>
                     ))}
-                  </FooterColumn> */}
+                  </FooterColumn>
                 </div>
 
                 <div className="flex flex-col gap-5">

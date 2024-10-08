@@ -3,7 +3,51 @@ import { GiCarSeat, GiCarDoor } from "react-icons/gi";
 import { MdLocationOn, MdAcUnit } from "react-icons/md";
 import { RiGasStationFill } from "react-icons/ri";
 
-const InfoCar = ({ car }) => {
+interface Model {
+  modelId: number;
+  modelName: string;
+}
+
+interface Make {
+  makeId: number;
+  makeName: string;
+}
+
+interface Type {
+  typeId: number;
+  typeName: string;
+}
+
+interface Locationtype {
+  locationtypeid: number;
+  locationtypename: string;
+}
+
+interface Car {
+  carId: number;
+  carName: string;
+  model: Model;
+  make: Make;
+  type: Type;
+  year: number;
+  seatCapacity: number;
+  airConditioned: boolean;
+  pricePerDay: number;
+  status: string;
+  locationtype: Locationtype;
+  cargearbox: string;
+  miles: string;
+  fueltankcapacity: string;
+  fuel: string;
+  location: string;
+  thumbnail: string[];
+}
+
+type infoCarProps = {
+  car : Car
+}
+
+const InfoCar = ({ car }: infoCarProps) => {
   return (
     <>
       <div className="p-6 grid grid-cols-4 grid-rows-2 gap-4 border rounded-lg">
@@ -37,7 +81,9 @@ const InfoCar = ({ car }) => {
         </div>
         <div className="flex gap-2 p-4 items-center border rounded-md">
           <MdAcUnit />
-          <span>{car.airConditioned ? "Air Conditioned" : "No Air Conditioned"}</span>
+          <span>
+            {car.airConditioned ? "Air Conditioned" : "No Air Conditioned"}
+          </span>
         </div>
       </div>
     </>

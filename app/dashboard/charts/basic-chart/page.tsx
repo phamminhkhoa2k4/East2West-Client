@@ -1,10 +1,7 @@
 "use client";
 import RevenueStatisticsPage from "@/components/Charts/RevenueStatisticsPage";
-import { Metadata } from "next";
-import BasicChart from "@/components/Charts/BasicChart";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import React from "react";
-import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 
 const BasicChartPage: React.FC = () => {
   return (
@@ -13,6 +10,7 @@ const BasicChartPage: React.FC = () => {
       {/* <Breadcrumb pageName="Basic Chart" /> */}
 
       < RevenueStatisticsPage/>
+      <div></div>
    
     </DefaultLayout>
     </>

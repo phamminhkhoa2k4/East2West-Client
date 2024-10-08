@@ -1,15 +1,18 @@
 import Banner from "@/components/Banner/Banner";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumbs";
+import Loading from "@/components/Loading";
 import { Metadata } from "next";
 import Image from "next/image";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   title: "About Us | East2West",
   description: "This Is About Us Page Of East2West Tours and Travel",
 };
 
-export default function About(){
-    return (
+export default function About() {
+  return (
+    <Suspense fallback={<Loading />}>
       <>
         <Banner url={"/banner/about_banner.jpeg"} />
         {/* <div className="mx-20">
@@ -90,9 +93,6 @@ export default function About(){
           </div>
         </div>
       </>
-    );
+    </Suspense>
+  );
 }
-
-
-
-

@@ -25,7 +25,7 @@ export default function HotelResultItem({ hotel }: HotelResultItemType) {
             <div>
               <div className="flex justify-between">
                 <span className="font-medium text-lg w-80">{hotel.name}</span>
-                <span>{hotel.total_rate.lowest} USD</span>
+                <span>{hotel.total_rate?.lowest} USD</span>
               </div>
               <div className=" mt-3 w-[420px] grid grid-cols-3 gap-0">
                 {hotel.amenities?.map((amenity,index) => (

@@ -22,7 +22,11 @@ const Create = () => {
           endpoint: "/homestays/host/structure",
           payload: structure,
         });
-        setMessage({title : "ka" , description: "dflg",status:"success"});
+        setMessage({
+          title: "Create Structure",
+          description: structure?.structurename!,
+          status: "success",
+        });
         router.push("/dashboard/manage/homestays/structure");
       } catch (error) {
         console.log(error);

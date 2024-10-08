@@ -65,8 +65,8 @@ const MapList: React.FC<OpenLayersMapProps> = ({ homestays, radius ,setRadius}) 
   const coordinates = useMemo(() => {
      if (!homestays) return [];
     return homestays?.map((homestay) => {
-      const geoJSON: Point = decodeWKB(homestay.geom ?? "");
-      return { coordinates: geoJSON.coordinates as [number, number] , homestay  };
+      // const geoJSON: Point = decodeWKB(homestay.geom ?? "");
+      return { coordinates: [homestay.longitude,homestay.latitude] as [number, number] , homestay  };
     });
   }, [homestays]);
 

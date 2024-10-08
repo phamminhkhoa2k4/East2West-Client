@@ -316,7 +316,7 @@ const MapList: React.FC<OpenLayersMapProps> = ({
       ({ coordinates: [longitude, latitude], hotel }) =>
         new Feature({
           geometry: new OlPoint(fromLonLat([longitude, latitude])),
-          price: hotel.total_rate.lowest
+          price: hotel?.total_rate?.lowest
         })
     );
 

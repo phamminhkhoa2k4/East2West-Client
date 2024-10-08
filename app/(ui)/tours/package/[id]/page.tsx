@@ -21,7 +21,7 @@ interface Accommodation {
   durationaccommodation: string;
   accommodationtype: string;
   isbreadkfast: boolean;
-  accommodationthumbnail: string[];
+  accommodationthumbnail: string;
   roomtype: string;
 }
 interface Transfer {
@@ -45,7 +45,7 @@ interface Place {
   description: string;
   placeduration: string;
 }
-interface Itinerary {
+interface ItineraryType {
   itineraryId: number;
   accommodations: Accommodation[];
   meals: Meal[];
@@ -53,6 +53,8 @@ interface Itinerary {
   transfers: Transfer[];
   day: string | null;
 }
+
+
 interface CategoryTour {
   categoryTourId: number;
   categoryTourName: string;
@@ -78,7 +80,7 @@ interface PackageData {
   deposit: string;
   bookinghold: string;
   bookingchange: string;
-  itineraries: Itinerary[];
+  itineraries: ItineraryType[];
   categoryTours: CategoryTour[];
   themeTours: ThemeTour[];
   departureDates: DepartureDate[];

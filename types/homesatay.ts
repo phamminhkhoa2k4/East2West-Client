@@ -24,6 +24,6 @@ type Homestay = {
   beds: number;
   bathroom: number;
   room: number | null;
-  availability: HomestayAvailability[];
+  availability?: HomestayAvailability[];
 };
 

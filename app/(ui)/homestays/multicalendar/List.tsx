@@ -1,6 +1,8 @@
+import { deleteData } from "@/utils/axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FaRegTrashCan } from "react-icons/fa6";
 import { TbCircleDotFilled } from "react-icons/tb";
 
 type ListType = {
@@ -11,12 +13,24 @@ const List = ({homestays} : ListType) => {
   const redirect = (id : number) => {
     router.push(`/homestays/host/editor/${id}`);
   }
+
+
+
+  const handleDelete = async  (id : number) =>  {
+    try {
+      const res = await deleteData({endpoint:"homestays/host",id:id });
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
     return (
       <>
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-4 gap-5">
           <div className="text-black font-bold">Item</div>
           <div className="text-black font-bold">Location</div>
           <div className="text-black font-bold">status</div>
+          <div className="text-black font-bold">Action</div>
           {homestays?.map((homestay) => (
             <>
               <div
@@ -51,6 +65,9 @@ const List = ({homestays} : ListType) => {
                 <span className="text-[#666] font-medium">
                   {homestay.isApproved ? "Approved" : "Pending Approval"}
                 </span>
+              </div>
+              <div className=" flex items-center">
+                <FaRegTrashCan className="h-10 w-10 bg-red-300 font-bold p-2 text-white rounded-lg" onClick={() => handleDelete(homestay.homestayid!)} />
               </div>
             </>
           ))}

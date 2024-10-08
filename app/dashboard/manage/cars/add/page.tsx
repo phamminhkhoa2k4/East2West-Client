@@ -61,29 +61,47 @@ const CreateCar = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const [makeData, modelData, typeData, locationTypeData] = await Promise.all([
-          getData({endpoint:"/cars/make"}),
-          getData({endpoint:"/cars/model"}),
-          getData({endpoint:"/cars/type"}),
-          getData({endpoint:"/cars/locationtypes"})
-        ]);
+        const [makeData, modelData, typeData, locationTypeData] =
+          await Promise.all([
+            getData({ endpoint: "/cars/make" }),
+            getData({ endpoint: "/cars/model" }),
+            getData({ endpoint: "/cars/type" }),
+            getData({ endpoint: "/cars/locationtypes" }),
+          ]);
 
-        
-
-        setMakeOptions(makeData.map((item: any) => ({ id: item.makeId, name: item.makeName })));
-        setModelOptions(modelData.map((item: any) => ({ id: item.modelId, name: item.modelName })));
-        setTypeOptions(typeData.map((item: any) => ({ id: item.typeId, name: item.typeName })));
-        setLocationTypeOptions(locationTypeData.map((item: any) => ({ id: item.locationtypeid, name: item.locationtypename })));
+        setMakeOptions(
+          makeData.map((item: any) => ({
+            id: item.makeId,
+            name: item.makeName,
+          }))
+        );
+        setModelOptions(
+          modelData.map((item: any) => ({
+            id: item.modelId,
+            name: item.modelName,
+          }))
+        );
+        setTypeOptions(
+          typeData.map((item: any) => ({
+            id: item.typeId,
+            name: item.typeName,
+          }))
+        );
+        setLocationTypeOptions(
+          locationTypeData.map((item: any) => ({
+            id: item.locationtypeid,
+            name: item.locationtypename,
+          }))
+        );
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
 
-
     fetchData();
-  }, []);
+  }, [imageUrls.length]);
 
 
    const handleUpload = async (): Promise<string[]> => {

@@ -190,7 +190,7 @@ const Receipt = () => {
                 <div className="border shadow-md rounded-xl overflow-hidden p-4">
                   <div className="rounded-xl overflow-hidden w-full h-96">
                     <Image
-                      src={"/boat.png"}
+                      src={state?.data?.photos[0]!}
                       alt=""
                       height={400}
                       width={400}
@@ -198,14 +198,20 @@ const Receipt = () => {
                     />
                   </div>
                   <div className="flex items-center justify-between pt-2">
-                    <div className="text-[14px] font-medium">{state?.data.title}</div>
+                    <div className="text-[14px] font-medium">
+                      {state?.data.title}
+                    </div>
                     <div className="flex items-center gap-2">
                       <div>New</div>
                       <IoStar />
                     </div>
                   </div>
                   <div className="pt-2 text-[14px]">
-                    $ <span className="font-bold text-[#222]">{state?.data.pricePerNight}</span>/Night
+                    ${" "}
+                    <span className="font-bold text-[#222]">
+                      {state?.data.pricePerNight}
+                    </span>
+                    /Night
                   </div>
                 </div>
               </div>

@@ -7,38 +7,56 @@ import DefaultLayout from '@/components/Layouts/DefaultLayout';
 
 // Your types
 // import { Rental, Refund, BookingTour } from './types'; // Assume types are in a separate file
-export interface UserFetch {
-    firstname: string;
-    lastname: string;
-    phone: string;
-  }
+export interface User {
+  firstname: string;
+  lastname: string;
+  phone: string;
+}
   
   export interface BookingTour {
     bookingTourId: number;
     tourTitle: string;
-    user: UserFetch;
     status: string;
-    bookingDate: string;  // Ngày đặt tour
-    totalAmount: number;  // Tổng số tiền của đặt tour
-    refundAmount?: number; // Số tiền hoàn tiền (nếu có)
+    user: User;
+    bookingDate: string;
+    totalAmount: number;
+    refundAmount: number;
   }
+type RefundFetch = {
+  bookingTourId: number;
+  tourTitle: string;
+  status: string;
+  user: User;
+  bookingDate: string;
+  totalAmount: number;
+  refundAmount: number;
+  reason: string;
+  refundDate: string;
+};
   
   export interface Rental {
     rentalId: number;
+    tourTitle: string;
     carName: string;
-    user: UserFetch;
+    user: User;
     status: string;
-    rentalDate: string;  // Ngày thuê xe
+    rentalDate: string; // Ngày thuê xe
     totalAmount: number; // Tổng số tiền của thuê xe
+    reabson: string;
+    refundDate: string;
+    refundAmount: number;
   }
   
   export interface Refund {
     bookingTourId: number;
     tourTitle: string;
-    user: UserFetch;
     status: string;
     refundAmount: number; // Số tiền hoàn tiền
-    refundDate: string;   // Ngày hoàn tiền
+    refundDate: string; // Ngày hoàn tiền
+    user: User;
+    bookingDate: string;
+    totalAmount: number;
+    reason: string;
   }
  
   
@@ -104,7 +122,7 @@ export interface UserFetch {
           </div>
 
           {/* Conditional Rendering Based on Active Tab */}
-          {activeTab === "rental" && <RentalList rentals={rentals} />}
+          {activeTab === "rental" && <RentalList rentals={rentals!} />}
           {activeTab === "refund" && <RefundList refunds={refunds} />}
           {activeTab === "bookingTour" && (
             <BookingTourList bookingTours={bookingTours} />

@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import {
@@ -25,8 +25,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 
-import { useState} from 'react';
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { api, getData } from "@/utils/axios";
+import { format } from "date-fns";
+import { useToast } from "../ui/use-toast";
+import { useMessage } from "@/store/MessageCotext";
 
 interface Column {
   key: string;
@@ -38,34 +42,56 @@ interface DataRow {
   [key: string]: string | number | string[];
 }
 
-
 interface CustomTableProps {
   columns: Column[];
   data: DataRow[];
 }
 
 const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
-  const [visibleColumns, setVisibleColumns] = useState<string[]>(columns.map(col => col.key));
-
-
-
+  const [visibleColumns, setVisibleColumns] = useState<string[]>(
+    columns.map((col) => col.key)
+  );
 
   const handleColumnToggle = (key: string) => {
     setVisibleColumns((prev) =>
       prev.includes(key) ? prev.filter((col) => col !== key) : [...prev, key]
     );
   };
+   const { message ,setMessage } = useMessage();
+
+   const { toast } = useToast();
+
+   useEffect(() => {
+     if (message) {
+       toast({
+         title: message?.title,
+         description: message?.description,
+         status: message?.status,
+       });
+       setMessage(null);
+     }
+   }, [message]);
 
 
-
-
+  const handleApprove = async (id : number, des: string) => {
+      try {
+        await api.put(`/homestays/host/approved/${id}`,null);
+         setMessage({
+           title: `Approve Homestays`,
+           description: `Approve ${des} Successfully`,
+           status: "success",
+         });
+      } catch (error) {
+        console.log(error);
+        
+      }
+  }
 
   return (
     <div className="">
       <div className="flex my-5 items-center justify-between max-w-[1135px]">
-        <Link href={"/dashboard/manage/homestays/add"}  className="px-7 py-3 rounded-full bg-blue-500 text-white font-bold">Add New</Link>
         <div>
-          <Pagination>
+          {/* <Pagination>
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious href="#" />
@@ -88,11 +114,11 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
                 <PaginationNext href="#" />
               </PaginationItem>
             </PaginationContent>
-          </Pagination>
+          </Pagination> */}
         </div>
         <Popover>
           <PopoverTrigger asChild>
-            <div className="px-3 py-1 border rounded-lg flex items-center">
+            <div className="px-3 py-2 border rounded-lg bg-blue-500 text-white font-bold flex items-center">
               Custom Column
             </div>
           </PopoverTrigger>
@@ -147,7 +173,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
               </tr>
             </thead>
             <tbody className="bg-white divide-gray-200">
-              {data.map((row, rowIndex) => (
+              {data?.map((row, rowIndex) => (
                 <tr
                   key={rowIndex}
                   className="dark:border-dark-3 border dark:bg-[#152030]"
@@ -156,7 +182,12 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
                     .filter((col) => visibleColumns.includes(col.key))
                     .map((col) => (
                       <td key={col.key} className="px-4 py-4">
-                        {col.key === "photo" && (
+                        {col.key === "homestayid" && (
+                          <div className="text-sm font-medium dark:text-dark-6 text-gray-900  line-clamp-1">
+                            {row[col.key]}
+                          </div>
+                        )}
+                        {col.key === "photos" && (
                           <div className="h-20 w-25 rounded-md overflow-hidden">
                             <Image
                               src={String(row[col.key])}
@@ -168,14 +199,30 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
                           </div>
                         )}
                         {col.key !== "approve" &&
-                          col.key !== "photo" &&
-                          col.key !== "perk" && (
+                          col.key !== "photos" &&
+                          col.key !== "instant" &&
+                          col.key !== "perk" &&
+                          col.key !== "homestayid" && (
                             <div className="text-sm font-medium dark:text-dark-6 text-gray-900 w-[200px] line-clamp-2">
                               {row[col.key]}
                             </div>
                           )}
+                        {col.key === "instant" && (
+                          <button className="px-4 py-2  rounded-xl font-bold dark:text-white border text-white bg-blue-500">
+                            {row[col.key] === "false" ? "Yes" : "No"}
+                          </button>
+                        )}
+
                         {col.key === "approve" && (
-                          <button className="px-4 py-2  rounded-xl font-bold dark:text-white border bg-blue-500">
+                          <button
+                            className="px-4 py-2  rounded-xl font-bold dark:text-white border text-white bg-blue-500"
+                            onClick={() =>
+                              handleApprove(
+                                Number(row[columns[0].key]),
+                                String(row[columns[2].key])
+                              )
+                            }
+                          >
                             {row[col.key] === "false" ? "Approve" : "Approved"}
                           </button>
                         )}
@@ -205,10 +252,9 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data }) => {
   );
 };
 
-
-
 const columns = [
-  { key: "photo", label: "Photo" },
+  { key: "homestayid", label: "ID" },
+  { key: "photos", label: "Photo" },
   { key: "title", label: "Title" },
   { key: "owner", label: "Owner" },
   { key: "type", label: "Type" },
@@ -219,39 +265,122 @@ const columns = [
   { key: "extraInfo", label: "Extra Information" },
   { key: "description", label: "Description" },
   { key: "pricePerNight", label: "Price Per Night" },
-  { key: "status", label: "Status" },
-  { key: "date", label: "Date" },
+  { key: "room", label: "Room" },
+  { key: "instant", label: "Instant" },
+  { key: "bed", label: "Bed" },
+  { key: "bathroom", label: "Bathroom" },
   { key: "approve", label: "Approve" },
 ];
 
-const data = [
-  {
-    photo: "/boat.png",
-    title: "Apple Watch Series 7 pham minh khoa dda dvsd dcs cdvsd ",
-    owner: "Wisdom",
-    type: "Cabin",
-    perk: ["wifi","path"],
-    location: "1234 Elm Street, Springfield, IL, 62704",
-    maxGuest: 12,
-    cleaningFee: 300,
-    extraInfo: "john@example.com",
-    description: "Company A",
-    pricePerNight: "Manager",
-    status: "Sales",
-    date: 60000,
-    approve: "false",
-  },
-];
+interface Homestay {
+  homestayid: number | null;
+  wardName: string; //
+  districtName: string; //
+  cityProvinceName: string; //
+  longitude: number; //
+  latitude: number; //
+  geom: string | null;
+  structureId: number | null; //
+  userId: number | null; //
+  type: string; //
+  title: string; //
+  address: string; //
+  photos: string[]; //
+  description: string; //
+  extraInfo: string; //
+  cleaningFee: number; //
+  isApproved: boolean;
+  maxGuest: number; //
+  perkIds: number[]; //
+  pricePerNight: number; //
+  instant: boolean;
+  beds: number;
+  bathroom: number;
+  room: number | null;
+  availability: HomestayAvailability[];
+}
 
+interface FormattedTourData extends DataRow {
+  homestayid: number;
+  longitude: number; //
+  latitude: number; //
+  geom: string;
+  structureId: number; //
+  userId: number; //
+  type: string; //
+  title: string; //
+  address: string; //
+  photos: string; //
+  description: string; //
+  extraInfo: string; //
+  cleaningFee: number; //
+  isApproved: string;
+  maxGuest: number; //
+  perkIds: number; //
+  pricePerNight: number; //
+  instant: string;
+  bed: number;
+  bathroom: number;
+  room: number;
+  owner: string;
+  location: string;
+  approve: string;
 
-
-
-
+}
 
 const TableHomestay = () => {
+
+   const { message } = useMessage();
+  const [homestays, setHomestays] = useState<FormattedTourData[]>();
+
+
+  const currentDate = format(new Date(), "yyyy-MM-dd");
+  
+  
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getData({
+          endpoint: "/homestays/admin",
+        });
+
+        const formattedData: FormattedTourData[] = response.map(
+          (home: Homestay) => ({
+            homestayid: home.homestayid,
+            location: `${home.wardName} ,${home.districtName}, ${home.cityProvinceName}`,
+            structureId: home.structureId,
+            userId: home.userId,
+            type: home.type,
+            title: home.title,
+            address: home.address,
+            photos: home.photos[0],
+            description: home.description,
+            extraInfo: home.extraInfo,
+            cleaningFee: home.cleaningFee,
+            approve: String(home.isApproved),
+            maxGuest: home.maxGuest,
+            perkIds: home.perkIds,
+            pricePerNight: home.availability.find((avail) => {
+              return avail.date.startsWith(currentDate);
+            })?.pricepernight,
+            instant: String(home.instant),
+            bed: home.beds,
+            bathroom: home.bathroom,
+            room: home.room,
+          })
+        );
+
+        setHomestays(formattedData);
+      } catch (error) {
+        console.error("Error fetching makes:", error);
+      }
+    };
+
+    fetchData();
+  }, [message]);
   return (
     <>
-      <CustomTable columns={columns} data={data} />
+      <CustomTable columns={columns} data={homestays!} />
     </>
   );
 };

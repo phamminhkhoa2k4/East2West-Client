@@ -57,31 +57,28 @@ const [checkAmenities, setCheckAmenities] = useState<number[]>(
             
             
    useEffect(() => {
-       const getById = async () => {
-         try {
-            await getData({ endpoint: `/homestays/${Number(params.id)}` }).then( async (data : Homestay ) => {
-                await getData({
-                  endpoint: `/auth/${data.userId}`,
-                }).then((owner: User) => {
-                  setHomestay(data);
-                  setOwner(owner);
-                  setCheckAmenities(data?.perkIds!)
-                });
-            })
-       
- 
-           
-           
-         } catch (err) {
-           console.log(err);
-         } finally {
-           setLoading(false);
-         }
-       };
+     const getById = async () => {
+       try {
+         await getData({ endpoint: `/homestays/${Number(params.id)}` }).then(
+           async (data: Homestay) => {
+             await getData({
+               endpoint: `/auth/${data.userId}`,
+             }).then((owner: User) => {
+               setHomestay(data);
+               setOwner(owner);
+               setCheckAmenities(data?.perkIds!);
+             });
+           }
+         );
+       } catch (err) {
+         console.log(err);
+       } finally {
+         setLoading(false);
+       }
+     };
 
-       getById();
-       
-   },[])
+     getById();
+   }, [params.id]);
    const currentDate = format(new Date(), "yyyy-MM-dd");
    const todayAvailability = homestay?.availability.find((avail) => {
      return avail.date.startsWith(currentDate);

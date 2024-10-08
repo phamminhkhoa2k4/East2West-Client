@@ -56,7 +56,7 @@ const Floor = () => {
       <div className="flex flex-col items-center justify-center mt-36 mb-30">
         <div className="text-4xl font-semibold w-[630px]">
           {/* Hãy bắt đầu từ những điều cơ bản */}
-          Let's start with the basics
+          Let&apos;s start with the basics
         </div>
         <div className="w-[630px]  text-lg font-semibold">
           {/* Bao nhiêu người có thể ở tại đây? */}
@@ -278,7 +278,10 @@ const Floor = () => {
         <button
           onClick={handleClick}
           className={`px-5 py-3 my-5 mr-5 rounded-xl text-lg font-bold text-white bg-blue-500 ${
-            countMaxGuest! > 0 && countBed! > 0 && countRoom! > 0 && countBathroom! > 0
+            countMaxGuest! > 0 &&
+            countBed! > 0 &&
+            countRoom! > 0 &&
+            countBathroom! > 0
               ? "opacity-100"
               : "opacity-30 cursor-not-allowed"
           }`}

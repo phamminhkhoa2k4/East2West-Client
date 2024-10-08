@@ -49,7 +49,7 @@ const LocationSearch = ({ position, setPosition , setLocation }: LocationSearchP
         {!position && (
           <div className="rounded-3xl overflow-hidden w-full h-full">
             <Image
-              src={"/host/vietnam.png"}
+              src={"/host/image.png"}
               alt=""
               height={400}
               width={400}

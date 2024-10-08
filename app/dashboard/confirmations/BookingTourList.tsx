@@ -30,10 +30,6 @@ const BookingTourList: React.FC<BookingTourListProps> = ({ bookingTours }) => {
       .then((response) => response.json())
       .then((data) => {
         alert('Booking Tour confirmed');
-<<<<<<< HEAD
-        // Cập nhật danh sách hoặc tải lại dữ liệu ở đây nếu cần
-=======
->>>>>>> 7ec56dd (add delete fetch)
       })
       .catch((error) => console.error('Error confirming booking tour:', error));
   };

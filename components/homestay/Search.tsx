@@ -104,7 +104,15 @@ export default function Search({isScroll}: SearchProps) {
       guests: countAdult + countChildren,
       radius: radius,
     });
-  }, [checkInDate, checkOutDate, position, countAdult, countChildren, radius]);
+  }, [
+    checkInDate,
+    checkOutDate,
+    position,
+    countAdult,
+    countChildren,
+    radius,
+    setSearchHomestay,
+  ]);
 
   const parseDateString = (dateString : string) => {
     const [day, month, year] = dateString.split("/").map(Number);
@@ -163,6 +171,7 @@ const handleSubmitSearch = async () => {
     };
   }, []);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const fetchSuggestions = useCallback(
     debounce(async (query: string) => {
       if (!query || selectingRef.current) return;
@@ -178,7 +187,7 @@ const handleSubmitSearch = async () => {
         console.error("Error fetching suggestions:", error);
       }
     }, 500),
-    []
+    [setSuggestions]
   );
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {

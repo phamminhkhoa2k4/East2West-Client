@@ -16,12 +16,12 @@ import { Metadata } from "next";export const metadata: Metadata = {
       {/* <div className="mx-20">
         <Breadcrumb />
       </div> */}
-      <Brands />
+      {/* <Brands />
       <div className="mx-20">
         <OurService />
         <OurPopular />
         <Collection/>
-      </div>
+      </div> */}
 
 
       {/* <Categories /> */}

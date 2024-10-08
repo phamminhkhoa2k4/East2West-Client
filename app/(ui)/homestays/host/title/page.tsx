@@ -53,8 +53,8 @@ const Title = () => {
           <div className="text-lg font-medium text-[#666]">
             {/* Tiêu đề ngắn cho hiệu quả tốt nhất. Đừng lo lắng, bạn luôn có thể
             thay đổi tiêu đề sau. */}
-            Short titles work best. Don't worry, you can always change the title
-            later.
+            Short titles work best. Don&apos;t worry, you can always change the
+            title later.
           </div>
         </div>
         <div className="w-[640px]  mt-5">

@@ -40,8 +40,8 @@ const Finish = () => {
               <div className="text-lg font-normal text-[#222]">
                 {/* Cuối cùng, bạn sẽ chọn cài đặt đặt phòng, thiết lập giá và đăng
                 mục cho thuê. */}
-                Finally, you'll choose your booking settings, set your prices,
-                and post your listing.
+                Finally, you&apos;ll choose your booking settings, set your
+                prices, and post your listing.
               </div>
             </div>
             <div className="w-[568px] h-[498px] relative">

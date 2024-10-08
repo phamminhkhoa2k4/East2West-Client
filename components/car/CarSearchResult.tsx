@@ -19,6 +19,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useLoading } from "@/store/loadingContext";
+import Loading from "../Loading";
 
 // import Slider from "@/components/ui/Slider";
 interface Car {
@@ -67,7 +69,9 @@ interface CarSearchFilters {
 
 const CarSearchResult = () => {
   const [cars, setCars] = useState<Car[]>([]);
-  const [selectedValue, setSelectedValue] = useState("apple");
+  // const [selectedValue, setSelectedValue] = useState("apple");
+    const { isLoading, setIsLoading } = useLoading();
+
   const [filters, setFilters] = useState<CarSearchFilters>({
     carName: '',
     modelId: undefined,
@@ -89,6 +93,7 @@ const CarSearchResult = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
         const [carResponse, modelResponse, makeResponse, typeResponse, locationResponse] = await Promise.all([
           api.get("/cars"),
           api.get("/cars/model"),
@@ -110,6 +115,8 @@ const CarSearchResult = () => {
         setLocationtypes(locationResponse.data);
       } catch (error) {
         console.error("Error fetching data:", error);
+      }finally{
+        setIsLoading(false);
       }
     };
     fetchData();
@@ -146,156 +153,161 @@ const CarSearchResult = () => {
       minMiles: undefined,
       maxMiles: undefined,
     });
-    setSelectedValue("apple"); // Reset the selected sort value if needed
+    // setSelectedValue("apple"); // Reset the selected sort value if needed
   };
   return (
     <>
-      <div className="border rounded-3xl shadow-lg mb-6">
-        <div className="flex border-b ">
-          <div className="p-5 w-1/4 border-r font-semibold">FILTERS</div>
-          <div className="p-5 w-3/4 font-semibold">ALL PACKAGES</div>
-        </div>
-        <div className="flex">
-          <div className="p-5 w-1/4 border-r ">
-            <label>Search   </label>
-            <input
-              type="text"
-              className="border py-1 px-2 rounded-xl"
-              placeholder="Car Name"
-              value={filters.carName}
-              onChange={(e) =>
-                setFilters({ ...filters, carName: e.target.value })
-              }
-            />
-            <div className="mt-5 flex flex-col gap-5">
-              <Select
-                value={filters.modelId?.toString()}
-                onValueChange={(value) =>
-                  setFilters({ ...filters, modelId: parseInt(value) })
+      {isLoading && <Loading />}{" "}
+      {!isLoading && (
+        <div className="border rounded-3xl shadow-lg mb-6">
+          <div className="flex border-b ">
+            <div className="p-5 w-1/4 border-r font-semibold">FILTERS</div>
+            <div className="p-5 w-3/4 font-semibold">ALL CARS</div>
+          </div>
+          <div className="flex">
+            <div className="p-5 w-1/4 border-r ">
+              <label>Search </label>
+              <input
+                type="text"
+                className="border py-1 px-2 rounded-xl"
+                placeholder="Car Name"
+                value={filters.carName}
+                onChange={(e) =>
+                  setFilters({ ...filters, carName: e.target.value })
                 }
-              >
-                <SelectTrigger className="w-full border outline-none">
-                  <SelectValue>
-                    {filters.modelId
-                      ? `Model : ${
-                          models.find(
-                            (model) => model.modelId === filters.modelId
-                          )?.modelName
-                        }`
-                      : "Select Model"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {models.map((model) => (
-                    <SelectItem
-                      key={model.modelId}
-                      value={model.modelId.toString()}
-                    >
-                      {model.modelName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={filters.makeId?.toString()}
-                onValueChange={(value) =>
-                  setFilters({ ...filters, makeId: parseInt(value) })
-                }
-              >
-                <SelectTrigger className="w-full border outline-none">
-                  <SelectValue>
-                    {filters.makeId
-                      ? `Make : ${
-                          makes.find((make) => make.makeId === filters.makeId)
-                            ?.makeName
-                        }`
-                      : "Select Make"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {makes.map((make) => (
-                    <SelectItem
-                      key={make.makeId}
-                      value={make.makeId.toString()}
-                    >
-                      {make.makeName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={filters.typeId?.toString()}
-                onValueChange={(value) =>
-                  setFilters({ ...filters, typeId: parseInt(value) })
-                }
-              >
-                <SelectTrigger className="w-full border outline-none">
-                  <SelectValue>
-                    {filters.typeId
-                      ? `Type : ${
-                          types.find((type) => type.typeId === filters.typeId)
-                            ?.typeName
-                        }`
-                      : "Select Type"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {types.map((type) => (
-                    <SelectItem
-                      key={type.typeId}
-                      value={type.typeId.toString()}
-                    >
-                      {type.typeName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <Select
-                value={filters.locationtypeId?.toString()}
-                onValueChange={(value) =>
-                  setFilters({ ...filters, locationtypeId: parseInt(value) })
-                }
-              >
-                <SelectTrigger className="w-full border outline-none">
-                  <SelectValue>
-                    {filters.locationtypeId
-                      ? `Location Type : ${
-                          locationtypes.find(
-                            (locationtypes) =>
-                              locationtypes.locationtypeid ===
-                              filters.locationtypeId
-                          )?.locationtypename
-                        }`
-                      : "Select Type"}
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  {locationtypes.map((locationtypes) => (
-                    <SelectItem
-                      key={locationtypes.locationtypeid}
-                      value={locationtypes.locationtypeid.toString()}
-                    >
-                      {locationtypes.locationtypename}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-
-              <label>
-                Air Conditioned:
-                <input
-                  type="checkbox"
-                  checked={filters.airConditioned ?? false}
-                  onChange={(e) =>
-                    setFilters({ ...filters, airConditioned: e.target.checked })
+              />
+              <div className="mt-5 flex flex-col gap-5">
+                <Select
+                  value={filters.modelId?.toString()}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, modelId: parseInt(value) })
                   }
-                />
-              </label>
+                >
+                  <SelectTrigger className="w-full border outline-none">
+                    <SelectValue>
+                      {filters.modelId
+                        ? `Model : ${
+                            models.find(
+                              (model) => model.modelId === filters.modelId
+                            )?.modelName
+                          }`
+                        : "Select Model"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {models.map((model) => (
+                      <SelectItem
+                        key={model.modelId}
+                        value={model.modelId.toString()}
+                      >
+                        {model.modelName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
 
-              {/* <div>
+                <Select
+                  value={filters.makeId?.toString()}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, makeId: parseInt(value) })
+                  }
+                >
+                  <SelectTrigger className="w-full border outline-none">
+                    <SelectValue>
+                      {filters.makeId
+                        ? `Make : ${
+                            makes.find((make) => make.makeId === filters.makeId)
+                              ?.makeName
+                          }`
+                        : "Select Make"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {makes.map((make) => (
+                      <SelectItem
+                        key={make.makeId}
+                        value={make.makeId.toString()}
+                      >
+                        {make.makeName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={filters.typeId?.toString()}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, typeId: parseInt(value) })
+                  }
+                >
+                  <SelectTrigger className="w-full border outline-none">
+                    <SelectValue>
+                      {filters.typeId
+                        ? `Type : ${
+                            types.find((type) => type.typeId === filters.typeId)
+                              ?.typeName
+                          }`
+                        : "Select Type"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {types.map((type) => (
+                      <SelectItem
+                        key={type.typeId}
+                        value={type.typeId.toString()}
+                      >
+                        {type.typeName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select
+                  value={filters.locationtypeId?.toString()}
+                  onValueChange={(value) =>
+                    setFilters({ ...filters, locationtypeId: parseInt(value) })
+                  }
+                >
+                  <SelectTrigger className="w-full border outline-none">
+                    <SelectValue>
+                      {filters.locationtypeId
+                        ? `Location Type : ${
+                            locationtypes.find(
+                              (locationtypes) =>
+                                locationtypes.locationtypeid ===
+                                filters.locationtypeId
+                            )?.locationtypename
+                          }`
+                        : "Select Type"}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    {locationtypes.map((locationtypes) => (
+                      <SelectItem
+                        key={locationtypes.locationtypeid}
+                        value={locationtypes.locationtypeid.toString()}
+                      >
+                        {locationtypes.locationtypename}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <label>
+                  Air Conditioned:
+                  <input
+                    type="checkbox"
+                    checked={filters.airConditioned ?? false}
+                    onChange={(e) =>
+                      setFilters({
+                        ...filters,
+                        airConditioned: e.target.checked,
+                      })
+                    }
+                  />
+                </label>
+
+                {/* <div>
                 <div>Price Range:</div>
                 <Slider
                   min={0}
@@ -316,7 +328,7 @@ const CarSearchResult = () => {
                 </div>
               </div> */}
 
-              {/* <div>
+                {/* <div>
                 <div>Miles Range:</div>
                 <Slider
                   min={0}
@@ -336,14 +348,24 @@ const CarSearchResult = () => {
                   {filters.maxMiles ?? 200000}
                 </div>
               </div> */}
-              <button onClick={resetFilters} className="bg-blue-500 rounded-lg text-white font-bold py-3">Clear All</button>
-              <button onClick={handleSearch} className="bg-blue-500 rounded-lg text-white font-bold py-3">Search</button>
+                <button
+                  onClick={resetFilters}
+                  className="bg-blue-500 rounded-lg text-white font-bold py-3"
+                >
+                  Clear All
+                </button>
+                <button
+                  onClick={handleSearch}
+                  className="bg-blue-500 rounded-lg text-white font-bold py-3"
+                >
+                  Search
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="p-5 w-3/4 h-[1032px] overflow-y-scroll scroll-transparent">
-            <div className="flex items-center justify-between ml-5 mb-5">
-              <div className="flex items-center gap-4">
-                {/* <div className="flex items-center gap-1 py-1 px-2 bg-blue-200 border-blue rounded-lg">
+            <div className="p-5 w-3/4 h-[1032px] overflow-y-scroll scroll-transparent">
+              <div className="flex items-center justify-between ml-5 mb-5">
+                <div className="flex items-center gap-4">
+                  {/* <div className="flex items-center gap-1 py-1 px-2 bg-blue-200 border-blue rounded-lg">
                   Customizable{" "}
                   <span>
                     <svg
@@ -362,10 +384,10 @@ const CarSearchResult = () => {
                     </svg>
                   </span>
                 </div> */}
-                {/* <div className="font-bold text-blue">Clear All</div> */}
-              </div>
-              <div>
-                {/* <Select
+                  {/* <div className="font-bold text-blue">Clear All</div> */}
+                </div>
+                <div>
+                  {/* <Select
                   value={selectedValue}
                   onValueChange={(value) => setSelectedValue(value)}
                 >
@@ -390,16 +412,17 @@ const CarSearchResult = () => {
                     </SelectGroup>
                   </SelectContent>
                 </Select> */}
+                </div>
               </div>
-            </div>
-            <div className="ml-5 flex flex-col gap-5 ">
-              {cars.map((car, index) => (
-                <CardSearch car={car} key={index} />
-              ))}
+              <div className="ml-5 flex flex-col gap-5 ">
+                {cars.map((car, index) => (
+                  <CardSearch car={car} key={index} />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}{" "}
     </>
   );
 };

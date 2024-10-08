@@ -54,17 +54,22 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
       toast({
         title: message?.title,
         description: message?.description,
+        status: message?.status
       });
       setMessage(null);
     }
   }, [message]);
 
-  const handleDelete = async (id : number) =>  {
+  const handleDelete = async (id : number , des : string) =>  {
     try{
       console.log(deleteUrl);
       
       const response = await deleteData({ endpoint: deleteUrl ?? "", id });
-      setMessage({description : "delete success 1",title: "Notification",status:"success"})
+      setMessage({
+        title: `Delete ${title}`,
+        description: "Successfully",
+        status: "success",
+      });
 
     }catch(error){
 
@@ -218,7 +223,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
 
                         {col.key === "itineraries" && (
                           <button className="px-6 py-2  rounded-lg text-white font-bold dark:text-white border bg-blue-500">
-                           {row[col.key].length }<span className="pl-1">Day</span>
+                           {row[col.key] }<span className="pl-1">Day</span>
                           </button>
                         )}
                         {col.key === "action" && (
@@ -274,7 +279,7 @@ const CustomTable: React.FC<CustomTableProps> = ({ columns, data , title ,create
                             </Link>
                             <button
                               onClick={() =>
-                                handleDelete(Number(row[columns[0].key]) ?? 0)
+                                handleDelete(Number(row[columns[0].key]) ?? 0, String(row[columns[2].key])) 
                               }
                               className="hover:text-primary"
                             >

@@ -45,7 +45,7 @@ const StaffTable: React.FC<StaffTableProps> = ({ columns, data, title ,handleSea
     <div className="">
       <div className="flex my-5 items-center justify-between max-w-[1135px]">
         {/* <SearchForm /> */}
-        <SearchForm onSearch={handleSearch} />
+        <SearchForm onSearch={handleSearch!} />
         <div>
           <Pagination>
             <PaginationContent>

@@ -106,14 +106,14 @@ const MultiCalendar = () => {
 
     const saturdayPrices = availability
       .filter(
-        (item) => getDayOfWeek(item.date) === 6 && item.status === "available"
+        (item) => getDayOfWeek(item.date) === 6 && item.status === "Available"
       )
       .map((item) => item.pricepernight)
       .filter((price): price is number => price !== null);
 
     const sundayPrices = availability
       .filter(
-        (item) => getDayOfWeek(item.date) === 0 && item.status === "available"
+        (item) => getDayOfWeek(item.date) === 0 && item.status === "Available"
       )
       .map((item) => item.pricepernight)
       .filter((price): price is number => price !== null);
@@ -217,6 +217,7 @@ const MultiCalendar = () => {
   }, [homestays]);
 
   useEffect(() => {
+  
     if (homestaySelect !== null && homestays.length > 0) {
       const selectedHomestay = homestays.find(
         (homestay) => homestay.homestayid === homestaySelect

@@ -242,15 +242,15 @@ const Navbar = () => {
                         <MdCardTravel className="mr-2 h-4 w-4" />
                         <Link href="">Trips</Link>
                       </DropdownMenuItem> */}
-                      {user.roles[0] === "ROLE_BUSINESS" ||
-                        (user.roles[0] === "ROLE_MODERATOR" && (
+                      {(user.roles[0] === "ROLE_BUSINESS" ||
+                        user.roles[0] === "ROLE_MODERATOR" )&& (
                           <DropdownMenuItem>
                             <BsHouses className="mr-2 h-4 w-4" />
                             <Link href="/homestays/multicalendar">
                               Manage Your Homestay
                             </Link>
                           </DropdownMenuItem>
-                        ))}
+                        )}
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Tours Package</DropdownMenuLabel>

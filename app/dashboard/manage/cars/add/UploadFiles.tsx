@@ -29,16 +29,24 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
   const [isProgress, setIsProgress] = useState<boolean>(false);
   const [progress, setProgress] = useState(0);
 
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const filesWithPreview = acceptedFiles.map((file) =>
-      Object.assign(file, { preview: URL.createObjectURL(file) })
-    );
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      const filesWithPreview = acceptedFiles.map((file) =>
+        Object.assign(file, { preview: URL.createObjectURL(file) })
+      );
 
-    setFiles((prevFiles) => [
-      ...prevFiles.filter(file => !filesWithPreview.some(newFile => newFile.preview === file.preview)),
-      ...filesWithPreview
-    ]);
-  }, [files]);
+      setFiles((prevFiles) => [
+        ...prevFiles.filter(
+          (file) =>
+            !filesWithPreview.some(
+              (newFile) => newFile.preview === file.preview
+            )
+        ),
+        ...filesWithPreview,
+      ]);
+    },
+    [setFiles]
+  );
 
   const removeFile = (fileName: string, event: React.MouseEvent) => {
     event.stopPropagation();

@@ -1,6 +1,61 @@
 import Image from "next/image";
+interface Accommodation {
+  accommodationid: number;
+  accommodationname: string;
+  durationaccommodation: string;
+  accommodationtype: string;
+  isbreadkfast: boolean;
+  accommodationthumbnail: string;
+  roomtype: string;
+}
 
-const CardSearch = ({ tourPackage }) => {
+interface Meal {
+  mealid: number;
+  mealname: string;
+  mealthumbnail: string;
+  mealduration: string;
+  mealactivity: string;
+}
+
+interface Place {
+  placeid: number;
+  placename: string;
+  placethumbnail: string;
+  description: string;
+  placeduration: string;
+}
+
+interface Transfer {
+  transferid: number;
+  transfername: string;
+  transferthumbnail: string;
+  description: string;
+  transferduration: string;
+}
+interface TourPackage {
+  packageId: number;
+  title: string;
+  price: number;
+  groupsize: string;
+  deposit: string;
+  bookinghold: string;
+  bookingchange: string;
+  categoryTourId: number[];
+  themeTourId: number[];
+  suitableTourId: number[];
+  thumbnail: string[];
+  itineraries: ItineraryDataType[];
+}
+
+interface ItineraryDataType {
+  day: number;
+  accommodations: Accommodation[];
+  meals: Meal[];
+  transfers: Transfer[];
+  places: Place[];
+}
+
+const CardSearch = ({ tourPackage } : any) => {
   return (
     <div className="border rounded-xl overflow-hidden">
       <div className="w-full h-50">
@@ -50,14 +105,13 @@ const CardSearch = ({ tourPackage }) => {
             </div>
           </div>
           <ul className="grid grid-cols-2 list-disc p-4 ">
-            {tourPackage.itineraries.map((itinerary, index) => (
+            {tourPackage.itineraries.map((itinerary : any, index : number) => (
               <li key={index} className="text-gray-6">
                 {itinerary.accommodations[0].accommodationname}
               </li>
             ))}
           </ul>
           <div className="flex border border-[#e5e5e5] items-center justify-between p-4 bg-[#f9f9f9] rounded-lg">
-            <p className="text-[#4a4a4a]">Price Reduced: {tourPackage.pricereduce}</p>
             <div className="flex items-center">
               <span className="text-black font-bold text-lg">${tourPackage.price}</span>
               <p>/Person</p>

@@ -111,7 +111,7 @@ const UploadFiles: React.FC<UploadFilesProps> = ({
         ...filesWithPreview,
       ]);
     },
-    [files]
+    [setFiles]
   );
 
   const removeFile = (fileName: string, event: React.MouseEvent) => {

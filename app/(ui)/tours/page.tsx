@@ -22,10 +22,10 @@ const Tours = () => {
         <Breadcrumb />
       </div> */}
       <div className="mx-40">
-        <Recently />
-        <CarouselFeatures />
-        <Packages />
-        <Packages />
+        {/* <Recently /> */}
+        {/* <CarouselFeatures /> */}
+        {/* <Packages /> */}
+        {/* <Packages /> */}
       </div>
       {/* <Categories /> */}
       {/* <OtherOffers /> */}

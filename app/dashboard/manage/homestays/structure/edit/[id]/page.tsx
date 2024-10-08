@@ -1,7 +1,9 @@
 "use client"
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { useMessage } from "@/store/MessageCotext";
 import { createData, getData, updateData } from "@/utils/axios";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 
@@ -10,8 +12,10 @@ type StructureType = {
   structurename: string;
 };
 const Update = ({params} : {params : {id :string}}) => {
+  const router = useRouter();
   const [structures, setStructures] = useState<StructureType>();
   const [structure, setStructure] = useState<StructureType>();
+   const { message, setMessage } = useMessage();
 
   useEffect(() => {
     const fetchStructures = async () => {
@@ -25,7 +29,7 @@ const Update = ({params} : {params : {id :string}}) => {
       }
     };
     fetchStructures();
-  }, []);
+  }, [params.id]);
 
   useEffect(() => {
     setStructures(structure);
@@ -37,6 +41,13 @@ const Update = ({params} : {params : {id :string}}) => {
         endpoint: "/homestays/host/structure",
         payload: structures,
       });
+       setMessage({
+         title: "Edit Structure",
+         description: structures?.structurename!,
+         status: "success",
+       });
+      router.push("/dashboard/manage/homestays/structure");
+
     } catch (error) {
       console.log(error);
     }

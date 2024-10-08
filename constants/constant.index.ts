@@ -8,7 +8,7 @@ export const NAV_LINKS = [
     icon_active: "/navicon/homestay_color.png",
   },
   {
-    href: "/tours",
+    href: "/tours/search",
     key: "Tours",
     label: "Tours",
     icon: "/navicon/tour.png",

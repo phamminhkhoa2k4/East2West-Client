@@ -12,7 +12,7 @@ import {
     PopoverTrigger,
   } from "@/components/ui/popover";
   import CardItinerary from "@/components/tour/CardItinerary";
-  import { useEffect, useState } from "react";
+  import { useCallback, useEffect, useState } from "react";
   import Image from "next/image";
   import TransferInfo from "@/components/tour/TransferInfo";
   import { FaRegStar, FaStar } from "react-icons/fa6";
@@ -167,59 +167,62 @@ import {
       return Array.isArray((itinerary as Itinerary)?.accommodationIds);
     };
 
-  const getItineraryData = (
-    itinerary: Itinerary | ItineraryDatas,
-    accommodations: Accommodation[],
-    meals: Meal[],
-    places: Place[],
-    transfers: Transfer[]
-  ): ItineraryData => {
-    console.log("kkk", itinerary);
-    console.log("kkk1", accommodations);
-    console.log("kkk2", meals);
-    console.log("kkk3", places);
-    console.log("kkk4", transfers);
+   const getItineraryData = useCallback(
+     (
+       itinerary: Itinerary | ItineraryDatas,
+       accommodations: Accommodation[],
+       meals: Meal[],
+       places: Place[],
+       transfers: Transfer[]
+     ): ItineraryData => {
+       console.log("kkk", itinerary);
+       console.log("kkk1", accommodations);
+       console.log("kkk2", meals);
+       console.log("kkk3", places);
+       console.log("kkk4", transfers);
 
-    if (isItinerary(itinerary)) {
-      return {
-        accommodationData:
-          itinerary?.accommodationIds
-            ?.map((id) =>
-              accommodations?.find((accom) => accom.accommodationid === id)
-            )
-            .filter((accom): accom is Accommodation => !!accom) || [],
+       if (isItinerary(itinerary)) {
+         return {
+           accommodationData:
+             itinerary?.accommodationIds
+               ?.map((id) =>
+                 accommodations?.find((accom) => accom.accommodationid === id)
+               )
+               .filter((accom): accom is Accommodation => !!accom) || [],
 
-        mealData:
-          itinerary?.mealIds
-            ?.map((id) => meals?.find((meal) => meal.mealid === id))
-            .filter((meal): meal is Meal => !!meal) || [],
+           mealData:
+             itinerary?.mealIds
+               ?.map((id) => meals?.find((meal) => meal.mealid === id))
+               .filter((meal): meal is Meal => !!meal) || [],
 
-        placeData:
-          itinerary?.placeIds
-            ?.map((id) => places?.find((place) => place.placeid === id))
-            .filter((place): place is Place => !!place) || [],
+           placeData:
+             itinerary?.placeIds
+               ?.map((id) => places?.find((place) => place.placeid === id))
+               .filter((place): place is Place => !!place) || [],
 
-        transferData:
-          itinerary?.transferIds
-            ?.map((id) =>
-              transfers?.find((transfer) => transfer.transferid === id)
-            )
-            .filter((transfer): transfer is Transfer => !!transfer) || [],
+           transferData:
+             itinerary?.transferIds
+               ?.map((id) =>
+                 transfers?.find((transfer) => transfer.transferid === id)
+               )
+               .filter((transfer): transfer is Transfer => !!transfer) || [],
 
-        day: itinerary?.day, 
-      };
-    } else {
-      console.log("sasa", itinerary);
+           day: itinerary?.day,
+         };
+       } else {
+         console.log("sasa", itinerary);
 
-      return {
-        accommodationData: itinerary?.accommodations || [],
-        mealData: itinerary?.meals || [],
-        placeData: itinerary?.places || [],
-        transferData: itinerary?.transfers || [],
-        day: itinerary?.day, 
-      };
-    }
-  };
+         return {
+           accommodationData: itinerary?.accommodations || [],
+           mealData: itinerary?.meals || [],
+           placeData: itinerary?.places || [],
+           transferData: itinerary?.transfers || [],
+           day: itinerary?.day,
+         };
+       }
+     },
+     [] 
+   );
 
 
 
@@ -242,19 +245,19 @@ import {
       meals,
       places,
       transfers,
-      
+      getItineraryData,
     ]);
 
 
 
-    useEffect(() => {
-      console.log("la", toursInfo?.itineraries);
-      console.log("in", itinerary);
-      console.log(`meals ${day -1}`, meals);
-      console.log("places", places);
-      console.log("transfer", transfers);
-      console.log("accomodations", accommodation);
-    }, [toursInfo, itinerary,meals,places,transfers,accommodation]);
+    // useEffect(() => {
+    //   console.log("la", toursInfo?.itineraries);
+    //   console.log("in", itinerary);
+    //   console.log(`meals ${day -1}`, meals);
+    //   console.log("places", places);
+    //   console.log("transfer", transfers);
+    //   console.log("accomodations", accommodation);
+    // }, [toursInfo, itinerary,meals,places,transfers,accommodation]);
 
     
  
