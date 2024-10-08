@@ -97,13 +97,18 @@ const MyBookingPage: React.FC = () => {
   const handlePrintPDF = async (rentalId: number) => {
     try {
       const response = await createData({ endpoint: `rental/pdf/${rentalId}`, payload: {} });
-      const url = window.URL.createObjectURL(new Blob([response.data], { type: 'application/pdf' }));
+      
+      // Đảm bảo rằng response.data là kiểu dữ liệu Blob
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      
       const link = document.createElement('a');
       link.href = url;
       link.setAttribute('download', `rental_${rentalId}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();
+      window.URL.revokeObjectURL(url); // Giải phóng URL sau khi tải xong
     } catch (error) {
       console.error("Error printing PDF:", error);
     }

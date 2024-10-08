@@ -26,7 +26,7 @@ interface BookingTourListProps {
 const BookingTourList: React.FC<BookingTourListProps> = ({ bookingTours }) => {
   const confirmBookingTour = async (bookingTourId: number) => {
     try {
-      const endpoint = `/confirmations/tour/${bookingTourId}/confirm`;
+      const endpoint = `confirmations/tour/confirm`;
       await updateData({ id: bookingTourId, endpoint, payload: {} });
       alert('Booking Tour confirmed');
     } catch (error) {

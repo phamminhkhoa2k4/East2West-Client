@@ -1,7 +1,11 @@
 import { getData } from '@/utils/axios';
 import React, { useEffect, useState } from 'react';
-import Chart from 'react-apexcharts';
+import dynamic from 'next/dynamic';
 
+// Dynamically import ApexCharts with SSR disabled
+const Chart = dynamic(() => import('react-apexcharts'), {
+  ssr: false
+});
 interface TourRevenueDTO {
   tourId: number;
   tourTitle: string;

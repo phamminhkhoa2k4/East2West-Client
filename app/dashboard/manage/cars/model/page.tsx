@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { useMessage } from "@/store/MessageCotext";
+import { getData } from "@/utils/axios";
 const columns = [
   { key: "modelId", label: "ID" },
   { key: "modelName", label: "Model Name" },
@@ -24,8 +25,8 @@ const Models = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars/model");
-        const result: Model[] = await response.json();
+       
+        const result: Model[] = await getData({ endpoint: "/cars/model" });
 
         const formattedData = result.map((model: Model) => ({
           modelId: model.modelId,

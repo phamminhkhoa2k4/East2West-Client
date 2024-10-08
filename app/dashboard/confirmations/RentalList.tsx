@@ -28,7 +28,7 @@ const RentalCarList: React.FC<RentalCarListProps> = ({ rentals }) => {
     try {
       const data = await updateData({
         id: rentalId,
-        endpoint: '/confirmations/rental',
+         endpoint: 'confirmations/rental/confirm',
         payload: {},
       });
       alert('Rental confirmed');

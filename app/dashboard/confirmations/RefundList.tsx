@@ -25,10 +25,7 @@ interface RefundListProps {
 const RefundList: React.FC<RefundListProps> = ({ refunds }) => {
   const confirmRefund = async (bookingTourId: number) => {
     try {
-      const data = await updateData({
-        id: bookingTourId,
-        endpoint: 'api/confirmations/tour',
-        payload: {}, 
+      const data = await updateData({ id: bookingTourId,endpoint: 'confirmations/tour/refund',payload: {}, 
       });
       alert('Refund confirmed');
     } catch (error) {

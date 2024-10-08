@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const EditSuitable = ({ params }: { params: { id: string } }) => {
   const [suitableName, setSuitableName] = useState("");
@@ -14,17 +15,9 @@ const EditSuitable = ({ params }: { params: { id: string } }) => {
       setLoading(true); // Start loading
 
       try {
-        const response = await fetch(`http://localhost:8080/api/tours/suitable/${params.id}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch suitable option. Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data) {
-          setSuitableName(data.suitableName); // Update according to API response structure
-        } else {
-          throw new Error("No data received from API.");
-        }
+        const data = await getData({ endpoint: `tours/suitable/${params.id}` });
+        if (!data) throw new Error("Failed to fetch Model.");
+        setSuitableName(data.suitableName);
       } catch (err) {
         console.error(err);
         setError("Failed to load suitable option.");
@@ -40,12 +33,10 @@ const EditSuitable = ({ params }: { params: { id: string } }) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8080/api/tours/suitable/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ suitableName: suitableName }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "tours/suitable",
+        payload: { suitableName: suitableName },
       });
 
       if (response.ok) {
