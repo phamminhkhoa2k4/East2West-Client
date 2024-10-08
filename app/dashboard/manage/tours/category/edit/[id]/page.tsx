@@ -34,7 +34,7 @@ const Editcategory = ({ params }: { params: { id: string } }) => {
     try {
       const response = await updateData({
         id: Number(params.id),
-        endpoint: "tours/category/",
+        endpoint: "tours/category",
         payload: { categoryTourName: categoryTourName },
       });
 

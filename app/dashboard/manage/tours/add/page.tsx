@@ -45,7 +45,7 @@ type ToursInfoType = {
   suitableTourId: number[];
   departureDates: DateTimeOption[];
   thumbnail: string[];
-  itineraries: ItinerarType[];
+  itinerary: ItinerarType[];
 };
 interface Accommodation {
   accommodationid: number;
@@ -104,7 +104,7 @@ const Create = () => {
     suitableTourId: [],
     departureDates: [],
     thumbnail: [],
-    itineraries: [],
+    itinerary: [],
   });
 
   const [files, setFiles] = useState<FileWithPreview[]>([]);

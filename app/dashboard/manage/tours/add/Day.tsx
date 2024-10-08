@@ -18,6 +18,7 @@ import {
   import { FaRegStar, FaStar } from "react-icons/fa6";
   import { FaStarHalfAlt } from "react-icons/fa";
   import { GiForkKnifeSpoon } from "react-icons/gi";
+  import { Button } from "@/components/ui/button";
   interface Accommodation {
     accommodationid: number;
     accommodationname: string;
@@ -136,16 +137,13 @@ import {
     const toggleExpansion = () => {
       setIsExpanded(!isExpanded);
     };
-
     console.log(`meals ${day -1}`, meals);
-      console.log("places", places);
-      console.log("transfer", transfers);
-      console.log("accomodations", accommodation);
-
+    console.log("places", places);
+    console.log("transfer", transfers);
+    console.log("accomodations", accommodation);
     const convertToTimeUnit = (value: number): string => {
       const minutesInHour = 60;
       const minutesInDay = 60 * 24;
-
       if (value >= minutesInDay) {
         const days = Math.floor(value / minutesInDay);
         const remainingMinutes = value % minutesInDay;
@@ -159,14 +157,11 @@ import {
         return `${value} Minutes`;
       }
     };
-
-    
     const isItinerary = (
       itinerary: Itinerary | ItineraryData
     ): itinerary is Itinerary => {
       return Array.isArray((itinerary as Itinerary)?.accommodationIds);
     };
-
   const getItineraryData = (
     itinerary: Itinerary | ItineraryDatas,
     accommodations: Accommodation[],
@@ -179,7 +174,6 @@ import {
     console.log("kkk2", meals);
     console.log("kkk3", places);
     console.log("kkk4", transfers);
-
     if (isItinerary(itinerary)) {
       return {
         accommodationData:
@@ -220,13 +214,94 @@ import {
       };
     }
   };
+  const addItineraryItem = (type: string, id: number) => {
+    ensureItineraryExists();
+    
+    const currentItinerary = toursInfo.itineraries[day - 1] || {
+      day,
+      accommodationIds: [],
+      mealIds: [],
+      placeIds: [],
+      transferIds: [],
+    };
 
+    let updatedItinerary = { ...currentItinerary };
+    
+    switch (type) {
+      case 'accommodation':
+        updatedItinerary.accommodationIds = [...(currentItinerary.accommodationIds || []), id];
+        break;
+      case 'meal':
+        updatedItinerary.mealIds = [...(currentItinerary.mealIds || []), id];
+        break;
+      case 'place':
+        updatedItinerary.placeIds = [...(currentItinerary.placeIds || []), id];
+        break;
+      case 'transfer':
+        updatedItinerary.transferIds = [...(currentItinerary.transferIds || []), id];
+        break;
+    }
 
+    setToursInfo({
+      ...toursInfo,
+      itineraries: [
+        ...toursInfo.itineraries.slice(0, day - 1),
+        updatedItinerary,
+        ...toursInfo.itineraries.slice(day),
+      ],
+    });
+  };
+  const ensureItineraryExists = () => {
+    if (!toursInfo.itineraries[day - 1]) {
+      setToursInfo({
+        ...toursInfo,
+        itineraries: [
+          ...toursInfo.itineraries.slice(0, day - 1),
+          {
+            day,
+            accommodationIds: [],
+            mealIds: [],
+            placeIds: [],
+            transferIds: [],
+          },
+          ...toursInfo.itineraries.slice(day),
+        ],
+      });
+    }
+  };
+  const deleteItineraryItem = (type: string, id: number) => {
+    const currentItinerary = toursInfo.itineraries[day - 1];
+    if (!currentItinerary) return;
+    let updatedItinerary = { ...currentItinerary };
+    switch (type) {
+      case 'accommodation':
+        updatedItinerary.accommodationIds = currentItinerary.accommodationIds?.filter(itemId => itemId !== id);
+        break;
+      case 'meal':
+        updatedItinerary.mealIds = currentItinerary.mealIds?.filter(itemId => itemId !== id);
+        break;
+      case 'place':
+        updatedItinerary.placeIds = currentItinerary.placeIds?.filter(itemId => itemId !== id);
+        break;
+      case 'transfer':
+        updatedItinerary.transferIds = currentItinerary.transferIds?.filter(itemId => itemId !== id);
+        break;
+    }
+
+    setToursInfo({
+      ...toursInfo,
+      itineraries: [
+        ...toursInfo.itineraries.slice(0, day - 1),
+        updatedItinerary,
+        ...toursInfo.itineraries.slice(day),
+      ],
+    });
+  };
 
 
     useEffect(() => {
       const itineraryData = getItineraryData(
-        toursInfo?.itineraries[day - 1],
+        toursInfo?.itineraries?.[day - 1] || {},
         accommodation,
         meals,
         places,
@@ -693,7 +768,6 @@ import {
                               const currentItinerary = toursInfo.itineraries[
                                 day - 1
                               ] || { mealIds: [] };
-
                               setToursInfo({
                                 ...toursInfo,
                                 itineraries: [
@@ -817,23 +891,63 @@ import {
         </Popover>
       </div>
       <div className="flex flex-col gap-5 my-5  ">
-        {itinerary?.accommodationData.map((item, index) => (
-          <div key={index} className="border rounded-lg py-5">
-            <CardItinerary data={item}  />
+      {itinerary?.accommodationData.map((item, index) => (
+          <div key={index} className="border rounded-lg py-5 relative">
+            <Button 
+              variant="destructive" 
+              size="sm"
+              className="absolute top-2 right-2"
+              onClick={() => deleteItineraryItem('accommodation', item.accommodationid)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Button>
+            <CardItinerary data={item} />
           </div>
         ))}
         {itinerary?.transferData.map((item, index) => (
-          <div key={index} className="border rounded-lg py-5">
+          <div key={index} className="border rounded-lg py-5 relative">
+            <Button 
+              variant="destructive" 
+              size="sm"
+              className="absolute top-2 right-2"
+              onClick={() => deleteItineraryItem('transfer', item.transferid)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Button>
             <CardItinerary data={item} />
           </div>
         ))}
         {itinerary?.mealData.map((item, index) => (
-          <div key={index} className="border rounded-lg py-5">
+          <div key={index} className="border rounded-lg py-5 relative">
+            <Button 
+              variant="destructive" 
+              size="sm"
+              className="absolute top-2 right-2"
+              onClick={() => deleteItineraryItem('meal', item.mealid)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Button>
             <CardItinerary data={item} />
           </div>
         ))}
         {itinerary?.placeData.map((item, index) => (
-          <div key={index} className="border rounded-lg py-5">
+          <div key={index} className="border rounded-lg py-5 relative">
+            <Button 
+              variant="destructive" 
+              size="sm"
+              className="absolute top-2 right-2"
+              onClick={() => deleteItineraryItem('place', item.placeid)}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </Button>
             <CardItinerary data={item} />
           </div>
         ))}

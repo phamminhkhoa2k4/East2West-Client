@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const EditModel = ({ params }: { params: { id: string } }) => {
   const [modelName, setModelName] = useState("");
@@ -12,11 +13,9 @@ const EditModel = ({ params }: { params: { id: string } }) => {
     // Fetch data từ API để lấy thông tin của Model dựa trên ID
     const fetchModel = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/cars/model/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch model.");
-
-        const model = await response.json();
-        setModelName(model.modelName); // Đặt giá trị của input
+        const model = await getData({ endpoint: `cars/model/${params.id}` });
+        if (!model) throw new Error("Failed to fetch Model.");
+        setModelName(model.modelName); 
       } catch (err) {
         console.error(err);
         setError("Failed to load model.");
@@ -31,12 +30,10 @@ const EditModel = ({ params }: { params: { id: string } }) => {
 
     // Update model
     try {
-      const response = await fetch(`http://localhost:8080/api/cars/model/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ modelName: modelName }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "cars/model",
+        payload: { modelName: modelName },
       });
 
       if (response.ok) {

@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { createData, getData } from '@/utils/axios';
 
 const Create = () => {
   const [modelName, setModelName] = useState("");
   const [error, setError] = useState("");
 
   // Function to check if a model already exists
-  const checkModelExists = async (modelName:string) => {
+  const checkModelExists = async (modelName: string): Promise<boolean> => {
     try {
-      const response = await fetch('http://localhost:8080/api/cars/model');
-      if (!response.ok) throw new Error('Failed to fetch models.');
-
-      const models = await response.json();
-      return models.some((type: { modelName: string })=> models.modelName === modelName);
+      // Use getData to fetch models from the API
+      const models = await getData({ endpoint: "/cars/model" });
+      return models.some((model: { modelName: string }) => model.modelName === modelName);
     } catch (err) {
       console.error(err);
-      setError('Failed to check if model exists.');
+      setError("Failed to check if model exists.");
       return false;
     }
   };
@@ -29,31 +28,29 @@ const Create = () => {
     // Check if model already exists
     const exists = await checkModelExists(modelName);
     if (exists) {
-      setError('Model already exists.');
+      setError("Model already exists.");
       return;
     }
 
     // Proceed with creating a new model
     try {
-      const response = await fetch('http://localhost:8080/api/cars/model', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ modelName }),
+      const response = await createData({
+        endpoint: "/cars/model",
+        payload: { modelName }, // Set the payload
       });
 
       if (response.ok) {
         // Handle success (e.g., show a success message or redirect)
-        alert('Model created successfully!');
-        setError(''); // Clear any previous errors
+        alert("Model created successfully!");
+        setError(""); // Clear any previous errors
+        setModelName(""); // Reset the input field
       } else {
         // Handle error (e.g., show an error message)
-        setError('Failed to create model.');
+        setError("Failed to create model.");
       }
     } catch (err) {
       console.error(err);
-      setError('An unexpected error occurred.');
+      setError("An unexpected error occurred.");
     }
   };
 

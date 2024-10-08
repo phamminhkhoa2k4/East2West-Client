@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { updateData } from '@/utils/axios';
 
 interface UserInfo {
   userId: number;
@@ -41,10 +42,11 @@ const UpdateUser = () => {
     e.preventDefault();
     
     try {
-      const response = await axios.put(`http://localhost:8080/api/auth/update/${userInfo.userId}`, userInfo);
-      alert(response.data.message);
-
-      // Cập nhật localStorage nếu cần
+      const response = await updateData({
+        id: userInfo.userId, 
+        payload: userInfo, 
+        endpoint: 'auth/update'
+      });
       localStorage.setItem('userInfo', JSON.stringify(userInfo));
     } catch (error: any) {
       if (error.response && error.response.data) {

@@ -43,7 +43,7 @@ const Create = () => {
 
       if (response.ok) {
         alert('Location Type created successfully!');
-        setLocationTypeName('' ); 
+        setLocationTypeName(''); 
         setError(''); 
       } else {
         setError('Failed to create location type.');

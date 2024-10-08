@@ -101,15 +101,16 @@ const CheckoutPackage = ({ packageData }: CheckoutPackageProps) => {
     const tourDate = new Date(selectedDate).toISOString();
     const numberOfPeople = guestCount;
     const totalPrice = packageData?.price * guestCount;
-
+    const packageId=packageData?.packageid
 
     const bookingData = {
+      packageId,
       userId,
       paymentId,
       id,
       tourDate,
       numberOfPeople,
-      totalPrice:total,
+      totalPrice:totalPrice,
       depositAmount: Number(packageData?.deposit),
     };
 
