@@ -1,4 +1,5 @@
 "use client"
+import { getData } from '@/utils/axios';
 import { ApexOptions } from 'apexcharts';
 import dynamic from 'next/dynamic';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -31,29 +32,37 @@ const RevenueStatisticsPage: React.FC = () => {
   const [isTourMonthly, setIsTourMonthly] = useState<boolean>(true);
   const [isCarMonthly, setIsCarMonthly] = useState<boolean>(true);
 
-  const fetchTourData = useCallback(async () => {
-    const url = isTourMonthly
-      ? `http://localhost:8080/api/revenuestatistics/toptours/month?year=${tourYear}&month=${tourMonth}`
-      : `http://localhost:8080/api/revenuestatistics/toptours/year?year=${tourYear}`;
-
-    const response = await fetch(url);
-    const data: TourRevenueDTO[] = await response.json();
-    setTours(data);
-  }, [isTourMonthly, tourYear, tourMonth]); 
-
+  const fetchTourData = async () => {
+    try {
+      const endpoint = isTourMonthly
+        ? `/revenuestatistics/toptours/month?year=${tourYear}&month=${tourMonth}`
+        : `/revenuestatistics/toptours/year?year=${tourYear}`;
+      
+      const data: TourRevenueDTO[] = await getData({ endpoint });
+      setTours(data);
+    } catch (error) {
+      console.error("Error fetching tour data:", error);
+    }
+  };
+  
+  const fetchCarData = async () => {
+    try {
+      const endpoint = isCarMonthly
+        ? `/revenuestatistics/topcars/month?year=${carYear}&month=${carMonth}`
+        : `/revenuestatistics/topcars/year?year=${carYear}`;
+      
+      const data: CarRevenueDTO[] = await getData({ endpoint });
+      setCars(data);
+    } catch (error) {
+      console.error("Error fetching car data:", error);
+    }
+  };
+  
   useEffect(() => {
     fetchTourData();
   }, [fetchTourData]);
 
- const fetchCarData = useCallback(async () => {
-   const url = isCarMonthly
-     ? `http://localhost:8080/api/revenuestatistics/topcars/month?year=${carYear}&month=${carMonth}`
-     : `http://localhost:8080/api/revenuestatistics/topcars/year?year=${carYear}`;
 
-   const response = await fetch(url);
-   const data: CarRevenueDTO[] = await response.json();
-   setCars(data);
- }, [isCarMonthly, carYear, carMonth]);
 
   useEffect(() => {
     fetchTourData();

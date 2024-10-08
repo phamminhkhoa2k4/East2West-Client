@@ -194,14 +194,7 @@ const handleSelectChange = (e: ChangeEvent<HTMLSelectElement>) => {
     };
   });
 };
-
-
-
-
   const handleSubmit = async () => {
-
-
-  
       await handleUpload().then(async(data) => {
           if(data){
             const carsData = {

@@ -3,17 +3,18 @@
 import React, { useState } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
+import { createData, getData } from "@/utils/axios";
+interface Category {
+  categoryTourId: number;
+  categoryTourName: string;
+}
 const Create = () => {
   const [categoryName, setCategoryName] = useState("");
   const [error, setError] = useState("");
 
   const checkCategoryExists = async (categoryName: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/tours/category");
-      if (!response.ok) throw new Error("Failed to fetch categories.");
-
-      const categories = await response.json();
+      const categories:Category[] = await  getData({ endpoint: '/tours/category' });
       return categories.some((category: { categoryTourName: string }) => category.categoryTourName === categoryName);
     } catch (err) {
       console.error(err);
@@ -34,12 +35,9 @@ const Create = () => {
 
     // Proceed with creating a new category
     try {
-      const response = await fetch("http://localhost:8080/api/tours/category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ categoryTourName: categoryName }),
+      const response =await createData({
+        endpoint:'/tours/category',
+        payload: { categoryTourName: categoryName },
       });
 
       if (response.ok) {

@@ -3,16 +3,19 @@
 import React, { useState } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
+import { createData, getData } from "@/utils/axios";
+interface Suitable {
+  suitableTourId: number;
+  suitableName: string;
+}
 const Create = () => {
   const [suitableName, setSuitableName] = useState("");
   const [error, setError] = useState("");
 
   const checkSuitableExists = async (suitableName: string) => {
     try {
-      const response = await fetch("http://localhost:8080/api/tours/suitable");
-      if (!response.ok) throw new Error("Failed to fetch suitable options.");
-      const suitableList = await response.json();
+      const suitableList:Suitable[] =await getData({ endpoint: '/tours/suitable' });
+     
       return suitableList.some((suitable: { suitableName: string }) => suitable.suitableName === suitableName);
     } catch (err) {
       console.error(err);
@@ -33,12 +36,9 @@ const Create = () => {
 
     // Proceed with creating a new suitable option
     try {
-      const response = await fetch("http://localhost:8080/api/tours/suitable", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ suitableName: suitableName }),
+      const response = await createData( {
+        endpoint:'/tours/suitable',
+        payload :{ suitableName: suitableName },
       });
 
       if (response.ok) {

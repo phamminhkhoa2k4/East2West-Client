@@ -2,7 +2,11 @@
 import React, { useState } from 'react';
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
-
+import { createData, getData } from '@/utils/axios';
+interface LocationType {
+  locationtypeid: number;
+  locationtypename: string;
+}
 const Create = () => {
   const [locationTypeName, setLocationTypeName] = useState("");
   const [error, setError] = useState("");
@@ -10,15 +14,15 @@ const Create = () => {
   // Function to check if a location type already exists
   const checkLocationTypeExists = async (name: string): Promise<boolean> => {
     try {
-      const response = await fetch('http://localhost:8080/api/cars/locationtypes');
-      if (!response.ok) throw new Error('Failed to fetch location types.');
-
-      const locationTypes = await response.json();
-      return locationTypes.some((type: { locationtypename: string }) => type.locationtypename === name);
+      // Use getData method to fetch location types
+      const locationTypes: LocationType[] = await getData({ endpoint: '/cars/locationtypes' });
+  
+      // Check if the location type exists
+      return locationTypes.some((type) => type.locationtypename === name);
     } catch (err) {
-      console.error(err);
-      setError('Failed to check if location type exists.');
-      return false;
+      console.error(err); // Log any errors
+      setError('Failed to check if location type exists.'); // Set error state
+      return false; // Return false if there's an error
     }
   };
 
@@ -32,12 +36,9 @@ const Create = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:8080/api/cars/locationtypes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({locationtypename: locationTypeName }),
+      const response = await createData({
+        endpoint: '/cars/locationtypes',
+        payload: { locationtypename: locationTypeName }, // Set the payload
       });
 
       if (response.ok) {

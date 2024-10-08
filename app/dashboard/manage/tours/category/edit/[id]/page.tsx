@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const Editcategory = ({ params }: { params: { id: string } }) => {
   const [categoryTourName, setcategoryTourName] = useState("");
@@ -12,19 +13,10 @@ const Editcategory = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchcategory = async () => {
       setLoading(true); // Start loading
-
       try {
-        const response = await fetch(`http://localhost:8080/api/tours/category/${params.id}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch category option. Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data) {
-          setcategoryTourName(data.categoryTourName); // Update according to API response structure
-        } else {
-          throw new Error("No data received from API.");
-        }
+        const data = await getData({ endpoint: `/tours/category/${params.id}` });
+        if (!data) throw new Error("Failed to fetch Model.");
+        setcategoryTourName(data.categoryTourName);
       } catch (err) {
         console.error(err);
         setError("Failed to load category option.");
@@ -40,12 +32,10 @@ const Editcategory = ({ params }: { params: { id: string } }) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8080/api/tours/category/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ categoryTourName: categoryTourName }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "tours/category",
+        payload: { categoryTourName: categoryTourName },
       });
 
       if (response.ok) {

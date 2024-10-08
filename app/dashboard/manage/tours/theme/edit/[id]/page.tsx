@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const Edittheme = ({ params }: { params: { id: string } }) => {
   const [themeTourName, setthemeTourName] = useState("");
@@ -14,18 +15,10 @@ const Edittheme = ({ params }: { params: { id: string } }) => {
       setLoading(true); // Start loading
 
       try {
-        const response = await fetch(`http://localhost:8080/api/tours/theme/${params.id}`);
-        if (!response.ok) {
-          throw new Error(`Failed to fetch theme option. Status: ${response.status}`);
-        }
-
-        const data = await response.json();
-        if (data) {
-          setthemeTourName(data.themeTourName); // Update according to API response structure
-        } else {
-          throw new Error("No data received from API.");
-        }
-      } catch (err) {
+        const data = await getData({ endpoint: `/tours/theme/${params.id}` });
+        if (!data) throw new Error("Failed to fetch Model.");
+        setthemeTourName(data.themeTourName);
+      }  catch (err) {
         console.error(err);
         setError("Failed to load theme option.");
       } finally {
@@ -40,14 +33,11 @@ const Edittheme = ({ params }: { params: { id: string } }) => {
     event.preventDefault();
 
     try {
-      const response = await fetch(`http://localhost:8080/api/tours/theme/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ themeTourName: themeTourName }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "tours/theme",
+        payload:{ themeTourName: themeTourName },
       });
-
       if (response.ok) {
         alert("theme option updated successfully!");
         setError(""); // Clear any previous errors

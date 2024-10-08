@@ -1,3 +1,4 @@
+import { createData } from "@/utils/axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 
 interface SignupFormData {
@@ -91,9 +92,9 @@ const SignUpForm: React.FC = () => {
       address: data.address,
       role: data.role,
     };
-
+    const baseURL = process.env.NEXT_PUBLIC_API_URL;
     try {
-      const response = await fetch("http://localhost:8080/api/auth/signup", {
+      const response = await fetch(baseURL+"auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

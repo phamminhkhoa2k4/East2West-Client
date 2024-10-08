@@ -2,22 +2,21 @@
 import React, { useState } from 'react';
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { createData, getData } from '@/utils/axios';
 
 const Create = () => {
   const [typeName, setTypeName] = useState("");
   const [error, setError] = useState("");
 
   // Function to check if a type already exists
-  const checkTypeExists = async (typeName:string) => {
+  const checkTypeExists = async (typeName: string): Promise<boolean> => {
     try {
-      const response = await fetch('http://localhost:8080/api/cars/type');
-      if (!response.ok) throw new Error('Failed to fetch types.');
-
-      const types = await response.json();
-      return types.some((type: { type: string }) => types.typeName === typeName);
+      // Use getData to fetch types from the API
+      const types = await getData({ endpoint: "/cars/type" });
+      return types.some((type: { typeName: string }) => type.typeName === typeName);
     } catch (err) {
       console.error(err);
-      setError('Failed to check if type exists.');
+      setError("Failed to check if type exists.");
       return false;
     }
   };
@@ -35,12 +34,9 @@ const Create = () => {
 
     // Proceed with creating a new type
     try {
-      const response = await fetch('http://localhost:8080/api/cars/type', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ typeName }),
+      const response = await createData({
+        endpoint: "/cars/type",
+        payload: { typeName }, // Set the payload
       });
 
       if (response.ok) {

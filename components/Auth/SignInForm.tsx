@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
+import { createData } from "@/utils/axios";
 
 export default function SignInForm() {
   const [data, setData] = useState({
@@ -24,27 +25,27 @@ export default function SignInForm() {
     }
   
     try {
-      const response = await fetch("http://localhost:8080/api/auth/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const response = await createData({
+        endpoint: "/auth/signin",
+        payload: {
           username: data.username,
           password: data.password,
-        }),
-        credentials: 'include', // Đảm bảo cookie được gửi cùng với yêu cầu
+        },
       });
-  
-      if (response.ok) {
-        const result = await response.json();
-        localStorage.setItem("userInfo", JSON.stringify(result));
+      if (!response.ok) {
+        localStorage.setItem("userInfo", JSON.stringify(response)); // Lưu thông tin người dùng vào localStorage
         setMessage("Đăng nhập thành công!");
-        console.log("User Info:", result);
+        console.log("User Info:", response);
+      }
+    } catch (error:any) {
+      // Kiểm tra lỗi cụ thể từ server
+      if (error.response) {
+        console.error('Đăng nhập thất bại:', error.response.data.message);
+        setMessage("Đăng nhập thất bại!");
       } else {
+        console.error('Lỗi không xác định:', error.message);
         setMessage("Đăng nhập thất bại!");
       }
-    } catch (error) {
-      console.error("Error:", error);
-      setMessage("Đã xảy ra lỗi.");
     }
   };
   

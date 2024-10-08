@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { getData, updateData } from "@/utils/axios";
 
 const Editlocationtype = ({ params }: { params: { id: string } }) => {
   const [locationtypename, setlocationtypename] = useState("");
@@ -12,11 +13,11 @@ const Editlocationtype = ({ params }: { params: { id: string } }) => {
     // Fetch data từ API để lấy thông tin của locationtype dựa trên ID
     const fetchlocationtype = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/api/cars/locationtype/${params.id}`);
-        if (!response.ok) throw new Error("Failed to fetch locationtype.");
+        const data = await getData({ endpoint: `cars/locationtype/${params.id}` });
+        if (!data) throw new Error("Failed to fetch locationtype.");
 
-        const locationtype = await response.json();
-        setlocationtypename(locationtype.locationtypename); // Đặt giá trị của input
+        setlocationtypename(data.locationtypename); 
+        
       } catch (err) {
         console.error(err);
         setError("Failed to load locationtype.");
@@ -31,12 +32,10 @@ const Editlocationtype = ({ params }: { params: { id: string } }) => {
 
     // Update locationtype
     try {
-      const response = await fetch(`http://localhost:8080/api/cars/locationtype/${params.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ locationtypename: locationtypename }),
+      const response = await updateData({
+        id: Number(params.id),
+        endpoint: "cars/locationtype",
+        payload: {locationtypename:locationtypename},
       });
 
       if (response.ok) {

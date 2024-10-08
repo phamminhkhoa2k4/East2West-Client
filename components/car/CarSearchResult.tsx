@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import CardSearch from "./CardSearch";
-import { api } from "../../utils/axios";
+import { api, getData } from "../../utils/axios";
 import {
   Accordion,
   AccordionContent,
@@ -135,10 +135,14 @@ const CarSearchResult = () => {
     if (filters.minMiles !== undefined) queryParams.append('minMiles', filters.minMiles.toString());
     if (filters.maxMiles !== undefined) queryParams.append('maxMiles', filters.maxMiles.toString());
 
-    const response = await fetch(`http://localhost:8080/api/cars/search?${queryParams.toString()}`);
-    const data = await response.json();
-    setCars(data);
-    console.log(data);
+    const endpoint = `/cars/search?${queryParams.toString()}`;
+
+    try {
+      const data = await getData({ endpoint });
+      setCars(data);
+    } catch (error) {
+      console.error("Error fetching cars:", error);
+    }
   };
   const resetFilters = () => {
     setFilters({

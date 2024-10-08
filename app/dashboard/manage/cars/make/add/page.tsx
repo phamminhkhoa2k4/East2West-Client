@@ -3,56 +3,55 @@
 import React, { useState } from "react";
 import InputGroup from "@/components/FormElements/InputGroup";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
+import { createData, getData } from "@/utils/axios";
+interface CarMake {
+  makeId: number; // You can adjust these properties based on your actual response structure
+  makeName: string;
+}
 
 const Create = () => {
-  const [makeName, setmakeName] = useState("");
+  const [carMakeName, setCarMakeName] = useState("");
   const [error, setError] = useState("");
 
-  const checkmakeExists = async (makeName: string) => {
+  const checkCarMakeExists = async (name: string): Promise<boolean> => {
     try {
-      const response = await fetch("http://localhost:8080/api/cars/make");
-      if (!response.ok) throw new Error("Failed to fetch categories.");
+      // Use getData to fetch car makes from the API
+      const carMakes: CarMake[] = await getData({ endpoint: "/cars/make" });
 
-      const categories = await response.json();
-      return categories.some(
-        (make: { makeName: string }) =>
-          make.makeName === makeName
-      );
+      // Check if the specified car make name exists in the fetched car makes
+      return carMakes.some((make) => make.makeName === name);
     } catch (err) {
-      console.error(err);
-      setError("Failed to check if make exists.");
-      return false;
+      console.error(err); // Log the error
+      setError("Failed to check if car make exists."); // Update the error message
+      return false; // Return false in case of an error
     }
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // Check if make already exists
-    const exists = await checkmakeExists(makeName);
+    // Check if car make already exists
+    const exists = await checkCarMakeExists(carMakeName);
     if (exists) {
-      setError("make already exists.");
+      setError("Car Make already exists.");
       return;
     }
 
-    // Proceed with creating a new make
+    // Proceed with creating a new car make
     try {
-      const response = await fetch("http://localhost:8080/api/cars/make", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ makeName: makeName }),
+      const response = await createData({
+        endpoint: "/cars/make",
+        payload: { makeName: carMakeName }, // Set the payload
       });
 
       if (response.ok) {
         // Handle success (e.g., show a success message or redirect)
-        alert("make created successfully!");
+        alert("Car Make created successfully!");
         setError(""); // Clear any previous errors
-        setmakeName(""); // Reset the input field
+        setCarMakeName(""); // Reset the input field
       } else {
         // Handle error (e.g., show an error message)
-        setError("Failed to create make.");
+        setError("Failed to create car make.");
       }
     } catch (err) {
       console.error(err);
@@ -76,8 +75,8 @@ const Create = () => {
                 type="text"
                 placeholder="Please Enter make Name!"
                 customClasses="w-full mb-4.5"
-                value={makeName}
-                onChange={(e) => setmakeName(e.target.value)}
+                value={carMakeName}
+                onChange={(e) => setCarMakeName(e.target.value)}
               />
               {error && <div className="mb-4 text-red-500">{error}</div>}
               <div className="mb-6"></div>

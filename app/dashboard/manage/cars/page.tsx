@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import CustomTable from "@/components/Tables/CustomTable";
 import { DataRow } from "@/types/table";
+import { getData } from "@/utils/axios";
 
 const columns = [
   { key: "carId", label: "Id" },
@@ -44,19 +45,18 @@ interface Car {
   seatCapacity: number;
   airConditioned: boolean;
   pricePerDay: number;
-  status: string;
+  status: string | null;
   locationtype: {
     locationtypeid: number;
     locationtypename: string;
   };
-  cargearbox?: string | null;
-  miles?: string | null;
-  fueltankcapacity?: string | null;
-  fuel?: string | null;
-  location?: string | null;
-  thumbnail?: string[];
+  cargearbox: string | null;
+  miles: string | null;
+  fueltankcapacity: string | null;
+  fuel: string | null;
+  location: string | null;
+  thumbnail: string[];
 }
-
 interface CarTableData extends DataRow {
   thumbnail: string;
   carName: string;
@@ -71,57 +71,63 @@ interface CarTableData extends DataRow {
   pricePerDay: number;
   status: string;
   mileages: string;
-  fuelTankCapacity: string;
+  fueltankcapacity: string;
   fuel: string;
   airConditioned: string;
   [key: string]: string | number; // Updated index signature
 }
 const Cars = () => {
-  const [data, setData] = useState<CarTableData[]>([]);
-
+  const [rawData, setRawData] = useState<Car[]>([]);
+  const [formattedData, setFormattedData] = useState<CarTableData[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/api/cars", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include", // Quan trọng để gửi cookie
-        });
-        const result: Car[] = await response.json();
-        const formattedData = result.map((car) => ({
-           carId: car?.carId!,
-          thumbnail: car?.thumbnail?.[0]! ,
-          carName: car.carName,
-          make: car.make?.makeName!,
-          model: car.model?.modelName!,
-          type: car.type?.typeName!,
-          locationType: car.locationtype?.locationtypename!,
-          year: car?.year!,
-          seatingCapacity: car.seatCapacity,
-          airConditioned: car.airConditioned ? "Yes" : "No",
-          pricePerDay: car.pricePerDay,
-          gearbox: car.cargearbox!,
-          status: car.status!,
-          mileages: car.miles!,
-          fuelTankCapacity: car.fueltankcapacity!,
-          fuel: car.fuel!,
-          location: car.location!,
-        }));
-
-        setData(formattedData);
+        const response = await getData({ endpoint: "/cars" });
+        console.log("API response:", response); // Log the response for debugging
+        
+        if (Array.isArray(response)) { // Directly check if response is an array
+          const result: Car[] = response;
+          setRawData(result);
+  
+          const formatted = result.map((car) => ({
+            carId: car.carId,
+            thumbnail: car.thumbnail?.[0] ?? 'https://via.placeholder.com/150', // Fallback image
+            carName: car.carName,
+            make: car.make?.makeName ?? '',
+            model: car.model?.modelName ?? '',
+            type: car.type?.typeName ?? '',
+            locationType: car.locationtype?.locationtypename ?? '',
+            year: car.year,
+            seatingCapacity: car.seatCapacity,
+            airConditioned: car.airConditioned ? "Yes" : "No",
+            pricePerDay: car.pricePerDay,
+            gearbox: car.cargearbox ?? 'N/A',
+            status: car.status ?? 'N/A',
+            mileages: car.miles ?? 'N/A',
+            fueltankcapacity: car.fueltankcapacity ?? 'N/A',
+            fuel: car.fuel ?? 'N/A',
+            location: car.location ?? 'N/A',
+          }));
+  
+          setFormattedData(formatted);
+        } else {
+          console.error("Unexpected API response format:", response);
+        }
       } catch (error) {
         console.error("Error fetching car data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
+  
 
   return (
     <DefaultLayout>
       <CustomTable
         columns={columns}
-        data={data}
+        data={formattedData}
         title="Cars"
         createUrl="/dashboard/manage/cars/add"
         deleteUrl="/cars/"
