@@ -4,7 +4,8 @@ import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Image from "next/image";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CiCalendar, CiUser } from "react-icons/ci";
+import { CiCalendar } from "react-icons/ci";
+import Calendar from '@/components/car/Calendar'; // Đảm bảo rằng bạn đã import Calendar
 import { createData, getData } from '@/utils/axios';
 
 interface Car {
@@ -46,11 +47,11 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
   useEffect(() => {
     const fetchCarData = async () => {
       try {
-        const carData :Car = await getData({ endpoint: `/cars/${id}`});
+        const carData: Car = await getData({ endpoint: `/cars/${id}` });
         setCar(carData);
       } catch (error) {
         console.error('Error fetching car data:', error);
-        setError('Error loading car data'); // Update error message
+        setError('Error loading car data');
       }
     };
 
@@ -62,7 +63,8 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
 
     const userId = Number(localStorage.getItem('userId')) || 1;
     const paymentId = 1;
-    const totalAmount = car.pricePerDay * Math.ceil((new Date(returnDate).getTime() - new Date(rentalDate).getTime()) / (1000 * 3600 * 24));
+    const totalDays = Math.ceil((new Date(returnDate).getTime() - new Date(rentalDate).getTime()) / (1000 * 3600 * 24));
+    const totalAmount = car.pricePerDay * totalDays;
 
     const rentalData = {
       userId,
@@ -76,9 +78,8 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
     try {
       const response = await createData({
         endpoint: "/employee-bookings/rental",
-        payload: rentalData, 
+        payload: rentalData,
       });
-      
 
       if (!response.ok) throw new Error('Failed to submit rental data');
       alert('Rental successfully booked!');
@@ -91,8 +92,8 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
   if (error) return <p>{error}</p>;
   if (!car) return <p>Loading...</p>;
 
-  const days = Math.ceil((new Date(returnDate).getTime() - new Date(rentalDate).getTime()) / (1000 * 3600 * 24));
-  const totalAmount = car.pricePerDay * days;
+  const totalDays = Math.ceil((new Date(returnDate).getTime() - new Date(rentalDate).getTime()) / (1000 * 3600 * 24));
+  const totalAmount = car.pricePerDay * totalDays;
 
   return (
     <DefaultLayout>
@@ -144,17 +145,20 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
                       >
                         Rental Date
                       </label>
-                      <input
+                      <button
                         id="rental-date"
-                        type="date"
-                        value={rentalDate}
-                        onChange={(e) => setRentalDate(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      />
+                        className="w-full justify-between gap-1 p-2 text-left bg-white border border-gray-300 rounded-lg text-sm flex"
+                      >
+                        {rentalDate || 'Select Date'} <CiCalendar className="h-5 w-5" />
+                      </button>
                     </div>
                   </PopoverTrigger>
                   <PopoverContent>
-                    {/* Additional content if needed */}
+                    <Calendar
+                      setCheckInDate={setRentalDate} 
+                      checkInDate={rentalDate}
+                      setCheckOutDate={setReturnDate}
+                    />
                   </PopoverContent>
                 </Popover>
                 <Popover>
@@ -166,17 +170,20 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
                       >
                         Return Date
                       </label>
-                      <input
+                      <button
                         id="return-date"
-                        type="date"
-                        value={returnDate}
-                        onChange={(e) => setReturnDate(e.target.value)}
-                        className="w-full p-2 border border-gray-300 rounded-lg text-sm"
-                      />
+                        className="w-full justify-between gap-1 p-2 text-left bg-white border border-gray-300 rounded-lg text-sm flex"
+                      >
+                        {returnDate || 'Select Date'} <CiCalendar className="h-5 w-5" />
+                      </button>
                     </div>
                   </PopoverTrigger>
                   <PopoverContent>
-                    {/* Additional content if needed */}
+                    <Calendar
+                      setCheckInDate={setReturnDate}
+                      checkInDate={returnDate}
+                      setCheckOutDate={setReturnDate}
+                    />
                   </PopoverContent>
                 </Popover>
               </div>
@@ -185,7 +192,7 @@ const RentalStaff = ({ params }: { params: { id: string } }) => {
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-between">
                   <span>
-                    ${car.pricePerDay} x {days} Days
+                    ${car.pricePerDay} x {totalDays} Days
                   </span>
                   <span>${totalAmount}</span>
                 </div>

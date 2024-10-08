@@ -301,7 +301,7 @@ import {
 
     useEffect(() => {
       const itineraryData = getItineraryData(
-        toursInfo?.itineraries[day - 1],
+        toursInfo?.itineraries?.[day - 1] || {},
         accommodation,
         meals,
         places,
